@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useSearchParams, Link } from "react-router-dom"
+import { useSearchParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import {
   Plus,
@@ -10,14 +10,37 @@ import {
   HelpCircle,
 } from "lucide-react"
 import TaskModal from "../components/TaskModel"
-import { fetchAllProjects, fetchTasks } from "../../services/requestToServer.js"
+import {
+  fetchAllProjects,
+  fetchMe,
+  fetchTasks,
+} from "../../services/requestToServer.js"
 
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
-  const [error, setIsError] = useState(false)
+  const [error, setIsError] = useState("")
+  const navigate = useNavigate()
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
+
+  useEffect(() => {
+    async function fetchData() {
+      const token = localStorage.getItem("token")
+      if (token && !user) {
+        const user = await fetchMe({ setFunction: setUser, setIsError })
+        localStorage.setItem("user", JSON.stringify(user))
+      }
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isModalOpen = searchParams.get("newTaskModal") === "true"
@@ -31,16 +54,17 @@ export default function Dashboard() {
           setIsError,
         })
 
-        const user = JSON.parse(localStorage.getItem("user"))
-        const taskEndpoint = currentStatusFilter
-          ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
-          : `http://localhost:3000/api/tasks?owner=${user.id}`
+        if (user) {
+          const taskEndpoint = currentStatusFilter
+            ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
+            : `http://localhost:3000/api/tasks?owner=${user.id}`
 
-        const tasksResponse = await fetchTasks({
-          taskEndpoint,
-          setFunction: setTasks,
-          setIsError,
-        })
+          const tasksResponse = await fetchTasks({
+            taskEndpoint,
+            setFunction: setTasks,
+            setIsError,
+          })
+        }
       } catch (error) {
         console.error("Error compiling dashboard backend data matrix:", error)
       } finally {

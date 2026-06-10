@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
 import { signUp } from "../../services/requestToServer"
+import { toast } from "react-toastify"
 
 export default function Signup() {
   const [name, setName] = useState("")
@@ -10,6 +11,13 @@ export default function Signup() {
   const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (error === "This email is already active.") {
+      toast("User already exists please login to continue.")
+      navigate("/login")
+    }
+  }, [error])
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault()
@@ -25,15 +33,14 @@ export default function Signup() {
         setIsError,
       })
 
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("user", JSON.stringify(response.user))
+      if (response) {
+        localStorage.setItem("token", response.token)
+        localStorage.setItem("user", JSON.stringify(response.user))
+      }
 
       navigate("/dashboard")
     } catch (err) {
-      setIsError(
-        err.response?.error ||
-          "Registration failed. Email might already be registered.",
-      )
+      setIsError("Registration failed. Email might already be registered.")
     } finally {
       setLoading(false)
     }

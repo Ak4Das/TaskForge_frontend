@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
 import { login } from "../../services/requestToServer"
+import { toast } from "react-toastify"
 
 export default function Login() {
   const [email, setEmail] = useState("")
@@ -10,6 +11,13 @@ export default function Login() {
   const [error, setIsError] = useState("")
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (error === "User not found.") {
+      toast("User not found please signup to continue.")
+      navigate("/signup")
+    }
+  }, [error])
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -17,15 +25,14 @@ export default function Login() {
     try {
       const response = await login({ body: { email, password }, setIsError })
 
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("user", JSON.stringify(response.user))
+      if (response) {
+        localStorage.setItem("token", response.token)
+        localStorage.setItem("user", JSON.stringify(response.user))
+      }
 
       navigate("/dashboard")
     } catch (err) {
-      setIsError(
-        err.response?.error ||
-          "Authentication failed. Please verify credentials.",
-      )
+      setIsError("Authentication failed. Please verify credentials.")
     } finally {
       setLoading(false)
     }

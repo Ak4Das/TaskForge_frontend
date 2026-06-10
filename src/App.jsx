@@ -14,6 +14,7 @@ import TaskDetail from "./pages/TaskDetail"
 import TeamManagement from "./pages/TeamManagement"
 import Reports from "./pages/Reports"
 import Sidebar from "./components/Sidebar"
+import { ToastContainer } from "react-toastify"
 
 const ProtectedLayout = ({ children }) => {
   const hasActiveToken = !!localStorage.getItem("token")
@@ -91,6 +92,7 @@ export default function App() {
         {/* Catch-all redirect */}
         {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
       </Routes>
+      <ToastContainer />
     </Router>
   )
 }

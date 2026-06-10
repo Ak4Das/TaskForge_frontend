@@ -7,8 +7,9 @@ export async function fetchAllProjects(obj) {
     controller.abort()
   }, 10000)
 
+  const { setFunction, setIsError } = obj
+
   try {
-    const { setFunction, setIsError } = obj
     const response = await axios.get("http://localhost:3000/api/projects", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -22,6 +23,11 @@ export async function fetchAllProjects(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -43,8 +49,9 @@ export async function fetchTasks(obj) {
     controller.abort()
   }, 10000)
 
+  const { taskEndpoint, setFunction, setIsError } = obj
+
   try {
-    const { taskEndpoint, setFunction, setIsError } = obj
     const response = await axios.get(taskEndpoint, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       signal: controller.signal,
@@ -56,6 +63,11 @@ export async function fetchTasks(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -77,8 +89,9 @@ export async function fetchTeams(obj) {
     controller.abort()
   }, 10000)
 
+  const { setFunction, setIsError } = obj
+
   try {
-    const { setFunction, setIsError } = obj
     const response = await axios.get("http://localhost:3000/api/teams", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       signal: controller.signal,
@@ -90,6 +103,11 @@ export async function fetchTeams(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -111,8 +129,9 @@ export async function fetchUsers(obj) {
     controller.abort()
   }, 10000)
 
+  const { setFunction, setIsError } = obj
+
   try {
-    const { setFunction, setIsError } = obj
     const response = await axios.get("http://localhost:3000/api/users", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       signal: controller.signal,
@@ -124,6 +143,59 @@ export async function fetchUsers(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    if (error.response) {
+      throw new Error("Request failed")
+    }
+
+    throw error
+  }
+}
+
+export async function fetchMe(obj) {
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  const { setFunction, setIsError } = obj
+
+  try {
+    const response = await axios.get("http://localhost:3000/api/auth/me", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
+
+    clearTimeout(timerId)
+
+    const respondedData = response.data.respondedData
+
+    const user = {
+      id: respondedData._id,
+      name: respondedData.name,
+      email: respondedData.email,
+    }
+
+    setFunction && setFunction(user)
+    return user
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -145,8 +217,9 @@ export async function fetchTasksById(obj) {
     controller.abort()
   }, 10000)
 
+  const { taskId, setFunction, setIsError } = obj
+
   try {
-    const { taskId, setFunction, setIsError } = obj
     const response = await axios.get(
       `http://localhost:3000/api/tasks/${taskId}`,
       {
@@ -163,6 +236,11 @@ export async function fetchTasksById(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -184,8 +262,9 @@ export async function login(obj) {
     controller.abort()
   }, 10000)
 
+  const { body, setFunction, setIsError } = obj
+
   try {
-    const { body, setFunction, setIsError } = obj
     const response = await axios.post(
       "http://localhost:3000/api/auth/login",
       body,
@@ -201,13 +280,14 @@ export async function login(obj) {
   } catch (error) {
     clearTimeout(timerId)
 
-    if (error.name === "CanceledError") {
-      setIsError && setIsError("Request timeout")
+    if (error.response.data.message === "User not found.") {
+      setIsError && setIsError("User not found.")
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
     }
 
     throw error
@@ -221,8 +301,9 @@ export async function signUp(obj) {
     controller.abort()
   }, 10000)
 
+  const { body, setFunction, setIsError } = obj
+
   try {
-    const { body, setFunction, setIsError } = obj
     const response = await axios.post(
       "http://localhost:3000/api/auth/signup",
       body,
@@ -237,6 +318,11 @@ export async function signUp(obj) {
     return response.data
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "This email is already active.") {
+      setIsError && setIsError("This email is already active.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -258,8 +344,9 @@ export async function createTeam(obj) {
     controller.abort()
   }, 10000)
 
+  const { body, setFunction, setIsError } = obj
+
   try {
-    const { body, setFunction, setIsError } = obj
     const response = await axios.post("http://localhost:3000/api/teams", body, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       signal: controller.signal,
@@ -271,6 +358,11 @@ export async function createTeam(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -292,8 +384,9 @@ export async function createTask(obj) {
     controller.abort()
   }, 10000)
 
+  const { body, setFunction, setIsError } = obj
+
   try {
-    const { body, setFunction, setIsError } = obj
     const response = await axios.post("http://localhost:3000/api/tasks", body, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       signal: controller.signal,
@@ -305,6 +398,11 @@ export async function createTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -326,8 +424,9 @@ export async function closedTasks(obj) {
     controller.abort()
   }, 10000)
 
+  const { setFunction, setIsError } = obj
+
   try {
-    const { setFunction, setIsError } = obj
     const response = await axios.get(
       "http://localhost:3000/api/report/closed-tasks",
       {
@@ -342,6 +441,11 @@ export async function closedTasks(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
@@ -381,6 +485,11 @@ export async function updateTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
 
     if (error.name === "CanceledError") {
       setIsError && setIsError("Request timeout")
