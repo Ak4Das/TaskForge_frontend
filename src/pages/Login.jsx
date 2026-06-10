@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
+import { login } from "../../services/requestToServer"
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [error, setIsError] = useState("")
   const navigate = useNavigate()
 
   const handleLoginSubmit = async (e) => {
@@ -14,15 +15,15 @@ export default function Login() {
     setLoading(true)
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", { email, password })
+      const response = await login({ body: { email, password }, setIsError })
 
-      localStorage.setItem("token", response.data.token)
-      localStorage.setItem("user", JSON.stringify(response.data.user))
+      localStorage.setItem("token", response.token)
+      localStorage.setItem("user", JSON.stringify(response.user))
 
       navigate("/dashboard")
     } catch (err) {
-      setError(
-        err.response?.data?.error ||
+      setIsError(
+        err.response?.error ||
           "Authentication failed. Please verify credentials.",
       )
     } finally {

@@ -12,6 +12,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js"
+import { closedTasks, fetchTasks } from "../../services/requestToServer"
 
 // Register essential modular dependencies required by Chart.js
 ChartJS.register(
@@ -26,7 +27,7 @@ ChartJS.register(
 
 export default function Reports() {
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
 
   // Local state arrays to map individual analytic metrics streams
   const [teamPerformanceData, setTeamPerformanceData] = useState(null)
@@ -38,26 +39,18 @@ export default function Reports() {
   })
 
   const fetchAnalyticalReportMatrices = async () => {
-    const config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    }
     try {
       setLoading(true)
-      setError("")
+      setIsError("")
 
       // Step A: Request aggregated metrics for completed tasks
-      const closedTasksRes = await axios.get(
-        "http://localhost:3000/api/report/closed-tasks",
-        config,
-      )
-      const dataPayload = closedTasksRes.data // Expects schema grouped arrays from backend matching spec definitions
+      const dataPayload = await closedTasks({ setIsError }) // Expects schema grouped arrays from backend matching spec definitions
 
       // Step B: Request raw fallback matrices (or use secondary tasks analytics) to calculate work metrics
-      const fallbackTasksRes = await axios.get(
-        "http://localhost:3000/api/tasks",
-        config,
-      )
-      const allTasks = fallbackTasksRes.data
+      const allTasks = await fetchTasks({
+        taskEndpoint: "http://localhost:3000/api/tasks",
+        setIsError,
+      })
 
       // --- Metric Compilations 1: Closed Tasks by Team (Pie Chart) ---
       const teamCounts = {}
@@ -154,7 +147,7 @@ export default function Reports() {
       })
     } catch (err) {
       console.error("Error generating metrics processing pipelines:", err)
-      setError("Could not evaluate reports pipeline data grids.")
+      setIsError("Could not evaluate reports pipeline data grids.")
     } finally {
       setLoading(false)
     }

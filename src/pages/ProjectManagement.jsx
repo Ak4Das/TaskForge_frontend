@@ -2,31 +2,30 @@ import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { FolderKanban, Search, Calendar, ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { fetchAllProjects } from "../../services/requestToServer"
 
 export default function ProjectManagement() {
   const [projects, setProjects] = useState([])
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
 
   useEffect(() => {
     const fetchProjectsRegistry = async () => {
       try {
         setLoading(true)
         // Request projects with valid session authentication context tokens
-        const response = await axios.get("http://localhost:3000/api/projects", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        })
+        const response = await fetchAllProjects(setIsError)
 
         // Explicitly sort project data by 'createdAt' field in descending order (Latest First)
-        const sortedLatestFirst = response.data.sort((a, b) => {
+        const sortedLatestFirst = response.sort((a, b) => {
           return new Date(b.createdAt) - new Date(a.createdAt)
         })
 
         setProjects(sortedLatestFirst)
       } catch (err) {
         console.error("Error compiling projects listing matrix:", err)
-        setError(
+        setIsError(
           "Could not retrieve active projects. Please check your network connection.",
         )
       } finally {

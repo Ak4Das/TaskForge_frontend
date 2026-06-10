@@ -10,12 +10,14 @@ import {
   HelpCircle,
 } from "lucide-react"
 import TaskModal from "../components/TaskModel"
+import { fetchAllProjects, fetchTasks } from "../../services/requestToServer.js"
 
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [error, setIsError] = useState(false)
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isModalOpen = searchParams.get("newTaskModal") === "true"
@@ -24,25 +26,21 @@ export default function Dashboard() {
     const fetchDashboardContent = async () => {
       try {
         setLoading(true)
-        const projectsResponse = await axios.get(
-          "http://localhost:3000/api/projects",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        )
-        setProjects(projectsResponse.data)
+        const projectsResponse = await fetchAllProjects({
+          setFunction: setProjects,
+          setIsError,
+        })
 
         const user = JSON.parse(localStorage.getItem("user"))
         const taskEndpoint = currentStatusFilter
           ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
           : `http://localhost:3000/api/tasks?owner=${user.id}`
 
-        const tasksResponse = await axios.get(taskEndpoint, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        const tasksResponse = await fetchTasks({
+          taskEndpoint,
+          setFunction: setTasks,
+          setIsError,
         })
-        setTasks(tasksResponse.data)
       } catch (error) {
         console.error("Error compiling dashboard backend data matrix:", error)
       } finally {

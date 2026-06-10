@@ -13,13 +13,14 @@ import {
   Tag,
   CalendarDays,
 } from "lucide-react"
+import { fetchTasksById, updateTask } from "../../services/requestToServer"
 
 export default function TaskDetail() {
   const { taskId } = useParams() // Extract route path argument string token safely
   const navigate = useNavigate()
   const [task, setTask] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
   const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
@@ -27,18 +28,14 @@ export default function TaskDetail() {
       try {
         setLoading(true)
         // Request deep details matching target task ID from database layer
-        const response = await axios.get(
-          `http://localhost:3000/api/tasks/${taskId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        )
-        setTask(response.data)
+        await fetchTasksById({
+          taskId,
+          setFunction: setTask,
+          setIsError,
+        })
       } catch (err) {
         console.error("Error fetching granular task details metadata:", err)
-        setError("Failed to load requested assignment metrics profile.")
+        setIsError("Failed to load requested assignment metrics profile.")
       } finally {
         setLoading(false)
       }
@@ -52,18 +49,14 @@ export default function TaskDetail() {
     try {
       setUpdating(true)
       // Execute standard partial field overwrite payload stream to backend
-      const response = await axios.patch(
-        `http://localhost:3000/api/tasks/${taskId}`,
-        {
+      await updateTask({
+        taskId,
+        body: {
           status: "Completed",
         },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        },
-      )
-
-      // Sync local UI component states instantly with returned record
-      setTask(response.data)
+        setFunction: setTask,
+        setIsError,
+      })
     } catch (err) {
       alert(
         "Error updating assignment workflow state: " +

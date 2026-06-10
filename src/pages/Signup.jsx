@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
+import { signUp } from "../../services/requestToServer"
 
 export default function Signup() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -15,19 +16,22 @@ export default function Signup() {
     setLoading(true)
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/signup", {
-        name,
-        email,
-        password,
+      const response = await signUp({
+        body: {
+          name,
+          email,
+          password,
+        },
+        setIsError,
       })
 
-      localStorage.setItem("token", response.data.token)
-      localStorage.setItem("user", JSON.stringify(response.data.user))
+      localStorage.setItem("token", response.token)
+      localStorage.setItem("user", JSON.stringify(response.user))
 
       navigate("/dashboard")
     } catch (err) {
-      setError(
-        err.response?.data?.error ||
+      setIsError(
+        err.response?.error ||
           "Registration failed. Email might already be registered.",
       )
     } finally {

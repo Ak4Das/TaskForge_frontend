@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { X } from "lucide-react"
+import {
+  createTask,
+  fetchAllProjects,
+  fetchTeams,
+  fetchUsers,
+} from "../../services/requestToServer"
 
 export default function TaskModal({ setModalVisibilityState }) {
   const [formData, setFormData] = useState({
@@ -16,6 +22,7 @@ export default function TaskModal({ setModalVisibilityState }) {
   const [teams, setTeams] = useState([])
   const [users, setUsers] = useState([])
   const [submitting, setSubmitting] = useState(false)
+  const [error, setIsError] = useState("")
 
   useEffect(() => {
     const fetchFormContextDependencies = async () => {
@@ -23,16 +30,11 @@ export default function TaskModal({ setModalVisibilityState }) {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
       try {
-        const [projRes, teamRes, userRes] = await Promise.all([
-          axios.get("http://localhost:3000/api/projects", config),
-          axios.get("http://localhost:3000/api/teams", config),
-          axios
-            .get("http://localhost:3000/api/users", config)
-            .catch(() => ({ data: [] })),
+        await Promise.all([
+          fetchAllProjects({ setFunction: setProjects, setIsError }),
+          fetchTeams({ setFunction: setTeams, setIsError }),
+          fetchUsers({ setFunction: setUsers, setIsError }),
         ])
-        setProjects(projRes.data)
-        setTeams(teamRes.data)
-        setUsers(userRes.data.length ? userRes.data : [])
       } catch (error) {
         console.error(error)
       }
@@ -49,16 +51,13 @@ export default function TaskModal({ setModalVisibilityState }) {
         .map((tag) => tag.trim())
         .filter((tag) => tag.length > 0)
 
-      await axios.post(
-        "http://localhost:3000/api/tasks",
-        {
+      await createTask({
+        body: {
           ...formData,
           tags: stringArrayTags,
         },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        },
-      )
+        setIsError,
+      })
 
       setModalVisibilityState(false)
       window.location.reload()

@@ -7,12 +7,17 @@ import {
   CheckCircle2,
   UserPlus,
 } from "lucide-react"
+import {
+  createTeam,
+  fetchTeams,
+  fetchUsers,
+} from "../../services/requestToServer"
 
 export default function TeamManagement() {
   const [teams, setTeams] = useState([])
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
 
   // Form Field Local State Matrix
@@ -28,18 +33,15 @@ export default function TeamManagement() {
     }
     try {
       setLoading(true)
-      setError("")
+      setIsError("")
 
       const [teamsRes, usersRes] = await Promise.all([
-        axios.get("http://localhost:3000/api/teams", config),
-        axios.get("http://localhost:3000/api/users", config),
+        fetchTeams({ setFunction: setTeams, setIsError }),
+        fetchUsers({ setFunction: setUsers, setIsError }),
       ])
-
-      setTeams(teamsRes.data)
-      setUsers(usersRes.data)
     } catch (err) {
       console.error("Error fetching operational teams metadata context:", err)
-      setError("Could not download complete organization metadata profiles.")
+      setIsError("Could not download complete organization metadata profiles.")
     } finally {
       setLoading(false)
     }
@@ -64,7 +66,7 @@ export default function TeamManagement() {
     if (!newTeamName.trim()) return
 
     setSubmitting(true)
-    setError("")
+    setIsError("")
     setSuccessMsg("")
 
     try {
@@ -73,15 +75,14 @@ export default function TeamManagement() {
       }
 
       // Post structural payload mapping direct to Express backend engine
-      await axios.post(
-        "http://localhost:3000/api/teams",
-        {
+      await createTeam({
+        body: {
           name: newTeamName,
           description: newTeamDesc,
           members: selectedMembers, // Directly binds the array of checked User ObjectIds
         },
-        config,
-      )
+        setIsError,
+      })
 
       setSuccessMsg(
         `Successfully registered the "${newTeamName}" structural unit.`,
@@ -95,7 +96,7 @@ export default function TeamManagement() {
       // Instantly refresh localized parent array list cache metrics
       await loadManagementContextData()
     } catch (err) {
-      setError(
+      setIsError(
         err.response?.data?.error ||
           "Database rejected team profile structure creation.",
       )

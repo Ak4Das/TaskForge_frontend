@@ -9,36 +9,34 @@ import {
   HelpCircle,
   Layers,
 } from "lucide-react"
+import { fetchAllProjects, fetchTasks } from "../../services/requestToServer"
 
 export default function ProjectTasks() {
   const { projectId } = useParams() // Extract the current project id safely from the URL string route
   const [project, setProject] = useState(null)
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setIsError] = useState("")
 
   useEffect(() => {
     const fetchProjectAndTasks = async () => {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
       try {
         setLoading(true)
 
         // Fetch the target project metadata array to establish user layout context
-        const projectRes = await axios.get("http://localhost:3000/api/projects", config)
-        const currentProject = projectRes.data.find((p) => p._id === projectId)
+        const projectRes = await fetchAllProjects({ setIsError })
+        const currentProject = projectRes.find((p) => p._id === projectId)
         setProject(currentProject)
 
         // Fetch only the tasks belonging to this project via our filter API endpoint
-        const tasksRes = await axios.get(
-          `http://localhost:3000/api/tasks?project=${projectId}`,
-          config,
-        )
-        setTasks(tasksRes.data)
+        await fetchTasks({
+          taskEndpoint: `http://localhost:3000/api/tasks?project=${projectId}`,
+          setFunction: setTasks,
+          setIsError,
+        })
       } catch (err) {
         console.error("Error fetching project tasks workspace:", err)
-        setError("Failed to pull project assignment records. Please retry.")
+        setIsError("Failed to pull project assignment records. Please retry.")
       } finally {
         setLoading(false)
       }
