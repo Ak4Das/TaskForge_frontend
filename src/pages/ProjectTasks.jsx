@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import {
   ArrowLeft,
@@ -8,8 +8,10 @@ import {
   AlertTriangle,
   HelpCircle,
   Layers,
+  Plus,
 } from "lucide-react"
 import { fetchAllProjects, fetchTasks } from "../../services/requestToServer"
+import TaskModal from "../components/TaskModel"
 
 export default function ProjectTasks() {
   const { projectId } = useParams() // Extract the current project id safely from the URL string route
@@ -17,6 +19,9 @@ export default function ProjectTasks() {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
 
   useEffect(() => {
     const fetchProjectAndTasks = async () => {
@@ -44,6 +49,17 @@ export default function ProjectTasks() {
 
     fetchProjectAndTasks()
   }, [projectId])
+
+  // Change task modal open/close states directly with the browser URL parameters
+  const setModalVisibilityState = (isOpen) => {
+    const updatedParams = new URLSearchParams(searchParams)
+    if (isOpen) {
+      updatedParams.set("newTaskModal", "true")
+    } else {
+      updatedParams.delete("newTaskModal")
+    }
+    setSearchParams(updatedParams)
+  }
 
   // Helper method to assign proper color badges to statuses
   const getStatusBadgeStyle = (status) => {
@@ -185,6 +201,33 @@ export default function ProjectTasks() {
           {project.description ||
             "No extended manifest description has been supplied for this initiative tracking hub."}
         </p>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "10px",
+        }}
+      >
+        <button
+          onClick={() => setModalVisibilityState(true)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            backgroundColor: "#4F46E5",
+            color: "#ffffff",
+            border: "none",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "background-color 0.2s",
+          }}
+        >
+          <Plus size={18} /> Add New Task
+        </button>
       </div>
 
       {/* Structured Isolation Table View Grid */}
@@ -333,6 +376,10 @@ export default function ProjectTasks() {
           </div>
         )}
       </div>
+
+      {isTaskModalOpen && (
+        <TaskModal setModalVisibilityState={setModalVisibilityState} />
+      )}
     </div>
   )
 }
