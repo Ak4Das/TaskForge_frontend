@@ -11,16 +11,22 @@ import {
   Plus,
   Filter,
 } from "lucide-react"
-import { fetchAllProjects, fetchTasks } from "../../services/requestToServer"
+import {
+  fetchAllProjects,
+  fetchTasks,
+  fetchUsers,
+} from "../../services/requestToServer"
 import TaskModal from "../components/TaskModel"
 
 export default function ProjectTasks() {
   const { projectId } = useParams() // Extract the current project id safely from the URL string route
   const [project, setProject] = useState(null)
   const [tasks, setTasks] = useState([])
+  const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
+  const [owner, setOwner] = useState("")
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
@@ -38,8 +44,12 @@ export default function ProjectTasks() {
         setProject(currentProject)
 
         const taskEndpoint = currentStatusFilter
-          ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
-          : `http://localhost:3000/api/tasks?project=${projectId}`
+          ? owner
+            ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
+            : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
+          : owner
+            ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}`
+            : `http://localhost:3000/api/tasks?project=${projectId}`
 
         // Fetch only the tasks belonging to this project via our filter API endpoint
         await fetchTasks({
@@ -47,6 +57,7 @@ export default function ProjectTasks() {
           setFunction: setTasks,
           setIsError,
         })
+        await fetchUsers({ setFunction: setUsers, setIsError })
       } catch (err) {
         console.error(err)
         setIsError("Failed to pull project assignment records. Please retry.")
@@ -56,7 +67,7 @@ export default function ProjectTasks() {
     }
 
     fetchProjectAndTasks()
-  }, [currentStatusFilter])
+  }, [currentStatusFilter, owner])
 
   // Update URL queries when a user selects a filter
   const handleQuickFilterToggle = (statusValue) => {
@@ -260,6 +271,26 @@ export default function ProjectTasks() {
             <option value="Completed">Completed</option>
             <option value="Blocked">Blocked</option>
           </select>
+          {users.length !== 0 && (
+            <select
+              onChange={(e) => setOwner(e.target.value)}
+              style={{
+                padding: "7px 10px",
+                border: "1px solid #D1D5DB",
+                borderRadius: "8px",
+                fontSize: "14px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <option value="">--- Choose Owner ---</option>
+              <option value="">All</option>
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
