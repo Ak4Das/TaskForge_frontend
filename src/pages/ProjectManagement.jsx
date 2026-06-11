@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import { FolderKanban, Search, Calendar, ArrowRight } from "lucide-react"
+import {
+  FolderKanban,
+  Search,
+  Calendar,
+  ArrowRight,
+  CheckCircle2,
+  AlertTriangle,
+  HelpCircle,
+  Clock,
+} from "lucide-react"
 import { Link } from "react-router-dom"
 import { fetchAllProjects } from "../../services/requestToServer"
 
@@ -9,6 +18,7 @@ export default function ProjectManagement() {
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
+  const [projectStatus, setProjectStatus] = useState("")
 
   useEffect(() => {
     const fetchProjectsRegistry = async () => {
@@ -24,7 +34,7 @@ export default function ProjectManagement() {
 
         setProjects(sortedLatestFirst)
       } catch (err) {
-        console.error("Error compiling projects listing matrix:", err)
+        console.error(err)
         setIsError(
           "Could not retrieve active projects. Please check your network connection.",
         )
@@ -41,6 +51,10 @@ export default function ProjectManagement() {
     project.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
+  const finalProjects = projectStatus
+    ? filteredProjects.filter((project) => project.status === projectStatus)
+    : filteredProjects
+
   // Helper utility to form clean local date string readouts
   const formatCreationDate = (dateString) => {
     if (!dateString) return "Recent"
@@ -52,12 +66,35 @@ export default function ProjectManagement() {
     })
   }
 
+  const getStatusBadgeStyle = (status) => {
+    const base = {
+      padding: "4px 10px",
+      borderRadius: "12px",
+      fontSize: "12px",
+      fontWeight: "600",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "4px",
+    }
+    switch (status) {
+      case "To Do":
+        return { ...base, backgroundColor: "#E5E7EB", color: "#374151" }
+      case "In Progress":
+        return { ...base, backgroundColor: "#DBEAFE", color: "#1E40AF" }
+      case "Completed":
+        return { ...base, backgroundColor: "#D1FAE5", color: "#065F46" }
+      case "Blocked":
+        return { ...base, backgroundColor: "#FEE2E2", color: "#991B1B" }
+      default:
+        return base
+    }
+  }
+
   return (
     <div
       style={{
         padding: "32px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontFamily: "sans-serif",
       }}
     >
       {/* Top Section Headers */}
@@ -82,46 +119,72 @@ export default function ProjectManagement() {
       <div
         style={{
           display: "flex",
+          gap: "25px",
+          justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "#ffffff",
-          border: "1px solid #D1D5DB",
-          borderRadius: "10px",
-          padding: "10px 16px",
-          maxWidth: "480px",
           marginBottom: "32px",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
         }}
       >
-        <Search size={18} style={{ color: "#9CA3AF", marginRight: "10px" }} />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search projects by name..."
+        <div
           style={{
-            width: "100%",
-            border: "none",
-            outline: "none",
-            fontSize: "14px",
-            color: "#111827",
-            backgroundColor: "transparent",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#ffffff",
+            border: "1px solid #D1D5DB",
+            borderRadius: "10px",
+            padding: "10px 16px",
+            minWidth: "400px",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
           }}
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
+        >
+          <Search size={18} style={{ color: "#9CA3AF", marginRight: "10px" }} />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search projects by name..."
             style={{
-              background: "none",
+              width: "100%",
               border: "none",
-              color: "#6B7280",
-              fontSize: "12px",
-              cursor: "pointer",
-              fontWeight: "500",
+              outline: "none",
+              fontSize: "14px",
+              color: "#111827",
+              backgroundColor: "transparent",
             }}
-          >
-            Clear
-          </button>
-        )}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#6B7280",
+                fontSize: "12px",
+                cursor: "pointer",
+                fontWeight: "500",
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        <select
+          value={projectStatus}
+          onChange={(e) => setProjectStatus(e.target.value)}
+          style={{
+            padding: "10px 12px",
+            border: "1px solid #D1D5DB",
+            borderRadius: "8px",
+            fontSize: "14px",
+            backgroundColor: "#ffffff",
+          }}
+        >
+          <option value="">--- Choose Status ---</option>
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="Blocked">Blocked</option>
+        </select>
       </div>
 
       {/* Error Banner States fallback */}
@@ -153,7 +216,7 @@ export default function ProjectManagement() {
         >
           Loading active project scopes...
         </div>
-      ) : filteredProjects.length === 0 ? (
+      ) : finalProjects.length === 0 ? (
         <div
           style={{
             textAlign: "center",
@@ -191,7 +254,7 @@ export default function ProjectManagement() {
             gap: "24px",
           }}
         >
-          {filteredProjects.map((project) => (
+          {finalProjects.map((project) => (
             <div
               key={project._id}
               style={{
@@ -213,15 +276,37 @@ export default function ProjectManagement() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "6px",
+                    justifyContent: "space-between",
+                    gap: "10px",
                     color: "#6B7280",
                     fontSize: "12px",
                     fontWeight: "500",
                     marginBottom: "12px",
                   }}
                 >
-                  <Calendar size={13} />
-                  <span>Created: {formatCreationDate(project.createdAt)}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <Calendar size={13} />
+                    <span style={{ marginTop: "2px" }}>
+                      Created: {formatCreationDate(project.createdAt)}
+                    </span>
+                  </div>
+                  <span style={getStatusBadgeStyle(project.status)}>
+                    {project.status === "Completed" && (
+                      <CheckCircle2 size={12} />
+                    )}
+                    {project.status === "In Progress" && <Clock size={12} />}
+                    {project.status === "Blocked" && (
+                      <AlertTriangle size={12} />
+                    )}
+                    {project.status === "To Do" && <HelpCircle size={12} />}
+                    {project.status}
+                  </span>
                 </div>
 
                 {/* Project Title */}

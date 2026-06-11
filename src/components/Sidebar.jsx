@@ -7,7 +7,7 @@ import {
   FolderKanban,
   LogOut,
   ClipboardMinus,
-  Settings
+  Settings,
 } from "lucide-react"
 
 export default function Sidebar() {

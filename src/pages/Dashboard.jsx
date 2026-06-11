@@ -255,9 +255,9 @@ export default function Dashboard() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             gap: "20px",
-            maxHeight:"300px",
-            overflow:"scroll",
-            scrollbarWidth:"none"
+            maxHeight: "300px",
+            overflow: "scroll",
+            scrollbarWidth: "none",
           }}
         >
           {filteredProjects.map((project) => (
