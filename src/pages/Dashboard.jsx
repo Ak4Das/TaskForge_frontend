@@ -15,6 +15,7 @@ import {
   fetchMe,
   fetchTasks,
 } from "../../services/requestToServer.js"
+import ProjectModal from "../components/ProjectModel.jsx"
 
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -24,6 +25,11 @@ export default function Dashboard() {
   const [error, setIsError] = useState("")
   const navigate = useNavigate()
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
+  const [projectStatus, setProjectStatus] = useState("")
+
+  const filteredProjects = projectStatus
+    ? projects.filter((project) => project.status === projectStatus)
+    : projects
 
   useEffect(() => {
     async function fetchData() {
@@ -43,7 +49,8 @@ export default function Dashboard() {
   }, [error])
 
   const currentStatusFilter = searchParams.get("status") || ""
-  const isModalOpen = searchParams.get("newTaskModal") === "true"
+  const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
+  const isProjectModalOpen = searchParams.get("newProjectModal") === "true"
 
   useEffect(() => {
     const fetchDashboardContent = async () => {
@@ -66,7 +73,7 @@ export default function Dashboard() {
           })
         }
       } catch (error) {
-        console.error("Error compiling dashboard backend data matrix:", error)
+        console.error(error)
       } finally {
         setLoading(false)
       }
@@ -94,6 +101,17 @@ export default function Dashboard() {
       updatedParams.set("newTaskModal", "true")
     } else {
       updatedParams.delete("newTaskModal")
+    }
+    setSearchParams(updatedParams)
+  }
+
+  // Change project modal open/close states directly with the browser URL parameters
+  const setProjectModalVisibilityState = (isOpen) => {
+    const updatedParams = new URLSearchParams(searchParams)
+    if (isOpen) {
+      updatedParams.set("newProjectModal", "true")
+    } else {
+      updatedParams.delete("newProjectModal")
     }
     setSearchParams(updatedParams)
   }
@@ -176,24 +194,73 @@ export default function Dashboard() {
       </div>
 
       <section style={{ marginBottom: "40px" }}>
-        <h2
+        <div
           style={{
-            fontSize: "18px",
-            fontWeight: "600",
-            color: "#374151",
-            marginBottom: "16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          Ongoing Projects
-        </h2>
+          <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+            <h2
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#374151",
+                marginBottom: "16px",
+              }}
+            >
+              Ongoing Projects
+            </h2>
+            <select
+              value={projectStatus}
+              onChange={(e) => setProjectStatus(e.target.value)}
+              style={{
+                padding: "5px 10px",
+                border: "1px solid #D1D5DB",
+                borderRadius: "8px",
+                fontSize: "14px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <option value="">--- Choose Status ---</option>
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+          </div>
+          <button
+            onClick={() => setProjectModalVisibilityState(true)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#4F46E5",
+              color: "#ffffff",
+              border: "none",
+              padding: "12px 20px",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+            }}
+          >
+            <Plus size={18} /> Add New Project
+          </button>
+        </div>
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             gap: "20px",
+            maxHeight:"300px",
+            overflow:"scroll",
+            scrollbarWidth:"none"
           }}
         >
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <Link
               key={project._id}
               to={`/projects/${project._id}`}
@@ -209,12 +276,19 @@ export default function Dashboard() {
                 transition: "transform 0.15s, box-shadow 0.15s",
               }}
             >
+              <span style={getStatusBadgeStyle(project.status)}>
+                {project.status === "Completed" && <CheckCircle2 size={12} />}
+                {project.status === "In Progress" && <Clock size={12} />}
+                {project.status === "Blocked" && <AlertTriangle size={12} />}
+                {project.status === "To Do" && <HelpCircle size={12} />}
+                {project.status}
+              </span>
               <h3
                 style={{
                   fontSize: "16px",
                   fontWeight: "600",
                   color: "#111827",
-                  margin: "0 0 8px 0",
+                  margin: "7px 0 8px 0",
                 }}
               >
                 {project.name}
@@ -470,8 +544,14 @@ export default function Dashboard() {
         )}
       </section>
 
-      {isModalOpen && (
+      {isTaskModalOpen && (
         <TaskModal setModalVisibilityState={setModalVisibilityState} />
+      )}
+
+      {isProjectModalOpen && (
+        <ProjectModal
+          setProjectModalVisibilityState={setProjectModalVisibilityState}
+        />
       )}
     </div>
   )

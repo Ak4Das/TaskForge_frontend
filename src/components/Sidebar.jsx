@@ -60,7 +60,7 @@ export default function Sidebar() {
             tracking: "0.1em",
           }}
         >
-          Workspace Control
+          Workspace Management
         </span>
       </div>
 
@@ -76,7 +76,7 @@ export default function Sidebar() {
       >
         <NavLink
           key="Dashboard"
-          to="/dashboard"
+          to="/"
           style={({ isActive }) => ({
             display: "flex",
             alignItems: "center",

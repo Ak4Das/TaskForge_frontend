@@ -30,7 +30,7 @@ export default function Login() {
         localStorage.setItem("user", JSON.stringify(response.user))
       }
 
-      navigate("/dashboard")
+      navigate("/")
     } catch (err) {
       setIsError("Authentication failed. Please verify credentials.")
     } finally {
