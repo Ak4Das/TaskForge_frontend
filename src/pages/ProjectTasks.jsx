@@ -9,6 +9,7 @@ import {
   HelpCircle,
   Layers,
   Plus,
+  Filter,
 } from "lucide-react"
 import { fetchAllProjects, fetchTasks } from "../../services/requestToServer"
 import TaskModal from "../components/TaskModel"
@@ -21,26 +22,33 @@ export default function ProjectTasks() {
   const [error, setIsError] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
+
+  useEffect(() => {
+    setLoading(true)
+  }, [])
 
   useEffect(() => {
     const fetchProjectAndTasks = async () => {
       try {
-        setLoading(true)
-
         // Fetch the target project metadata array to establish user layout context
         const projectRes = await fetchAllProjects({ setIsError })
         const currentProject = projectRes.find((p) => p._id === projectId)
         setProject(currentProject)
 
+        const taskEndpoint = currentStatusFilter
+          ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
+          : `http://localhost:3000/api/tasks?project=${projectId}`
+
         // Fetch only the tasks belonging to this project via our filter API endpoint
         await fetchTasks({
-          taskEndpoint: `http://localhost:3000/api/tasks?project=${projectId}`,
+          taskEndpoint,
           setFunction: setTasks,
           setIsError,
         })
       } catch (err) {
-        console.error("Error fetching project tasks workspace:", err)
+        console.error(err)
         setIsError("Failed to pull project assignment records. Please retry.")
       } finally {
         setLoading(false)
@@ -48,7 +56,19 @@ export default function ProjectTasks() {
     }
 
     fetchProjectAndTasks()
-  }, [projectId])
+  }, [currentStatusFilter])
+
+  // Update URL queries when a user selects a filter
+  const handleQuickFilterToggle = (statusValue) => {
+    // Create copy of existing searchParams
+    const updatedParams = new URLSearchParams(searchParams)
+    if (currentStatusFilter === statusValue || statusValue === "") {
+      updatedParams.delete("status")
+    } else {
+      updatedParams.set("status", statusValue)
+    }
+    setSearchParams(updatedParams)
+  }
 
   // Change task modal open/close states directly with the browser URL parameters
   const setModalVisibilityState = (isOpen) => {
@@ -205,29 +225,42 @@ export default function ProjectTasks() {
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           marginBottom: "10px",
         }}
       >
-        <button
-          onClick={() => setModalVisibilityState(true)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#4F46E5",
-            color: "#ffffff",
-            border: "none",
-            padding: "12px 20px",
-            borderRadius: "8px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-        >
-          <Plus size={18} /> Add New Task
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              color: "#4B5563",
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            <Filter size={16} />
+            <span>Quick Filters:</span>
+          </div>
+          <select
+            onChange={(e) => handleQuickFilterToggle(e.target.value)}
+            style={{
+              padding: "7px 10px",
+              border: "1px solid #D1D5DB",
+              borderRadius: "8px",
+              fontSize: "14px",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            <option value="">--- Choose Status ---</option>
+            <option value="">All</option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Blocked">Blocked</option>
+          </select>
+        </div>
       </div>
 
       {/* Structured Isolation Table View Grid */}
@@ -242,9 +275,12 @@ export default function ProjectTasks() {
       >
         <div
           style={{
-            padding: "16px 20px",
+            padding: "10px 20px",
             borderBottom: "1px solid #E5E7EB",
             backgroundColor: "#F9FAFB",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <h2
@@ -257,6 +293,25 @@ export default function ProjectTasks() {
           >
             Project Scope Tasks ({tasks.length})
           </h2>
+          <button
+            onClick={() => setModalVisibilityState(true)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#4F46E5",
+              color: "#ffffff",
+              border: "none",
+              padding: "12px 20px",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+            }}
+          >
+            <Plus size={18} /> Add New Task
+          </button>
         </div>
 
         {tasks.length === 0 ? (
