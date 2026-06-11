@@ -9,9 +9,11 @@ import {
   AlertTriangle,
   HelpCircle,
   Clock,
+  Plus,
 } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { fetchAllProjects } from "../../services/requestToServer"
+import ProjectModal from "../components/ProjectModel.jsx"
 
 export default function ProjectManagement() {
   const [projects, setProjects] = useState([])
@@ -19,6 +21,9 @@ export default function ProjectManagement() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [projectStatus, setProjectStatus] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const isProjectModalOpen = searchParams.get("newProjectModal") === "true"
 
   useEffect(() => {
     const fetchProjectsRegistry = async () => {
@@ -66,6 +71,17 @@ export default function ProjectManagement() {
     })
   }
 
+  // Change project modal open/close states directly with the browser URL parameters
+  const setProjectModalVisibilityState = (isOpen) => {
+    const updatedParams = new URLSearchParams(searchParams)
+    if (isOpen) {
+      updatedParams.set("newProjectModal", "true")
+    } else {
+      updatedParams.delete("newProjectModal")
+    }
+    setSearchParams(updatedParams)
+  }
+
   const getStatusBadgeStyle = (status) => {
     const base = {
       padding: "4px 10px",
@@ -98,21 +114,49 @@ export default function ProjectManagement() {
       }}
     >
       {/* Top Section Headers */}
-      <div style={{ marginBottom: "32px" }}>
-        <h1
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "32px",
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize: "28px",
+              fontWeight: "700",
+              color: "#111827",
+              margin: "0 0 6px 0",
+            }}
+          >
+            Projects Workspace
+          </h1>
+          <p style={{ color: "#4B5563", margin: 0 }}>
+            Review, search, and manage ongoing project initiatives across your
+            company teams.
+          </p>
+        </div>
+        <button
+          onClick={() => setProjectModalVisibilityState(true)}
           style={{
-            fontSize: "28px",
-            fontWeight: "700",
-            color: "#111827",
-            margin: "0 0 6px 0",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            backgroundColor: "#4F46E5",
+            color: "#ffffff",
+            border: "none",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "background-color 0.2s",
           }}
         >
-          Projects Workspace
-        </h1>
-        <p style={{ color: "#4B5563", margin: 0 }}>
-          Review, search, and manage ongoing project initiatives across your
-          company teams.
-        </p>
+          <Plus size={18} /> Add New Project
+        </button>
       </div>
 
       {/* Dynamic Filter Search Form Bar Layout */}
@@ -370,6 +414,12 @@ export default function ProjectManagement() {
             </div>
           ))}
         </div>
+      )}
+
+      {isProjectModalOpen && (
+        <ProjectModal
+          setProjectModalVisibilityState={setProjectModalVisibilityState}
+        />
       )}
     </div>
   )
