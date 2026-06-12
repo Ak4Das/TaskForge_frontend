@@ -12,7 +12,12 @@ import {
   Legend,
   ArcElement,
 } from "chart.js"
-import { closedTasks, fetchTasks } from "../../services/requestToServer"
+import {
+  closedTasksByTeams,
+  closedTasksByOwner,
+  fetchTasks,
+  pendingTasksByOwner,
+} from "../../services/requestToServer"
 
 // Register essential modular dependencies required by Chart.js
 ChartJS.register(
@@ -38,40 +43,62 @@ export default function Reports() {
     pendingDays: 0,
   })
 
+  function findRemainingDays(createdAt, allocatedTime) {
+    const createdAtDay = new Date(createdAt)
+    const today = new Date()
+    const passedDay = (today - createdAtDay) / (1000 * 60 * 60 * 24)
+    const remainingDays = allocatedTime - Math.floor(passedDay)
+    return remainingDays
+  }
+
   const fetchAnalyticalReportMatrices = async () => {
     try {
       setLoading(true)
-      setIsError("")
 
-      // Step A: Request aggregated metrics for completed tasks
-      const dataPayload = await closedTasks({ setIsError }) // Expects schema grouped arrays from backend matching spec definitions
+      const teamCounts = {}
 
-      // Step B: Request raw fallback matrices (or use secondary tasks analytics) to calculate work metrics
+      const numberOfClosedTasksByTeams = await closedTasksByTeams({
+        setIsError,
+      })
+
+      numberOfClosedTasksByTeams.forEach((team) => {
+        teamCounts[team.teamDetails.name] = team.count
+      })
+
+      const ownerCounts = {}
+
+      const numberOfClosedTasksByOwners = await closedTasksByOwner({
+        setIsError,
+      })
+
+      numberOfClosedTasksByOwners.forEach((owner) => {
+        ownerCounts[owner.name] = owner.count
+      })
+
+      const projectPendingEffort = await pendingTasksByOwner({ setIsError })
+
       const allTasks = await fetchTasks({
         taskEndpoint: "http://localhost:3000/api/tasks",
         setIsError,
       })
 
-      // --- Metric Compilations 1: Closed Tasks by Team (Pie Chart) ---
-      const teamCounts = {}
-      // --- Metric Compilations 2: Closed Tasks by Owner (Doughnut Chart) ---
-      const ownerCounts = {}
       let closedCounter = 0
 
       allTasks.forEach((task) => {
         if (task.status === "Completed") {
           closedCounter++
-          const tName = task.team?.name || "Cross-Functional"
-          teamCounts[tName] = (teamCounts[tName] || 0) + 1
+        }
+      })
 
-          // Map cross-reference arrays for task owners securely
-          if (task.owners && task.owners.length > 0) {
-            task.owners.forEach((owner) => {
-              ownerCounts[owner.name] = (ownerCounts[owner.name] || 0) + 1
-            })
-          } else {
-            ownerCounts["Unassigned"] = (ownerCounts["Unassigned"] || 0) + 1
-          }
+      let totalPendingDaysSum = 0
+
+      allTasks.forEach((task) => {
+        if (task.status !== "Completed") {
+          const effortDays = findRemainingDays(
+            task.createdAt,
+            task.timeToComplete,
+          )
+          totalPendingDaysSum += effortDays
         }
       })
 
@@ -113,21 +140,6 @@ export default function Reports() {
         ],
       })
 
-      // --- Metric Compilations 3: Pending Work Across Projects (Bar Chart) ---
-      const projectPendingEffort = {}
-      let totalPendingDaysSum = 0
-
-      allTasks.forEach((task) => {
-        if (task.status !== "Completed") {
-          const projName = task.project?.name || "General Backlog"
-          const effortDays = Number(task.timeToComplete) || 0
-
-          projectPendingEffort[projName] =
-            (projectPendingEffort[projName] || 0) + effortDays
-          totalPendingDaysSum += effortDays
-        }
-      })
-
       setProjectBacklogData({
         labels: Object.keys(projectPendingEffort),
         datasets: [
@@ -146,7 +158,7 @@ export default function Reports() {
         pendingDays: totalPendingDaysSum,
       })
     } catch (err) {
-      console.error("Error generating metrics processing pipelines:", err)
+      console.error(err)
       setIsError("Could not evaluate reports pipeline data grids.")
     } finally {
       setLoading(false)

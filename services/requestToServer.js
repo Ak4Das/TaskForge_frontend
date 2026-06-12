@@ -501,7 +501,7 @@ export async function createProject(obj) {
   }
 }
 
-export async function closedTasks(obj) {
+export async function closedTasksByTeams(obj) {
   const controller = new AbortController()
 
   const timerId = setTimeout(() => {
@@ -512,7 +512,93 @@ export async function closedTasks(obj) {
 
   try {
     const response = await axios.get(
-      "http://localhost:3000/api/report/closed-tasks",
+      "http://localhost:3000/api/report/closed-tasks-teams",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal: controller.signal,
+      },
+    )
+
+    clearTimeout(timerId)
+
+    setFunction && setFunction(response.data.respondedData)
+    return response.data.respondedData
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    if (error.response) {
+      throw new Error("Request failed")
+    }
+
+    throw error
+  }
+}
+
+export async function closedTasksByOwner(obj) {
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  const { setFunction, setIsError } = obj
+
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/report/closed-tasks-owners",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal: controller.signal,
+      },
+    )
+
+    clearTimeout(timerId)
+
+    setFunction && setFunction(response.data.respondedData)
+    return response.data.respondedData
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    if (error.response) {
+      throw new Error("Request failed")
+    }
+
+    throw error
+  }
+}
+
+export async function pendingTasksByOwner(obj) {
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  const { setFunction, setIsError } = obj
+
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/report/pending",
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
