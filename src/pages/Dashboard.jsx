@@ -489,7 +489,7 @@ export default function Dashboard() {
                               borderRadius: "4px",
                             }}
                           >
-                            {tag}
+                            {tag.name}
                           </span>
                         ))}
                       </div>

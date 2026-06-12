@@ -10,23 +10,29 @@ import {
   Layers,
   Plus,
   Filter,
+  ArrowUpDown,
 } from "lucide-react"
 import {
   fetchAllProjects,
+  fetchTags,
   fetchTasks,
   fetchUsers,
 } from "../../services/requestToServer"
 import TaskModal from "../components/TaskModel"
 
 export default function ProjectTasks() {
-  const { projectId } = useParams() // Extract the current project id safely from the URL string route
+  const { projectId } = useParams()
   const [project, setProject] = useState(null)
   const [tasks, setTasks] = useState([])
   const [users, setUsers] = useState([])
+  const [tags, setTags] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
   const [owner, setOwner] = useState("")
+  const [tag, setTag] = useState("")
+  const [prioritySortOrder, setPrioritySortOrder] = useState("")
+  const [dateSortOrder, setDateSortOrder] = useState("")
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
@@ -38,18 +44,41 @@ export default function ProjectTasks() {
   useEffect(() => {
     const fetchProjectAndTasks = async () => {
       try {
-        // Fetch the target project metadata array to establish user layout context
         const projectRes = await fetchAllProjects({ setIsError })
         const currentProject = projectRes.find((p) => p._id === projectId)
         setProject(currentProject)
 
         const taskEndpoint = currentStatusFilter
           ? owner
-            ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
-            : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
+            ? tag
+              ? prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}`
+              : prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
+            : tag
+              ? prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}`
+              : prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
           : owner
-            ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}`
-            : `http://localhost:3000/api/tasks?project=${projectId}`
+            ? tag
+              ? prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}`
+              : prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}`
+            : tag
+              ? prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}`
+              : prioritySortOrder
+                ? `http://localhost:3000/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
+                : `http://localhost:3000/api/tasks?project=${projectId}`
 
         // Fetch only the tasks belonging to this project via our filter API endpoint
         await fetchTasks({
@@ -58,6 +87,7 @@ export default function ProjectTasks() {
           setIsError,
         })
         await fetchUsers({ setFunction: setUsers, setIsError })
+        await fetchTags({ setFunction: setTags, setIsError })
       } catch (err) {
         console.error(err)
         setIsError("Failed to pull project assignment records. Please retry.")
@@ -67,7 +97,7 @@ export default function ProjectTasks() {
     }
 
     fetchProjectAndTasks()
-  }, [currentStatusFilter, owner])
+  }, [currentStatusFilter, owner, tag, prioritySortOrder])
 
   // Update URL queries when a user selects a filter
   const handleQuickFilterToggle = (statusValue) => {
@@ -273,6 +303,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
+              value={owner}
               onChange={(e) => setOwner(e.target.value)}
               style={{
                 padding: "7px 10px",
@@ -289,6 +320,82 @@ export default function ProjectTasks() {
                   {user.name}
                 </option>
               ))}
+            </select>
+          )}
+          {tags.length !== 0 && (
+            <select
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              style={{
+                padding: "7px 10px",
+                border: "1px solid #D1D5DB",
+                borderRadius: "8px",
+                fontSize: "14px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <option value="">--- Choose Tags ---</option>
+              <option value="">All</option>
+              {tags.map((tag) => (
+                <option key={tag._id} value={tag._id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              color: "#4B5563",
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            <ArrowUpDown size={16} />
+            <span>Sort By:</span>
+          </div>
+          <select
+            onChange={(e) => setPrioritySortOrder(e.target.value)}
+            style={{
+              padding: "7px 10px",
+              border: "1px solid #D1D5DB",
+              borderRadius: "8px",
+              fontSize: "14px",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            <option value="">--- Priority ---</option>
+            <option value="highToLow">High to Low</option>
+            <option value="lowToHigh">Low to High</option>
+            <option value="">Unsort</option>
+          </select>
+          {users.length !== 0 && (
+            <select
+              onChange={(e) => setDateSortOrder(e.target.value)}
+              style={{
+                padding: "7px 10px",
+                border: "1px solid #D1D5DB",
+                borderRadius: "8px",
+                fontSize: "14px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <option value="">--- Due Date ---</option>
+              <option value="highToLow">High to Low</option>
+              <option value="lowToHigh">Low to High</option>
+              <option value="">Unsort</option>
             </select>
           )}
         </div>
@@ -380,6 +487,7 @@ export default function ProjectTasks() {
                   <th style={{ padding: "12px 20px" }}>Action Item Title</th>
                   <th style={{ padding: "12px 20px" }}>Assigned Team</th>
                   <th style={{ padding: "12px 20px" }}>Workflow State</th>
+                  <th style={{ padding: "12px 20px" }}>Priority</th>
                   <th style={{ padding: "12px 20px" }}>Effort Estimate</th>
                 </tr>
               </thead>
@@ -417,7 +525,7 @@ export default function ProjectTasks() {
                               borderRadius: "4px",
                             }}
                           >
-                            {tag}
+                            {tag.name}
                           </span>
                         ))}
                       </div>
@@ -444,6 +552,7 @@ export default function ProjectTasks() {
                         {task.status}
                       </span>
                     </td>
+                    <td style={{ padding: "16px 20px" }}>{task.priority}</td>
                     <td
                       style={{
                         padding: "16px 20px",
