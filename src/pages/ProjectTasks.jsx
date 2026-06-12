@@ -122,6 +122,52 @@ export default function ProjectTasks() {
     setSearchParams(updatedParams)
   }
 
+  function findRemainingDays(createdAt, allocatedTime) {
+    const createdAtDay = new Date(createdAt)
+    const today = new Date()
+    const passedDay = (today - createdAtDay) / (1000 * 60 * 60 * 24)
+    const remainingDays = allocatedTime - Math.floor(passedDay)
+    return `${remainingDays} ${remainingDays === 1 ? "day" : "days"}`
+  }
+
+  function findDueDate(createdAt, allocatedTime) {
+    const createdAtDay = new Date(createdAt)
+    createdAtDay.setDate(createdAtDay.getDate() + allocatedTime)
+    const dueDate = new Date(createdAtDay)
+    return dueDate.toLocaleDateString()
+  }
+
+  const finalTasks = tasks.map((task) => {
+    const dueDate = findDueDate(task.createdAt, task.timeToComplete)
+    return { ...task, dueDate }
+  })
+
+  function sortDueDateByAscOrder() {
+    for (let i = 0; i < finalTasks.length; i++) {
+      for (let j = i + 1; j < finalTasks.length; j++) {
+        if (finalTasks[i].dueDate > finalTasks[j].dueDate) {
+          const hold = finalTasks[i]
+          finalTasks[i] = finalTasks[j]
+          finalTasks[j] = hold
+        }
+      }
+    }
+    setTasks(finalTasks)
+  }
+
+  function sortDueDateByDescOrder() {
+    for (let i = 0; i < finalTasks.length; i++) {
+      for (let j = i + 1; j < finalTasks.length; j++) {
+        if (finalTasks[i].dueDate < finalTasks[j].dueDate) {
+          const hold = finalTasks[i]
+          finalTasks[i] = finalTasks[j]
+          finalTasks[j] = hold
+        }
+      }
+    }
+    setTasks(finalTasks)
+  }
+
   // Helper method to assign proper color badges to statuses
   const getStatusBadgeStyle = (status) => {
     const base = {
@@ -383,7 +429,20 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
-              onChange={(e) => setDateSortOrder(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value === "highToLow") {
+                  sortDueDateByDescOrder()
+                } else if (e.target.value === "lowToHigh") {
+                  sortDueDateByAscOrder()
+                } else {
+                  const taskEndpoint = `http://localhost:3000/api/tasks?project=${projectId}`
+                  fetchTasks({
+                    taskEndpoint,
+                    setFunction: setTasks,
+                    setIsError,
+                  })
+                }
+              }}
               style={{
                 padding: "7px 10px",
                 border: "1px solid #D1D5DB",
@@ -488,7 +547,8 @@ export default function ProjectTasks() {
                   <th style={{ padding: "12px 20px" }}>Assigned Team</th>
                   <th style={{ padding: "12px 20px" }}>Workflow State</th>
                   <th style={{ padding: "12px 20px" }}>Priority</th>
-                  <th style={{ padding: "12px 20px" }}>Effort Estimate</th>
+                  <th style={{ padding: "12px 20px" }}>Due Date</th>
+                  <th style={{ padding: "12px 20px" }}>Remaining Days</th>
                 </tr>
               </thead>
               <tbody>
@@ -561,8 +621,17 @@ export default function ProjectTasks() {
                         fontWeight: "500",
                       }}
                     >
-                      {task.timeToComplete}{" "}
-                      {task.timeToComplete === 1 ? "day" : "days"}
+                      {findDueDate(task.createdAt, task.timeToComplete)}
+                    </td>
+                    <td
+                      style={{
+                        padding: "16px 20px",
+                        color: "#111827",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {findRemainingDays(task.createdAt, task.timeToComplete)}
                     </td>
                   </tr>
                 ))}
