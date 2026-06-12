@@ -29,20 +29,19 @@ export default function ProjectManagement() {
     const fetchProjectsRegistry = async () => {
       try {
         setLoading(true)
-        // Request projects with valid session authentication context tokens
+
         const response = await fetchAllProjects(setIsError)
 
-        // Explicitly sort project data by 'createdAt' field in descending order (Latest First)
         const sortedLatestFirst = response.sort((a, b) => {
           return new Date(b.createdAt) - new Date(a.createdAt)
         })
 
         setProjects(sortedLatestFirst)
-      } catch (err) {
-        console.error(err)
-        setIsError(
-          "Could not retrieve active projects. Please check your network connection.",
-        )
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
       } finally {
         setLoading(false)
       }
@@ -51,7 +50,6 @@ export default function ProjectManagement() {
     fetchProjectsRegistry()
   }, [])
 
-  // Filter project cards context dynamically based on the input text
   const filteredProjects = projects.filter((project) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
@@ -60,7 +58,6 @@ export default function ProjectManagement() {
     ? filteredProjects.filter((project) => project.status === projectStatus)
     : filteredProjects
 
-  // Helper utility to form clean local date string readouts
   const formatCreationDate = (dateString) => {
     if (!dateString) return "Recent"
     const dateObj = new Date(dateString)
@@ -113,7 +110,6 @@ export default function ProjectManagement() {
         fontFamily: "sans-serif",
       }}
     >
-      {/* Top Section Headers */}
       <div
         style={{
           display: "flex",
@@ -159,7 +155,6 @@ export default function ProjectManagement() {
         </button>
       </div>
 
-      {/* Dynamic Filter Search Form Bar Layout */}
       <div
         style={{
           display: "flex",
@@ -231,7 +226,7 @@ export default function ProjectManagement() {
         </select>
       </div>
 
-      {/* Error Banner States fallback */}
+      {/* Error Banner */}
       {error && (
         <div
           style={{
@@ -248,7 +243,6 @@ export default function ProjectManagement() {
         </div>
       )}
 
-      {/* Grid Dynamic Collection Render Pass */}
       {loading ? (
         <div
           style={{
@@ -258,7 +252,7 @@ export default function ProjectManagement() {
             fontSize: "15px",
           }}
         >
-          Loading active project scopes...
+          Loading projects...
         </div>
       ) : finalProjects.length === 0 ? (
         <div
@@ -315,7 +309,6 @@ export default function ProjectManagement() {
               }}
             >
               <div>
-                {/* Meta Header */}
                 <div
                   style={{
                     display: "flex",
@@ -353,7 +346,6 @@ export default function ProjectManagement() {
                   </span>
                 </div>
 
-                {/* Project Title */}
                 <h2
                   style={{
                     fontSize: "18px",
@@ -365,7 +357,6 @@ export default function ProjectManagement() {
                   {project.name}
                 </h2>
 
-                {/* Description Body text */}
                 <p
                   style={{
                     fontSize: "14px",
@@ -379,12 +370,10 @@ export default function ProjectManagement() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {project.description ||
-                    "No detailed overview description has been recorded for this scope initiative."}
+                  {project.description}
                 </p>
               </div>
 
-              {/* Interaction Link Footer */}
               <div
                 style={{
                   marginTop: "auto",

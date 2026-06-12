@@ -31,8 +31,11 @@ export default function Login() {
       }
 
       navigate("/")
-    } catch (err) {
-      setIsError("Authentication failed. Please verify credentials.")
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setLoading(false)
     }

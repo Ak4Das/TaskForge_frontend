@@ -33,8 +33,6 @@ ChartJS.register(
 export default function Reports() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
-
-  // Local state arrays to map individual analytic metrics streams
   const [teamPerformanceData, setTeamPerformanceData] = useState(null)
   const [ownerPerformanceData, setOwnerPerformanceData] = useState(null)
   const [projectBacklogData, setProjectBacklogData] = useState(null)
@@ -157,9 +155,11 @@ export default function Reports() {
         totalClosed: closedCounter,
         pendingDays: totalPendingDaysSum,
       })
-    } catch (err) {
-      console.error(err)
-      setIsError("Could not evaluate reports pipeline data grids.")
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setLoading(false)
     }
@@ -177,7 +177,6 @@ export default function Reports() {
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      {/* Top Section Headers */}
       <div
         style={{
           display: "flex",
@@ -244,7 +243,6 @@ export default function Reports() {
         </div>
       )}
 
-      {/* Dynamic Summary Cards Layout Header */}
       <div
         style={{
           display: "grid",
@@ -341,11 +339,11 @@ export default function Reports() {
         <div
           style={{ textAlign: "center", padding: "60px 0", color: "#6B7280" }}
         >
-          Processing collection telemetry maps...
+          Processing data and creating charts using chart.js...
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-          {/* Main Chart Section: Pending Work Across Projects (Bar Chart) */}
+          {/* Pending Work Across Projects (Bar Chart) */}
           <div
             style={{
               backgroundColor: "#ffffff",
@@ -395,7 +393,6 @@ export default function Reports() {
             </div>
           </div>
 
-          {/* Dual Sub-Chart Split Section Panel */}
           <div
             style={{
               display: "grid",

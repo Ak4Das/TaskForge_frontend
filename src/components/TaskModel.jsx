@@ -36,7 +36,10 @@ export default function TaskModal({ setModalVisibilityState }) {
           fetchUsers({ setFunction: setUsers, setIsError }),
         ])
       } catch (error) {
-        console.error(error)
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
       }
     }
     fetchFormContextDependencies()

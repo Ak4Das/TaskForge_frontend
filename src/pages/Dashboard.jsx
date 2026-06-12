@@ -73,7 +73,10 @@ export default function Dashboard() {
           })
         }
       } catch (error) {
-        console.error(error)
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
       } finally {
         setLoading(false)
       }
@@ -416,13 +419,13 @@ export default function Dashboard() {
           <div
             style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
           >
-            Loading action items registry...
+            Loading items registry...
           </div>
         ) : tasks.length === 0 ? (
           <div
             style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
           >
-            No active assignments found matching current filter parameters.
+            No active tasks found matching current filter parameters.
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>

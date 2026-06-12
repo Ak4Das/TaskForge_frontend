@@ -45,7 +45,9 @@ export default function ProjectTasks() {
     const fetchProjectAndTasks = async () => {
       try {
         const projectRes = await fetchAllProjects({ setIsError })
-        const currentProject = projectRes.find((p) => p._id === projectId)
+        const currentProject = projectRes.find(
+          (project) => project._id === projectId,
+        )
         setProject(currentProject)
 
         const taskEndpoint = currentStatusFilter
@@ -80,7 +82,6 @@ export default function ProjectTasks() {
                 ? `http://localhost:3000/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
                 : `http://localhost:3000/api/tasks?project=${projectId}`
 
-        // Fetch only the tasks belonging to this project via our filter API endpoint
         await fetchTasks({
           taskEndpoint,
           setFunction: setTasks,
@@ -88,9 +89,11 @@ export default function ProjectTasks() {
         })
         await fetchUsers({ setFunction: setUsers, setIsError })
         await fetchTags({ setFunction: setTags, setIsError })
-      } catch (err) {
-        console.error(err)
-        setIsError("Failed to pull project assignment records. Please retry.")
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
       } finally {
         setLoading(false)
       }
@@ -203,7 +206,7 @@ export default function ProjectTasks() {
           fontFamily: "sans-serif",
         }}
       >
-        Loading task workspace ecosystem...
+        Loading tasks...
       </div>
     )
   }
@@ -221,8 +224,7 @@ export default function ProjectTasks() {
             marginBottom: "16px",
           }}
         >
-          {error ||
-            "The requested project scope profile could not be localized."}
+          {error}
         </div>
         <Link
           to="/projects"
@@ -249,7 +251,6 @@ export default function ProjectTasks() {
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      {/* Back to Project Management Screen Link */}
       <Link
         to="/projects"
         style={{
@@ -266,7 +267,6 @@ export default function ProjectTasks() {
         <ArrowLeft size={16} /> Back to Projects Track
       </Link>
 
-      {/* Head Context Summary Panel Container */}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -305,8 +305,7 @@ export default function ProjectTasks() {
             lineHeight: "1.5",
           }}
         >
-          {project.description ||
-            "No extended manifest description has been supplied for this initiative tracking hub."}
+          {project.description}
         </p>
       </div>
       <div
@@ -460,7 +459,6 @@ export default function ProjectTasks() {
         </div>
       </div>
 
-      {/* Structured Isolation Table View Grid */}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -520,8 +518,7 @@ export default function ProjectTasks() {
               fontSize: "14px",
             }}
           >
-            No task records have been instantiated under this project tracking
-            channel yet.
+            No task records have been initiated under this project.
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>

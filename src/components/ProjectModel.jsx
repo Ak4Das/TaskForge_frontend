@@ -32,9 +32,11 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
 
       setProjectModalVisibilityState(false)
       window.location.reload()
-    } catch (err) {
-      console.error(err)
-      setIsError("Project submission failed.")
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setSubmitting(false)
     }

@@ -17,7 +17,7 @@ import {
 import { fetchTasksById, updateTask } from "../../services/requestToServer"
 
 export default function TaskDetail() {
-  const { taskId } = useParams() // Extract route path argument string token safely
+  const { taskId } = useParams()
   const navigate = useNavigate()
   const [task, setTask] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -28,15 +28,17 @@ export default function TaskDetail() {
     const fetchIndividualTaskData = async () => {
       try {
         setLoading(true)
-        // Request deep details matching target task ID from database layer
+
         await fetchTasksById({
           taskId,
           setFunction: setTask,
           setIsError,
         })
-      } catch (err) {
-        console.error(err)
-        setIsError("Failed to load requested assignment metrics profile.")
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
       } finally {
         setLoading(false)
       }
@@ -45,11 +47,10 @@ export default function TaskDetail() {
     fetchIndividualTaskData()
   }, [taskId])
 
-  // Status mutation event trigger
   const handleMarkAsComplete = async () => {
     try {
       setUpdating(true)
-      // Execute standard partial field overwrite payload stream to backend
+
       await updateTask({
         taskId,
         body: {
@@ -58,11 +59,11 @@ export default function TaskDetail() {
         setFunction: setTask,
         setIsError,
       })
-    } catch (err) {
-      alert(
-        "Error updating assignment workflow state: " +
-          (err.response?.data?.error || err.message),
-      )
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setUpdating(false)
     }
@@ -118,7 +119,7 @@ export default function TaskDetail() {
           fontFamily: "sans-serif",
         }}
       >
-        Loading task blueprint...
+        Loading task...
       </div>
     )
   }
@@ -166,7 +167,6 @@ export default function TaskDetail() {
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      {/* Upper Navigation Row Element */}
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -185,7 +185,6 @@ export default function TaskDetail() {
         <ArrowLeft size={16} /> Return to Previous Workspace
       </button>
 
-      {/* Main Structural Metadata Container */}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -196,7 +195,6 @@ export default function TaskDetail() {
           overflow: "hidden",
         }}
       >
-        {/* Card Header Title Section */}
         <div
           style={{
             padding: "28px 32px",
@@ -226,7 +224,6 @@ export default function TaskDetail() {
           </h1>
         </div>
 
-        {/* Informational Parameter Listing Body Grid */}
         <div
           style={{
             padding: "32px",
@@ -235,7 +232,6 @@ export default function TaskDetail() {
             gap: "20px",
           }}
         >
-          {/* Project Mapping Readout row */}
           <div
             style={{
               display: "grid",
@@ -261,11 +257,10 @@ export default function TaskDetail() {
             <div
               style={{ fontSize: "15px", fontWeight: "600", color: "#111827" }}
             >
-              {task.project?.name || "Unassigned Workspace"}
+              {task.project?.name}
             </div>
           </div>
 
-          {/* Accountable Department Row */}
           <div
             style={{
               display: "grid",
@@ -289,11 +284,10 @@ export default function TaskDetail() {
               <span>Assigned Team:</span>
             </div>
             <div style={{ fontSize: "14px", color: "#374151" }}>
-              {task.team?.name || "Cross-Functional Unit"}
+              {task.team?.name}
             </div>
           </div>
 
-          {/* Accountable Owners Row Pass */}
           <div
             style={{
               display: "grid",
@@ -348,7 +342,6 @@ export default function TaskDetail() {
             </div>
           </div>
 
-          {/* Days Allocation Row */}
           <div
             style={{
               display: "grid",
@@ -378,7 +371,6 @@ export default function TaskDetail() {
             </div>
           </div>
 
-          {/* Time Remaining Row */}
           <div
             style={{
               display: "grid",
@@ -408,7 +400,6 @@ export default function TaskDetail() {
             </div>
           </div>
 
-          {/* Flat Array String Labels Index */}
           <div
             style={{
               display: "grid",
@@ -462,7 +453,6 @@ export default function TaskDetail() {
           </div>
         </div>
 
-        {/* Form Mutation Controls Bottom Row Segment */}
         {task.status !== "Completed" && (
           <div
             style={{

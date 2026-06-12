@@ -19,14 +19,11 @@ export default function TeamManagement() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
-
-  // Form Field Local State Matrix
   const [newTeamName, setNewTeamName] = useState("")
   const [newTeamDesc, setNewTeamDesc] = useState("")
   const [selectedMembers, setSelectedMembers] = useState([])
   const [submitting, setSubmitting] = useState(false)
 
-  // Load team collection arrays and database profile references
   const teamManagementContextData = async () => {
     try {
       setLoading(true)
@@ -35,9 +32,11 @@ export default function TeamManagement() {
         fetchTeams({ setFunction: setTeams, setIsError }),
         fetchUsers({ setFunction: setUsers, setIsError }),
       ])
-    } catch (err) {
-      console.error(err)
-      setIsError("Could not download complete organization metadata profiles.")
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setLoading(false)
     }
@@ -55,39 +54,33 @@ export default function TeamManagement() {
     }
   }
 
-  // Submit mutation request handler for creating teams
   const handleCreateTeamSubmit = async (e) => {
     e.preventDefault()
 
     setSubmitting(true)
 
     try {
-      // Post structural payload mapping direct to Express backend engine
       await createTeam({
         body: {
           name: newTeamName,
           description: newTeamDesc,
-          members: selectedMembers, // Directly binds the array of checked User ObjectIds
+          members: selectedMembers,
         },
         setIsError,
       })
 
-      setSuccessMsg(
-        `Successfully registered the "${newTeamName}" structural unit.`,
-      )
+      setSuccessMsg(`${newTeamName} team created successfully.`)
 
-      // Reset team creation input form fields cleanly
       setNewTeamName("")
       setNewTeamDesc("")
       setSelectedMembers([])
 
-      // Instantly refresh localized parent array list cache metrics
       await teamManagementContextData()
-    } catch (err) {
-      setIsError(
-        err.response?.data?.error ||
-          "Database rejected team profile structure creation.",
-      )
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setSubmitting(false)
     }
@@ -100,7 +93,6 @@ export default function TeamManagement() {
         fontFamily: "sans-serif",
       }}
     >
-      {/* Structural Page Header Context */}
       <div style={{ marginBottom: "32px" }}>
         <h1
           style={{
@@ -118,7 +110,6 @@ export default function TeamManagement() {
         </p>
       </div>
 
-      {/* Global Status Banner Messages */}
       {error && (
         <div
           style={{
@@ -158,7 +149,6 @@ export default function TeamManagement() {
         </div>
       )}
 
-      {/* Twin Dynamic Layout Division Split */}
       <div
         style={{
           display: "grid",
@@ -167,7 +157,6 @@ export default function TeamManagement() {
           alignItems: "start",
         }}
       >
-        {/* LEFT COLUMN: Registered System Active Teams List Block */}
         <section
           style={{
             backgroundColor: "#ffffff",
@@ -204,7 +193,7 @@ export default function TeamManagement() {
             <div
               style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
             >
-              Loading system organization directory...
+              Loading teams registry...
             </div>
           ) : teams.length === 0 ? (
             <div
@@ -215,7 +204,7 @@ export default function TeamManagement() {
                 fontSize: "14px",
               }}
             >
-              No operational team units registered in database records.
+              No team registered in database records.
             </div>
           ) : (
             <div
@@ -274,17 +263,14 @@ export default function TeamManagement() {
                       lineHeight: "1.4",
                     }}
                   >
-                    {team.description ||
-                      "No descriptive summary added for this functional team group."}
+                    {team.description}
                   </p>
 
-                  {/* Inline list of users currently assigned to this team */}
                   {team.members && team.members.length > 0 && (
                     <div
                       style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}
                     >
                       {team.members.map((member, i) => {
-                        // Handle formatting seamlessly whether the backend populates the member object or provides just an ID string
                         const nameString =
                           typeof member === "object"
                             ? member.name
@@ -313,7 +299,6 @@ export default function TeamManagement() {
           )}
         </section>
 
-        {/* RIGHT COLUMN: Interactive Form to Register an Original Team Profile */}
         <section
           style={{
             backgroundColor: "#ffffff",
@@ -409,7 +394,6 @@ export default function TeamManagement() {
               />
             </div>
 
-            {/* Selection Selection Grid for Seeding the Team Members */}
             <div>
               <label
                 style={{

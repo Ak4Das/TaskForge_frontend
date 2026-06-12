@@ -39,8 +39,11 @@ export default function Signup() {
       }
 
       navigate("/dashboard")
-    } catch (err) {
-      setIsError("Registration failed. Email might already be registered.")
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setLoading(false)
     }
