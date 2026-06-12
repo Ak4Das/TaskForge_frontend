@@ -27,20 +27,16 @@ export default function TeamManagement() {
   const [submitting, setSubmitting] = useState(false)
 
   // Load team collection arrays and database profile references
-  const loadManagementContextData = async () => {
-    const config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    }
+  const teamManagementContextData = async () => {
     try {
       setLoading(true)
-      setIsError("")
 
       const [teamsRes, usersRes] = await Promise.all([
         fetchTeams({ setFunction: setTeams, setIsError }),
         fetchUsers({ setFunction: setUsers, setIsError }),
       ])
     } catch (err) {
-      console.error("Error fetching operational teams metadata context:", err)
+      console.error(err)
       setIsError("Could not download complete organization metadata profiles.")
     } finally {
       setLoading(false)
@@ -48,10 +44,9 @@ export default function TeamManagement() {
   }
 
   useEffect(() => {
-    loadManagementContextData()
+    teamManagementContextData()
   }, [])
 
-  // Handle cross-document ID matching inside membership arrays
   const handleMemberCheckboxToggle = (userId) => {
     if (selectedMembers.includes(userId)) {
       setSelectedMembers(selectedMembers.filter((id) => id !== userId))
@@ -63,17 +58,10 @@ export default function TeamManagement() {
   // Submit mutation request handler for creating teams
   const handleCreateTeamSubmit = async (e) => {
     e.preventDefault()
-    if (!newTeamName.trim()) return
 
     setSubmitting(true)
-    setIsError("")
-    setSuccessMsg("")
 
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-
       // Post structural payload mapping direct to Express backend engine
       await createTeam({
         body: {
@@ -94,7 +82,7 @@ export default function TeamManagement() {
       setSelectedMembers([])
 
       // Instantly refresh localized parent array list cache metrics
-      await loadManagementContextData()
+      await teamManagementContextData()
     } catch (err) {
       setIsError(
         err.response?.data?.error ||
@@ -109,8 +97,7 @@ export default function TeamManagement() {
     <div
       style={{
         padding: "32px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontFamily: "sans-serif",
       }}
     >
       {/* Structural Page Header Context */}
