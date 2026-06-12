@@ -558,15 +558,17 @@ export default function ProjectTasks() {
                     style={{ borderBottom: "1px solid #E5E7EB" }}
                   >
                     <td style={{ padding: "16px 20px" }}>
-                      <span
+                      <Link
+                        to={`/tasks/${task._id}`}
                         style={{
                           fontWeight: "600",
-                          color: "#111827",
+                          textDecoration: "none",
+                          color: "#0000ee",
                           fontSize: "14px",
                         }}
                       >
                         {task.name}
-                      </span>
+                      </Link>
                       <div
                         style={{
                           display: "flex",
