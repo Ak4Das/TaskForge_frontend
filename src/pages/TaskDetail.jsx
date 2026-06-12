@@ -12,6 +12,7 @@ import {
   User,
   Tag,
   CalendarDays,
+  Clock3,
 } from "lucide-react"
 import { fetchTasksById, updateTask } from "../../services/requestToServer"
 
@@ -34,7 +35,7 @@ export default function TaskDetail() {
           setIsError,
         })
       } catch (err) {
-        console.error("Error fetching granular task details metadata:", err)
+        console.error(err)
         setIsError("Failed to load requested assignment metrics profile.")
       } finally {
         setLoading(false)
@@ -65,6 +66,21 @@ export default function TaskDetail() {
     } finally {
       setUpdating(false)
     }
+  }
+
+  function findRemainingDays(createdAt, allocatedTime) {
+    const createdAtDay = new Date(createdAt)
+    const today = new Date()
+    const passedDay = (today - createdAtDay) / (1000 * 60 * 60 * 24)
+    const remainingDays = allocatedTime - Math.floor(passedDay)
+    return `${remainingDays} ${remainingDays === 1 ? "day" : "days"}`
+  }
+
+  function findDueDate(createdAt, allocatedTime) {
+    const createdAtDay = new Date(createdAt)
+    createdAtDay.setDate(createdAtDay.getDate() + allocatedTime)
+    const dueDate = new Date(createdAtDay)
+    return dueDate.toLocaleDateString()
   }
 
   // Status styling configurations lookup map block
@@ -353,13 +369,42 @@ export default function TaskDetail() {
               }}
             >
               <CalendarDays size={16} />
-              <span>Time Effort Allocation:</span>
+              <span>Due Date:</span>
             </div>
             <div
               style={{ fontSize: "14px", fontWeight: "600", color: "#111827" }}
             >
-              {task.timeToComplete}{" "}
-              {task.timeToComplete === 1 ? "Working Day" : "Working Days"}
+              {findDueDate(task.createdAt, task.timeToComplete)}
+            </div>
+          </div>
+
+          {/* Time Remaining Row */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "200px 1fr",
+              alignItems: "center",
+              borderBottom: "1px solid #F3F4F6",
+              paddingBottom: "14px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                color: "#6B7280",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+            >
+              <Clock3 size={16} />
+              <span>Time Remaining:</span>
+            </div>
+            <div
+              style={{ fontSize: "14px", fontWeight: "600", color: "#111827" }}
+            >
+              {findRemainingDays(task.createdAt, task.timeToComplete)}
             </div>
           </div>
 
@@ -399,7 +444,7 @@ export default function TaskDetail() {
                       fontWeight: "500",
                     }}
                   >
-                    {tag}
+                    {tag.name}
                   </span>
                 ))
               ) : (
@@ -446,12 +491,6 @@ export default function TaskDetail() {
                 transition: "background-color 0.15s",
                 boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
               }}
-              onMouseEnter={(e) =>
-                !updating && (e.target.style.backgroundColor = "#047857")
-              }
-              onMouseLeave={(e) =>
-                !updating && (e.target.style.backgroundColor = "#059669")
-              }
             >
               <CheckCircle2 size={16} />
               {updating ? "Updating state..." : "Mark as Complete"}
