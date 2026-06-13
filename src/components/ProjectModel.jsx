@@ -155,7 +155,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Q3 Client Onboarding Suite"
+              placeholder="e.g., Workspace management for track projects..."
               style={{
                 width: "100%",
                 boxSizing: "border-box",
@@ -179,13 +179,13 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
                 marginBottom: "6px",
               }}
             >
-              Overview Description
+              Project Description
             </label>
             <textarea
               rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provide tracking metrics, structural bounds, and milestone scopes managed under this brand initiative..."
+              placeholder="Write project description here..."
               style={{
                 width: "100%",
                 boxSizing: "border-box",

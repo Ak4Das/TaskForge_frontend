@@ -210,8 +210,7 @@ export default function Reports() {
             Workasana Reports
           </h1>
           <p style={{ color: "#4B5563", margin: 0 }}>
-            Monitor task completion matrices, pending resource blocks, and
-            delivery cycles.
+            Monitor task completion matrices and pending workloads.
           </p>
         </div>
 

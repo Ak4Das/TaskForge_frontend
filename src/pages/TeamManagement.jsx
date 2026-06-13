@@ -113,8 +113,7 @@ export default function TeamManagement() {
           Teams Management
         </h1>
         <p style={{ color: "#4B5563", margin: 0 }}>
-          Form departmental units, assign target user keys, and maintain
-          operational project divisions.
+          View teams, assigned members and establish new team.
         </p>
       </div>
 

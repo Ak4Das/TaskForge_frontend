@@ -229,6 +229,7 @@ export default function Dashboard() {
               }}
             >
               <option value="">--- Choose Status ---</option>
+              <option value="">All</option>
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="Completed">Completed</option>

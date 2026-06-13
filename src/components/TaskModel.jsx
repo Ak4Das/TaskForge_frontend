@@ -155,7 +155,7 @@ export default function TaskModal({ setModalVisibilityState }) {
             <input
               type="text"
               required
-              placeholder="e.g., Fix edge-case auth failure loops"
+              placeholder="e.g., Fix auth failure edge cases"
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
@@ -187,7 +187,7 @@ export default function TaskModal({ setModalVisibilityState }) {
                   marginBottom: "6px",
                 }}
               >
-                Project Track Context
+                Projects List
               </label>
               <select
                 required
@@ -221,7 +221,7 @@ export default function TaskModal({ setModalVisibilityState }) {
                   marginBottom: "6px",
                 }}
               >
-                Accountable Team
+                Teams List
               </label>
               <select
                 required
