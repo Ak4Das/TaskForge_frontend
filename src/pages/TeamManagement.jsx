@@ -12,6 +12,7 @@ import {
   fetchTeams,
   fetchUsers,
 } from "../../services/requestToServer"
+import { Link } from "react-router-dom"
 
 export default function TeamManagement() {
   const [teams, setTeams] = useState([])
@@ -231,16 +232,22 @@ export default function TeamManagement() {
                       marginBottom: "6px",
                     }}
                   >
-                    <h3
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        color: "#111827",
-                        margin: 0,
-                      }}
+                    <Link
+                      to={`/teams/${team._id}`}
+                      style={{ textDecoration: "none" }}
                     >
-                      {team.name}
-                    </h3>
+                      <h3
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          color: "#111827",
+                          margin: 0,
+                          color: "#0000ee",
+                        }}
+                      >
+                        {team.name}
+                      </h3>
+                    </Link>
                     <span
                       style={{
                         fontSize: "11px",
