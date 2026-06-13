@@ -26,9 +26,6 @@ export default function TaskModal({ setModalVisibilityState }) {
 
   useEffect(() => {
     const fetchFormContextDependencies = async () => {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
       try {
         await Promise.all([
           fetchAllProjects({ setFunction: setProjects, setIsError }),
@@ -63,12 +60,11 @@ export default function TaskModal({ setModalVisibilityState }) {
       })
 
       setModalVisibilityState(false)
-      window.location.reload()
-    } catch (err) {
-      alert(
-        "Failed to register task record entry points: " +
-          (err.response?.data?.error || err.message),
-      )
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setSubmitting(false)
     }
