@@ -12,7 +12,7 @@ import {
   Plus,
 } from "lucide-react"
 import { fetchTasks, fetchTeamsById } from "../../services/requestToServer"
-import AddUser from "./AddUser"
+import UserModel from "../components/UserModel"
 
 export default function TeamDetail() {
   const { teamId } = useParams()
@@ -506,7 +506,7 @@ export default function TeamDetail() {
                         justifyContent: "center",
                       }}
                     >
-                      Total Load {renderSortIndicator("totalTasks")}
+                      Total Tasks {renderSortIndicator("totalTasks")}
                     </span>
                   </th>
                   <th
@@ -653,9 +653,7 @@ export default function TeamDetail() {
         )}
       </div>
       {isMemberModalOpen && (
-        <AddUser
-          setMemberModalVisibilityState={setMemberModalVisibilityState}
-        />
+        <UserModel setModalVisibilityState={setMemberModalVisibilityState} />
       )}
     </div>
   )

@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import { signUp } from "../../services/requestToServer"
 
-export default function AddUser() {
+export default function UserModel({ setModalVisibilityState }) {
   const navigate = useNavigate()
 
   // Local Form Input States
@@ -38,7 +38,10 @@ export default function AddUser() {
     try {
       // Issue creation POST request directly onto the authentication engine endpoints
       // We route this through an administrative/auth route to populate user collections
-      await signUp({ body: { name, email, password }, setIsError })
+      await signUp({
+        body: { name, email, password },
+        setIsError,
+      })
 
       setSuccess(
         `Account profile for "${name}" has been successfully created inside the workspace registry.`,
@@ -47,6 +50,7 @@ export default function AddUser() {
       setName("")
       setEmail("")
       setPassword("")
+      setModalVisibilityState(false)
     } catch (err) {
       console.error(err)
       setIsError(
