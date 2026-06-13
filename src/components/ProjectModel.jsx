@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { X, FolderPlus, AlertCircle } from "lucide-react"
 import { createProject } from "../../services/requestToServer"
 
 export default function ProjectModal({ setProjectModalVisibilityState }) {
-  // Local form input management states
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
@@ -16,7 +15,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
     setSubmitting(true)
 
     try {
-      // Ship payload object array directly to Express routing endpoints
       await createProject({
         body: {
           name: name.trim(),
@@ -26,12 +24,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
         setIsError,
       })
 
-      // Reset internal input configurations to baseline states
-      setName("")
-      setDescription("")
-
       setProjectModalVisibilityState(false)
-      window.location.reload()
     } catch (error) {
       if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
         console.error(error)
@@ -59,7 +52,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
         padding: "16px",
       }}
     >
-      {/* Modal Card Element Structure */}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -72,7 +64,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
           animation: "fadeIn 0.2s ease-out",
         }}
       >
-        {/* Header Ribbon Element */}
         <div
           style={{
             padding: "20px 24px",
@@ -119,7 +110,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
           </button>
         </div>
 
-        {/* Operational Form Segment */}
         <form
           onSubmit={handleFormSubmit}
           style={{
@@ -148,7 +138,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
             </div>
           )}
 
-          {/* Project Title Field */}
           <div>
             <label
               style={{
@@ -180,7 +169,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
             />
           </div>
 
-          {/* Descriptive Context Field */}
           <div>
             <label
               style={{
@@ -214,7 +202,6 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
             />
           </div>
 
-          {/* Bottom Actions Row Segment */}
           <div
             style={{
               display: "flex",
