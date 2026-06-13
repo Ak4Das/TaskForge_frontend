@@ -25,6 +25,12 @@ export default function TaskDetail() {
   const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
+
+  useEffect(() => {
     const fetchIndividualTaskData = async () => {
       try {
         setLoading(true)

@@ -11,7 +11,7 @@ import {
   Clock,
   Plus,
 } from "lucide-react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { fetchAllProjects } from "../../services/requestToServer"
 import ProjectModal from "../components/ProjectModel.jsx"
 
@@ -22,8 +22,15 @@ export default function ProjectManagement() {
   const [error, setIsError] = useState("")
   const [projectStatus, setProjectStatus] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   const isProjectModalOpen = searchParams.get("newProjectModal") === "true"
+
+  useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
 
   useEffect(() => {
     const fetchProjectsRegistry = async () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useParams, Link, useSearchParams } from "react-router-dom"
+import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import {
   ArrowLeft,
@@ -27,8 +27,15 @@ export default function TeamDetail() {
 
   const [sortColumn, setSortColumn] = useState("closedTasks")
   const [sortDirection, setSortDirection] = useState("desc")
+  const navigate = useNavigate()
 
   const isMemberModalOpen = searchParams.get("newMemberModal") === "true"
+
+  useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
 
   useEffect(() => {
     const fetchTeamPerformanceMetrics = async () => {

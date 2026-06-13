@@ -12,7 +12,7 @@ import {
   fetchTeams,
   fetchUsers,
 } from "../../services/requestToServer"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function TeamManagement() {
   const [teams, setTeams] = useState([])
@@ -24,6 +24,13 @@ export default function TeamManagement() {
   const [newTeamDesc, setNewTeamDesc] = useState("")
   const [selectedMembers, setSelectedMembers] = useState([])
   const [submitting, setSubmitting] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
 
   const teamManagementContextData = async () => {
     try {

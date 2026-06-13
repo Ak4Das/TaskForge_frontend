@@ -85,7 +85,7 @@ export default function Dashboard() {
     }
 
     fetchDashboardContent()
-  }, [currentStatusFilter])
+  }, [user, currentStatusFilter])
 
   // Update URL queries when a user selects a filter
   const handleQuickFilterToggle = (statusValue) => {

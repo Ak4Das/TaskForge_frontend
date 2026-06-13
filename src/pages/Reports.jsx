@@ -18,6 +18,7 @@ import {
   fetchTasks,
   pendingTasksByOwner,
 } from "../../services/requestToServer"
+import { useNavigate } from "react-router-dom"
 
 // Register essential modular dependencies required by Chart.js
 ChartJS.register(
@@ -40,6 +41,13 @@ export default function Reports() {
     totalClosed: 0,
     pendingDays: 0,
   })
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (error === "Invalid Token.") {
+      navigate("/login")
+    }
+  }, [error])
 
   function findRemainingDays(createdAt, allocatedTime) {
     const createdAtDay = new Date(createdAt)
