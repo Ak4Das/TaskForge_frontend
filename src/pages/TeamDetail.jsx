@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import {
   ArrowLeft,
@@ -9,11 +9,14 @@ import {
   Shield,
   CheckCircle2,
   AlertCircle,
+  Plus,
 } from "lucide-react"
 import { fetchTasks, fetchTeamsById } from "../../services/requestToServer"
+import AddUser from "./AddUser"
 
 export default function TeamDetail() {
   const { teamId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [team, setTeam] = useState(null)
   const [membersData, setMembersData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -24,6 +27,8 @@ export default function TeamDetail() {
 
   const [sortColumn, setSortColumn] = useState("closedTasks")
   const [sortDirection, setSortDirection] = useState("desc")
+
+  const isMemberModalOpen = searchParams.get("newMemberModal") === "true"
 
   useEffect(() => {
     const fetchTeamPerformanceMetrics = async () => {
@@ -54,6 +59,7 @@ export default function TeamDetail() {
           const userId = member._id
           const userName = member.name
           const userEmail = member.email
+          const role = member.role
 
           const userAssignments = globalTasks.filter((task) =>
             task.owners?.some((owner) => owner._id === userId),
@@ -76,7 +82,7 @@ export default function TeamDetail() {
             closedTasks,
             pendingTasks,
             completionRate,
-            role: "Team Contributor",
+            role,
           }
         })
 
@@ -93,6 +99,18 @@ export default function TeamDetail() {
 
     fetchTeamPerformanceMetrics()
   }, [teamId])
+
+  // Change project modal open/close states directly with the browser URL parameters
+  const setMemberModalVisibilityState = (isOpen) => {
+    // Create copy of existing searchParams
+    const updatedParams = new URLSearchParams(searchParams)
+    if (isOpen) {
+      updatedParams.set("newMemberModal", "true")
+    } else {
+      updatedParams.delete("newMemberModal")
+    }
+    setSearchParams(updatedParams)
+  }
 
   const requestSort = (column) => {
     let direction = "asc"
@@ -209,6 +227,28 @@ export default function TeamDetail() {
       >
         <ArrowLeft size={16} /> Back to Teams Management
       </Link>
+
+      <button
+        onClick={() => setMemberModalVisibilityState(true)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          backgroundColor: "#4F46E5",
+          color: "#ffffff",
+          border: "none",
+          padding: "12px 20px",
+          borderRadius: "8px",
+          fontSize: "14px",
+          fontWeight: "600",
+          cursor: "pointer",
+          transition: "background-color 0.2s",
+          marginLeft: "auto",
+          marginBottom: "25px",
+        }}
+      >
+        <Plus size={18} /> Add New Member
+      </button>
 
       <div
         style={{
@@ -369,7 +409,7 @@ export default function TeamDetail() {
           >
             <option value="All">--- Select Member Role ---</option>
             <option value="All">All Roles</option>
-            <option value="Lead Engineer">Team Lead</option>
+            <option value="Team Lead">Team Lead</option>
             <option value="Team Contributor">Team Contributor</option>
           </select>
         </div>
@@ -545,18 +585,12 @@ export default function TeamDetail() {
                           borderRadius: "4px",
                           fontWeight: "500",
                           backgroundColor:
-                            member.role === "Lead Engineer"
-                              ? "#F59E0B"
-                              : "#E5E7EB",
+                            member.role === "Team Lead" ? "#F59E0B" : "#E5E7EB",
                           color:
-                            member.role === "Lead Engineer"
-                              ? "#ffffff"
-                              : "#374151",
+                            member.role === "Team Lead" ? "#ffffff" : "#374151",
                         }}
                       >
-                        {member.role === "Lead Engineer" && (
-                          <Shield size={12} />
-                        )}
+                        {member.role === "Team Lead" && <Shield size={12} />}
                         {member.role}
                       </span>
                     </td>
@@ -618,6 +652,11 @@ export default function TeamDetail() {
           </div>
         )}
       </div>
+      {isMemberModalOpen && (
+        <AddUser
+          setMemberModalVisibilityState={setMemberModalVisibilityState}
+        />
+      )}
     </div>
   )
 }

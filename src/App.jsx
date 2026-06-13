@@ -15,6 +15,7 @@ import TeamManagement from "./pages/TeamManagement"
 import Reports from "./pages/Reports"
 import Sidebar from "./components/Sidebar"
 import { ToastContainer } from "react-toastify"
+import TeamDetail from "./pages/TeamDetail"
 
 const ProtectedLayout = ({ children }) => {
   const hasActiveToken = !!localStorage.getItem("token")
@@ -41,7 +42,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <ProtectedLayout>
               <Dashboard />
@@ -88,9 +89,16 @@ export default function App() {
             </ProtectedLayout>
           }
         />
+        <Route
+          path="/teams/:teamId"
+          element={
+            <ProtectedLayout>
+              <TeamDetail />
+            </ProtectedLayout>
+          }
+        />
 
-        {/* Catch-all redirect */}
-        {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
       <ToastContainer />
     </Router>
