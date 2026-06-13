@@ -24,6 +24,10 @@ export async function fetchAllProjects(obj) {
   } catch (error) {
     clearTimeout(timerId)
 
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
+
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
       return
@@ -63,6 +67,10 @@ export async function fetchTasks(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -103,6 +111,10 @@ export async function fetchTeams(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -143,6 +155,10 @@ export async function fetchUsers(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -183,6 +199,10 @@ export async function fetchTags(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -231,6 +251,10 @@ export async function fetchMe(obj) {
     return user
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -276,6 +300,10 @@ export async function fetchTasksById(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -321,6 +349,10 @@ export async function fetchTeamsById(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -364,6 +396,10 @@ export async function login(obj) {
     return response.data
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "User not found.") {
       setIsError && setIsError("User not found.")
@@ -403,6 +439,10 @@ export async function signUp(obj) {
     return response.data
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "This email is already active.") {
       setIsError && setIsError("This email is already active.")
@@ -443,6 +483,10 @@ export async function createTeam(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -483,6 +527,10 @@ export async function createTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -527,6 +575,10 @@ export async function createProject(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -570,6 +622,10 @@ export async function closedTasksByTeams(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -613,6 +669,10 @@ export async function closedTasksByOwner(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -656,6 +716,10 @@ export async function pendingTasksByOwner(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
@@ -700,6 +764,10 @@ export async function updateTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
+    
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
 
     if (error.response.data.message === "Access Denied: Invalid Token.") {
       setIsError && setIsError("Invalid Token.")
