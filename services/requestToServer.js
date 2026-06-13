@@ -38,11 +38,7 @@ export async function fetchAllProjects(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -67,7 +63,7 @@ export async function fetchTasks(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -82,11 +78,7 @@ export async function fetchTasks(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -111,7 +103,7 @@ export async function fetchTeams(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -126,11 +118,7 @@ export async function fetchTeams(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -155,7 +143,7 @@ export async function fetchUsers(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -170,11 +158,7 @@ export async function fetchUsers(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -199,7 +183,7 @@ export async function fetchTags(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -214,11 +198,7 @@ export async function fetchTags(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -251,7 +231,7 @@ export async function fetchMe(obj) {
     return user
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -266,11 +246,7 @@ export async function fetchMe(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -300,7 +276,7 @@ export async function fetchTasksById(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -315,11 +291,7 @@ export async function fetchTasksById(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -349,7 +321,7 @@ export async function fetchTeamsById(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -364,11 +336,7 @@ export async function fetchTeamsById(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -396,7 +364,7 @@ export async function login(obj) {
     return response.data
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -406,12 +374,7 @@ export async function login(obj) {
       return
     }
 
-    if (error.name === "CanceledError") {
-      setIsError && setIsError("Request timeout")
-      return
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -439,7 +402,7 @@ export async function signUp(obj) {
     return response.data
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -454,11 +417,7 @@ export async function signUp(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -483,7 +442,7 @@ export async function createTeam(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -498,11 +457,7 @@ export async function createTeam(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -527,7 +482,7 @@ export async function createTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -542,11 +497,7 @@ export async function createTask(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -575,7 +526,7 @@ export async function createProject(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -590,11 +541,7 @@ export async function createProject(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -622,7 +569,7 @@ export async function closedTasksByTeams(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -637,11 +584,7 @@ export async function closedTasksByTeams(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -669,7 +612,7 @@ export async function closedTasksByOwner(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -684,11 +627,7 @@ export async function closedTasksByOwner(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -716,7 +655,7 @@ export async function pendingTasksByOwner(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -731,11 +670,7 @@ export async function pendingTasksByOwner(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }
 
@@ -764,7 +699,7 @@ export async function updateTask(obj) {
     return response.data.respondedData
   } catch (error) {
     clearTimeout(timerId)
-    
+
     if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
       console.dir(error)
     }
@@ -779,10 +714,6 @@ export async function updateTask(obj) {
       return
     }
 
-    if (error.response) {
-      throw new Error("Request failed")
-    }
-
-    throw error
+    setIsError && setIsError(error.message)
   }
 }

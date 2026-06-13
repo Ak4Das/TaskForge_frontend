@@ -59,9 +59,10 @@ export default function Reports() {
         setIsError,
       })
 
-      numberOfClosedTasksByTeams.forEach((team) => {
-        teamCounts[team.teamDetails.name] = team.count
-      })
+      numberOfClosedTasksByTeams &&
+        numberOfClosedTasksByTeams.forEach((team) => {
+          teamCounts[team.teamDetails.name] = team.count
+        })
 
       const ownerCounts = {}
 
@@ -69,9 +70,10 @@ export default function Reports() {
         setIsError,
       })
 
-      numberOfClosedTasksByOwners.forEach((owner) => {
-        ownerCounts[owner.name] = owner.count
-      })
+      numberOfClosedTasksByOwners &&
+        numberOfClosedTasksByOwners.forEach((owner) => {
+          ownerCounts[owner.name] = owner.count
+        })
 
       const projectPendingEffort = await pendingTasksByOwner({ setIsError })
 
@@ -82,23 +84,25 @@ export default function Reports() {
 
       let closedCounter = 0
 
-      allTasks.forEach((task) => {
-        if (task.status === "Completed") {
-          closedCounter++
-        }
-      })
+      allTasks &&
+        allTasks.forEach((task) => {
+          if (task.status === "Completed") {
+            closedCounter++
+          }
+        })
 
       let totalPendingDaysSum = 0
 
-      allTasks.forEach((task) => {
-        if (task.status !== "Completed") {
-          const effortDays = findRemainingDays(
-            task.createdAt,
-            task.timeToComplete,
-          )
-          totalPendingDaysSum += effortDays
-        }
-      })
+      allTasks &&
+        allTasks.forEach((task) => {
+          if (task.status !== "Completed") {
+            const effortDays = findRemainingDays(
+              task.createdAt,
+              task.timeToComplete,
+            )
+            totalPendingDaysSum += effortDays
+          }
+        })
 
       setTeamPerformanceData({
         labels: Object.keys(teamCounts),
@@ -138,18 +142,19 @@ export default function Reports() {
         ],
       })
 
-      setProjectBacklogData({
-        labels: Object.keys(projectPendingEffort),
-        datasets: [
-          {
-            label: "Pending Work Effort (Days)",
-            data: Object.values(projectPendingEffort),
-            backgroundColor: "#4F46E5",
-            borderRadius: 6,
-            barThickness: 28,
-          },
-        ],
-      })
+      projectPendingEffort &&
+        setProjectBacklogData({
+          labels: Object.keys(projectPendingEffort),
+          datasets: [
+            {
+              label: "Pending Work Effort (Days)",
+              data: Object.values(projectPendingEffort),
+              backgroundColor: "#4F46E5",
+              borderRadius: 6,
+              barThickness: 28,
+            },
+          ],
+        })
 
       setSummaryCards({
         totalClosed: closedCounter,

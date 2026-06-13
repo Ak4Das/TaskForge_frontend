@@ -30,11 +30,13 @@ export default function ProjectManagement() {
       try {
         setLoading(true)
 
-        const response = await fetchAllProjects(setIsError)
+        const response = await fetchAllProjects({ setIsError })
 
-        const sortedLatestFirst = response.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt)
-        })
+        const sortedLatestFirst = response
+          ? response.sort((a, b) => {
+              return new Date(b.createdAt) - new Date(a.createdAt)
+            })
+          : []
 
         setProjects(sortedLatestFirst)
       } catch (error) {

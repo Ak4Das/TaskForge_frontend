@@ -61,14 +61,17 @@ export default function TeamDetail() {
           const userEmail = member.email
           const role = member.role
 
-          const userAssignments = globalTasks.filter((task) =>
-            task.owners?.some((owner) => owner._id === userId),
-          )
+          const userAssignments =
+            globalTasks &&
+            globalTasks.filter((task) =>
+              task.owners?.some((owner) => owner._id === userId),
+            )
 
-          const totalTasks = userAssignments.length
-          const closedTasks = userAssignments.filter(
-            (task) => task.status === "Completed",
-          ).length
+          const totalTasks = userAssignments ? userAssignments.length : 0
+          const closedTasks = userAssignments
+            ? userAssignments.filter((task) => task.status === "Completed")
+                .length
+            : 0
           const pendingTasks = totalTasks - closedTasks
 
           const completionRate =

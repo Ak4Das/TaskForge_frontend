@@ -45,9 +45,9 @@ export default function ProjectTasks() {
     const fetchProjectAndTasks = async () => {
       try {
         const projectRes = await fetchAllProjects({ setIsError })
-        const currentProject = projectRes.find(
-          (project) => project._id === projectId,
-        )
+        const currentProject = projectRes
+          ? projectRes.find((project) => project._id === projectId)
+          : {}
         setProject(currentProject)
 
         const taskEndpoint = currentStatusFilter

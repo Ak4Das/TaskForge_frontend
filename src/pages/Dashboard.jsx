@@ -36,7 +36,9 @@ export default function Dashboard() {
       const token = localStorage.getItem("token")
       if (token && !user) {
         const user = await fetchMe({ setFunction: setUser, setIsError })
-        localStorage.setItem("user", JSON.stringify(user))
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user))
+        }
       }
     }
     fetchData()
@@ -56,7 +58,7 @@ export default function Dashboard() {
     const fetchDashboardContent = async () => {
       try {
         setLoading(true)
-        const projectsResponse = await fetchAllProjects({
+        await fetchAllProjects({
           setFunction: setProjects,
           setIsError,
         })
@@ -66,7 +68,7 @@ export default function Dashboard() {
             ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
             : `http://localhost:3000/api/tasks?owner=${user.id}`
 
-          const tasksResponse = await fetchTasks({
+          await fetchTasks({
             taskEndpoint,
             setFunction: setTasks,
             setIsError,

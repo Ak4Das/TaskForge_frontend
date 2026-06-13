@@ -29,7 +29,7 @@ export default function TeamManagement() {
     try {
       setLoading(true)
 
-      const [teamsRes, usersRes] = await Promise.all([
+      await Promise.all([
         fetchTeams({ setFunction: setTeams, setIsError }),
         fetchUsers({ setFunction: setUsers, setIsError }),
       ])
