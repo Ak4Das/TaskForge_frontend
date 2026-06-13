@@ -15,8 +15,6 @@ import { signUp } from "../../services/requestToServer"
 
 export default function UserModel({ setModalVisibilityState }) {
   const navigate = useNavigate()
-
-  // Local Form Input States
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -26,36 +24,22 @@ export default function UserModel({ setModalVisibilityState }) {
 
   const handleCreateUserSubmit = async (e) => {
     e.preventDefault()
-    setSuccess("")
     setLoading(true)
 
-    if (password.length < 6) {
-      setIsError("Security passphrases must contain a minimum of 6 characters.")
-      setLoading(false)
-      return
-    }
-
     try {
-      // Issue creation POST request directly onto the authentication engine endpoints
-      // We route this through an administrative/auth route to populate user collections
       await signUp({
         body: { name, email, password },
         setIsError,
       })
 
-      setSuccess(
-        `Account profile for "${name}" has been successfully created inside the workspace registry.`,
-      )
+      setSuccess(`Account profile for "${name}" has been successfully created.`)
 
-      setName("")
-      setEmail("")
-      setPassword("")
       setModalVisibilityState(false)
-    } catch (err) {
-      console.error(err)
-      setIsError(
-        "Registration failed. This email domain might already be registered.",
-      )
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
     } finally {
       setLoading(false)
     }
@@ -229,7 +213,6 @@ export default function UserModel({ setModalVisibilityState }) {
             </div>
           </div>
 
-          {/* Email Target Input Field */}
           <div>
             <label
               style={{
