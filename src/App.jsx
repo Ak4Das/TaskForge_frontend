@@ -5,6 +5,8 @@ import {
   Navigate,
 } from "react-router-dom"
 import "./App.css"
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"

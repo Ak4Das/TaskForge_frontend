@@ -545,6 +545,50 @@ export async function createProject(obj) {
   }
 }
 
+export async function createTags(obj) {
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  const { body, setFunction, setIsError } = obj
+
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/tags",
+      body,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal: controller.signal,
+      },
+    )
+
+    clearTimeout(timerId)
+
+    setFunction && setFunction(response.data.respondedData)
+    return response.data.respondedData
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    setIsError && setIsError(error.message)
+  }
+}
+
 export async function closedTasksByTeams(obj) {
   const controller = new AbortController()
 

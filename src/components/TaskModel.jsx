@@ -8,6 +8,8 @@ import {
   fetchTeams,
   fetchUsers,
 } from "../../services/requestToServer"
+import { useSearchParams } from "react-router-dom"
+import TagsModel from "./TagsModel"
 
 export default function TaskModal({ setModalVisibilityState, fetchData }) {
   const [formData, setFormData] = useState({
@@ -25,25 +27,40 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
   const [tags, setTags] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const isTagsModalOpen = searchParams.get("newTagsModal") === "true"
+
+  const fetchFormContextDependencies = async () => {
+    try {
+      await Promise.all([
+        fetchAllProjects({ setFunction: setProjects, setIsError }),
+        fetchTeams({ setFunction: setTeams, setIsError }),
+        fetchUsers({ setFunction: setUsers, setIsError }),
+        fetchTags({ setFunction: setTags, setIsError }),
+      ])
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
+    }
+  }
 
   useEffect(() => {
-    const fetchFormContextDependencies = async () => {
-      try {
-        await Promise.all([
-          fetchAllProjects({ setFunction: setProjects, setIsError }),
-          fetchTeams({ setFunction: setTeams, setIsError }),
-          fetchUsers({ setFunction: setUsers, setIsError }),
-          fetchTags({ setFunction: setTags, setIsError }),
-        ])
-      } catch (error) {
-        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-          console.error(error)
-        }
-        setIsError(error.message)
-      }
-    }
     fetchFormContextDependencies()
   }, [])
+
+  // Change Tags modal open/close states directly with the browser URL parameters
+  const setTagsModalVisibilityState = (isOpen) => {
+    const updatedParams = new URLSearchParams(searchParams)
+    if (isOpen) {
+      updatedParams.set("newTagsModal", "true")
+    } else {
+      updatedParams.delete("newTagsModal")
+    }
+    setSearchParams(updatedParams)
+  }
 
   const handleFormSubmission = async (e) => {
     e.preventDefault()
@@ -291,17 +308,26 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
           </div>
 
           <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "14px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "6px",
-              }}
-            >
-              Tags (Hold Cmd/Ctrl to choose multiple)
-            </label>
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  marginBottom: "6px",
+                }}
+              >
+                Tags (Hold Cmd/Ctrl to choose multiple)
+              </label>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => setTagsModalVisibilityState(true)}
+                type="button"
+              >
+                Add New Tag
+              </button>
+            </div>
             <select
               multiple
               required
@@ -455,6 +481,12 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
           </div>
         </form>
       </div>
+      {isTagsModalOpen && (
+        <TagsModel
+          setTagsModalVisibilityState={setTagsModalVisibilityState}
+          fetchData={fetchFormContextDependencies}
+        />
+      )}
     </div>
   )
 }
