@@ -48,64 +48,64 @@ export default function ProjectTasks() {
     setLoading(true)
   }, [])
 
-  useEffect(() => {
-    const fetchProjectAndTasks = async () => {
-      try {
-        const projectRes = await fetchAllProjects({ setIsError })
-        const currentProject = projectRes
-          ? projectRes.find((project) => project._id === projectId)
-          : {}
-        setProject(currentProject)
+  const fetchProjectAndTasks = async () => {
+    try {
+      const projectRes = await fetchAllProjects({ setIsError })
+      const currentProject = projectRes
+        ? projectRes.find((project) => project._id === projectId)
+        : {}
+      setProject(currentProject)
 
-        const taskEndpoint = currentStatusFilter
-          ? owner
-            ? tag
-              ? prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}`
-              : prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
-            : tag
-              ? prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}`
-              : prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
-          : owner
-            ? tag
-              ? prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}`
-              : prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}`
-            : tag
-              ? prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}`
-              : prioritySortOrder
-                ? `http://localhost:3000/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
-                : `http://localhost:3000/api/tasks?project=${projectId}`
+      const taskEndpoint = currentStatusFilter
+        ? owner
+          ? tag
+            ? prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}`
+            : prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
+          : tag
+            ? prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}`
+            : prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
+        : owner
+          ? tag
+            ? prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}`
+            : prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&owner=${owner}`
+          : tag
+            ? prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}&tags=${tag}`
+            : prioritySortOrder
+              ? `http://localhost:3000/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
+              : `http://localhost:3000/api/tasks?project=${projectId}`
 
-        await fetchTasks({
-          taskEndpoint,
-          setFunction: setTasks,
-          setIsError,
-        })
-        await fetchUsers({ setFunction: setUsers, setIsError })
-        await fetchTags({ setFunction: setTags, setIsError })
-      } catch (error) {
-        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-          console.error(error)
-        }
-        setIsError(error.message)
-      } finally {
-        setLoading(false)
+      await fetchTasks({
+        taskEndpoint,
+        setFunction: setTasks,
+        setIsError,
+      })
+      await fetchUsers({ setFunction: setUsers, setIsError })
+      await fetchTags({ setFunction: setTags, setIsError })
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
       }
+      setIsError(error.message)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchProjectAndTasks()
   }, [currentStatusFilter, owner, tag, prioritySortOrder])
 
@@ -648,7 +648,10 @@ export default function ProjectTasks() {
       </div>
 
       {isTaskModalOpen && (
-        <TaskModal setModalVisibilityState={setModalVisibilityState} />
+        <TaskModal
+          setModalVisibilityState={setModalVisibilityState}
+          fetchData={fetchProjectAndTasks}
+        />
       )}
     </div>
   )

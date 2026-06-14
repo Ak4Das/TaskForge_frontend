@@ -4,11 +4,12 @@ import { X } from "lucide-react"
 import {
   createTask,
   fetchAllProjects,
+  fetchTags,
   fetchTeams,
   fetchUsers,
 } from "../../services/requestToServer"
 
-export default function TaskModal({ setModalVisibilityState }) {
+export default function TaskModal({ setModalVisibilityState, fetchData }) {
   const [formData, setFormData] = useState({
     name: "",
     project: "",
@@ -21,6 +22,7 @@ export default function TaskModal({ setModalVisibilityState }) {
   const [projects, setProjects] = useState([])
   const [teams, setTeams] = useState([])
   const [users, setUsers] = useState([])
+  const [tags, setTags] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
 
@@ -31,6 +33,7 @@ export default function TaskModal({ setModalVisibilityState }) {
           fetchAllProjects({ setFunction: setProjects, setIsError }),
           fetchTeams({ setFunction: setTeams, setIsError }),
           fetchUsers({ setFunction: setUsers, setIsError }),
+          fetchTags({ setFunction: setTags, setIsError }),
         ])
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -46,20 +49,13 @@ export default function TaskModal({ setModalVisibilityState }) {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const stringArrayTags = formData.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0)
-
       await createTask({
-        body: {
-          ...formData,
-          tags: stringArrayTags,
-        },
+        body: formData,
         setIsError,
       })
 
       setModalVisibilityState(false)
+      fetchData()
     } catch (error) {
       if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
         console.error(error)
@@ -263,10 +259,13 @@ export default function TaskModal({ setModalVisibilityState }) {
               multiple
               required
               onChange={(e) => {
-                const checkedOptionsArray = Array.from(
-                  e.target.selectedOptions,
+                // Convert array like object to actual array
+                const selectedOptions = Array.from(e.target.selectedOptions)
+
+                const checkedOptionsArray = selectedOptions.map(
                   (opt) => opt.value,
                 )
+
                 setFormData({ ...formData, owners: checkedOptionsArray })
               }}
               style={{
@@ -279,13 +278,13 @@ export default function TaskModal({ setModalVisibilityState }) {
                 backgroundColor: "#ffffff",
               }}
             >
-              {users.map((u) => (
+              {users.map((user) => (
                 <option
-                  key={u._id}
-                  value={u._id}
+                  key={user._id}
+                  value={user._id}
                   style={{ marginBottom: "5px" }}
                 >
-                  {u.name}
+                  {user.name}
                 </option>
               ))}
             </select>
@@ -301,23 +300,40 @@ export default function TaskModal({ setModalVisibilityState }) {
                 marginBottom: "6px",
               }}
             >
-              Tags (Separate values using commas)
+              Tags (Hold Cmd/Ctrl to choose multiple)
             </label>
-            <input
-              type="text"
-              placeholder="e.g., Urgent, Bug, Core-API"
-              onChange={(e) =>
-                setFormData({ ...formData, tags: e.target.value })
-              }
+            <select
+              multiple
+              required
+              onChange={(e) => {
+                // Convert array like object to actual array
+                const selectedOptions = Array.from(e.target.selectedOptions)
+
+                const checkedOptionsArray = selectedOptions.map(
+                  (opt) => opt.value,
+                )
+                setFormData({ ...formData, tags: checkedOptionsArray })
+              }}
               style={{
                 width: "100%",
-                boxSizing: "border-box",
                 padding: "10px 12px",
                 border: "1px solid #D1D5DB",
                 borderRadius: "8px",
                 fontSize: "14px",
+                minHeight: "80px",
+                backgroundColor: "#ffffff",
               }}
-            />
+            >
+              {tags.map((tag) => (
+                <option
+                  key={tag._id}
+                  value={tag._id}
+                  style={{ marginBottom: "5px" }}
+                >
+                  {tag.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div
