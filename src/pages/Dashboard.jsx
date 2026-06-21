@@ -204,6 +204,7 @@ export default function Dashboard() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            marginBottom: "10px",
           }}
         >
           <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
@@ -212,13 +213,13 @@ export default function Dashboard() {
                 fontSize: "18px",
                 fontWeight: "600",
                 color: "#374151",
-                marginBottom: "16px",
+                marginBottom: "0px",
               }}
             >
               Ongoing Projects
             </h2>
             <select
-              value={projectStatus}
+              // value={projectStatus}
               onChange={(e) => setProjectStatus(e.target.value)}
               style={{
                 padding: "5px 10px",

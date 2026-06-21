@@ -199,7 +199,7 @@ export default function EditTask() {
             Modify Task Configuration
           </h1>
           <p style={{ fontSize: "14px", color: "#4B5563", margin: 0 }}>
-            Adjust properties, transfer group context headers, and update
+            Update properties, handover to other teams, and update
             execution metrics.
           </p>
         </div>

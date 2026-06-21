@@ -18,6 +18,8 @@ import Reports from "./pages/Reports"
 import Sidebar from "./components/Sidebar"
 import { ToastContainer } from "react-toastify"
 import TeamDetail from "./pages/TeamDetail"
+import EditTask from "./components/EditTaskModel"
+import EditProfile from "./components/EditProfile"
 
 const ProtectedLayout = ({ children }) => {
   const hasActiveToken = !!localStorage.getItem("token")
@@ -96,6 +98,22 @@ export default function App() {
           element={
             <ProtectedLayout>
               <TeamDetail />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/tasks/edit/:taskId"
+          element={
+            <ProtectedLayout>
+              <EditTask />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedLayout>
+              <EditProfile />
             </ProtectedLayout>
           }
         />
