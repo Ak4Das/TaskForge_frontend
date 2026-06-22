@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify"
 import TeamDetail from "./pages/TeamDetail"
 import EditTask from "./components/EditTaskModel"
 import EditProfile from "./components/EditProfile"
+import EditTeam from "./components/EditTeam"
 
 const ProtectedLayout = ({ children }) => {
   const hasActiveToken = !!localStorage.getItem("token")
@@ -114,6 +115,14 @@ export default function App() {
           element={
             <ProtectedLayout>
               <EditProfile />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/teams/edit/:teamId"
+          element={
+            <ProtectedLayout>
+              <EditTeam />
             </ProtectedLayout>
           }
         />
