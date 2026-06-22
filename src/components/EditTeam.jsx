@@ -29,10 +29,12 @@ export default function EditTeam() {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [selectedMembers, setSelectedMembers] = useState([])
+  const [newSelectedMembers, setNewSelectedMembers] = useState([])
 
   const initialValues = {
     name: name,
     description: description,
+    members: selectedMembers,
   }
 
   const formik = useFormik({
@@ -42,7 +44,6 @@ export default function EditTeam() {
     onSubmit: async (values, action) => {
       try {
         setSubmitting(true)
-        values.members = selectedMembers
 
         const response = await updateTeam({ teamId, body: values, setIsError })
 
@@ -86,6 +87,7 @@ export default function EditTeam() {
         setName(teamMatch.name || "")
         setDescription(teamMatch.description || "")
         setSelectedMembers(teamMatch.members || [])
+        setNewSelectedMembers(teamMatch.members || [])
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
           console.error(error)
@@ -100,10 +102,20 @@ export default function EditTeam() {
   }, [teamId])
 
   const handleMemberCheckboxToggle = (userId) => {
-    if (selectedMembers.includes(userId)) {
-      setSelectedMembers(selectedMembers.filter((id) => id !== userId))
+    if (newSelectedMembers.includes(userId)) {
+      formik.setValues({
+        name: values.name,
+        description: values.description,
+        members: newSelectedMembers.filter((id) => id !== userId),
+      })
+      setNewSelectedMembers(newSelectedMembers.filter((id) => id !== userId))
     } else {
-      setSelectedMembers([...selectedMembers, userId])
+      formik.setValues({
+        name: values.name,
+        description: values.description,
+        members: [...newSelectedMembers, userId],
+      })
+      setNewSelectedMembers([...newSelectedMembers, userId])
     }
   }
 
@@ -316,7 +328,7 @@ export default function EditTeam() {
                   color: "#374151",
                 }}
               >
-                Assigned Team Members ({selectedMembers.length} active)
+                Assigned Team Members ({newSelectedMembers.length} active)
               </label>
               <div style={{ position: "relative", width: "200px" }}>
                 <Search
@@ -385,7 +397,7 @@ export default function EditTeam() {
                   >
                     <input
                       type="checkbox"
-                      checked={selectedMembers.includes(user._id)}
+                      checked={newSelectedMembers.includes(user._id)}
                       onChange={() => handleMemberCheckboxToggle(user._id)}
                       style={{
                         width: "15px",

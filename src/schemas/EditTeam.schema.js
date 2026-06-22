@@ -10,4 +10,15 @@ export const editTeamSchema = yup.object({
     .string()
     .strict()
     .typeError("Team description must be string"),
+  members: yup
+    .array()
+    .of(
+      yup
+        .string()
+        .trim()
+        .required("Member is required")
+        .matches(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId"),
+    )
+    .min(1, "At least one member is required")
+    .required("Members are required"),
 })
