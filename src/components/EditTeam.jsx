@@ -14,6 +14,8 @@ import {
   fetchUsers,
   updateTeam,
 } from "../../services/requestToServer"
+import { useFormik } from "formik"
+import { editTeamSchema } from "../schemas/EditTeam.schema"
 
 export default function EditTeam() {
   const { teamId } = useParams()
@@ -28,6 +30,40 @@ export default function EditTeam() {
   const [description, setDescription] = useState("")
   const [selectedMembers, setSelectedMembers] = useState([])
 
+  const initialValues = {
+    name: name,
+    description: description,
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: editTeamSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+        values.members = selectedMembers
+
+        const response = await updateTeam({ teamId, body: values, setIsError })
+
+        if (response && Object.keys(response).length) {
+          setSuccess(`Team "${name}" have been successfully saved.`)
+          setTimeout(() => navigate("/teams"), 600)
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
+
   useEffect(() => {
     const fetchTeamAndOrganizationUsers = async () => {
       try {
@@ -38,27 +74,18 @@ export default function EditTeam() {
           fetchTeams({ setIsError }),
         ])
 
-        setUsersList(usersRes.data.respondedData)
+        setUsersList(usersRes)
 
-        const teamMatch = teamsRes.data.respondedData.find(
-          (team) => team._id === teamId,
-        )
+        const teamMatch = teamsRes.find((team) => team._id === teamId)
         if (!teamMatch) {
-          setIsError(
-            "The requested team configuration profile could not be localized.",
-          )
+          setIsError("Team not registered.")
           setLoading(false)
           return
         }
 
         setName(teamMatch.name || "")
         setDescription(teamMatch.description || "")
-
-        if (teamMatch.members) {
-          setSelectedMembers(
-            teamMatch.members.map((m) => (typeof m === "object" ? m._id : m)),
-          )
-        }
+        setSelectedMembers(teamMatch.members || [])
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
           console.error(error)
@@ -85,36 +112,6 @@ export default function EditTeam() {
       user.name.toLowerCase().includes(searchMemberQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchMemberQuery.toLowerCase()),
   )
-
-  const handleEditTeamSubmit = async (e) => {
-    e.preventDefault()
-    if (!name.trim()) return
-
-    setSubmitting(true)
-
-    try {
-      const payload = {
-        name: name.trim(),
-        description: description.trim(),
-        members: selectedMembers,
-      }
-
-      await updateTeam({ teamId, body: payload, setIsError })
-
-      setSuccess(
-        `Structural parameters for "${name}" have been successfully saved.`,
-      )
-
-      setTimeout(() => navigate("/teams"), 1200)
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -234,10 +231,9 @@ export default function EditTeam() {
         )}
 
         <form
-          onSubmit={handleEditTeamSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "18px" }}
         >
-          {/* Team Name Input Field */}
           <div>
             <label
               style={{
@@ -253,8 +249,8 @@ export default function EditTeam() {
             <input
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={values.name}
+              name="name"
               placeholder="e.g., Quality Engineering"
               style={{
                 width: "100%",
@@ -265,10 +261,11 @@ export default function EditTeam() {
                 fontSize: "14px",
                 color: "#111827",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
-          {/* Team Scope Description Textarea */}
           <div>
             <label
               style={{
@@ -283,8 +280,8 @@ export default function EditTeam() {
             </label>
             <textarea
               rows="3"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={values.description}
+              name="description"
               placeholder="Outline task scopes managed by this structural group unit..."
               style={{
                 width: "100%",
@@ -298,10 +295,11 @@ export default function EditTeam() {
                 fontFamily: "inherit",
                 lineHeight: "1.4",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
-          {/* Team Member Rosters Checklist Block */}
           <div>
             <div
               style={{
@@ -348,7 +346,6 @@ export default function EditTeam() {
               </div>
             </div>
 
-            {/* Selection Checklist Box */}
             <div
               style={{
                 border: "1px solid #D1D5DB",
@@ -409,7 +406,6 @@ export default function EditTeam() {
             </div>
           </div>
 
-          {/* Action Row Buttons */}
           <div
             style={{
               display: "flex",
@@ -439,7 +435,7 @@ export default function EditTeam() {
             </button>
             <button
               type="submit"
-              disabled={submitting || !name.trim()}
+              disabled={submitting}
               style={{
                 display: "flex",
                 alignItems: "center",
