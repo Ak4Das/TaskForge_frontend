@@ -150,7 +150,6 @@ export default function EditTeam() {
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      {/* Return Action Row */}
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -169,7 +168,6 @@ export default function EditTeam() {
         <ArrowLeft size={16} /> Discard Modifications & Go Back
       </button>
 
-      {/* Main Form Box Container */}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -197,12 +195,11 @@ export default function EditTeam() {
             Edit Team Properties
           </h1>
           <p style={{ fontSize: "14px", color: "#4B5563", margin: 0 }}>
-            Update operational scopes, adjust departmental labels, and alter
-            personnel assignments.
+            Update team name, change functional scope description, and assign or
+            remove team members.
           </p>
         </div>
 
-        {/* Action Status Banners */}
         {error && (
           <div
             style={{
@@ -276,6 +273,11 @@ export default function EditTeam() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+                {errors.name}
+              </span>
+            ) : null}
           </div>
 
           <div>
@@ -310,6 +312,11 @@ export default function EditTeam() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.description && touched.description ? (
+              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+                {errors.description}
+              </span>
+            ) : null}
           </div>
 
           <div>
@@ -343,7 +350,7 @@ export default function EditTeam() {
                 />
                 <input
                   type="text"
-                  placeholder="Search personnel..."
+                  placeholder="Search member by name..."
                   value={searchMemberQuery}
                   onChange={(e) => setSearchMemberQuery(e.target.value)}
                   style={{
@@ -416,6 +423,11 @@ export default function EditTeam() {
                 ))
               )}
             </div>
+            {errors.members ? (
+              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+                {errors.members}
+              </span>
+            ) : null}
           </div>
 
           <div

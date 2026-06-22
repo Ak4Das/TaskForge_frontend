@@ -9,7 +9,9 @@ export const editTeamSchema = yup.object({
   description: yup
     .string()
     .strict()
-    .typeError("Team description must be string"),
+    .typeError("Team description must be string")
+    .required("Description is required")
+    .min(10, "Description is too short"),
   members: yup
     .array()
     .of(
