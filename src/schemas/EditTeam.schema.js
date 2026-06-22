@@ -3,13 +3,15 @@ import * as yup from "yup"
 export const editTeamSchema = yup.object({
   name: yup
     .string()
-    .strict()
-    .typeError("Team name must be string.")
-    .matches(/^[A-Z][a-z]*$/, "First character must be capital"),
+    .trim()
+    .required("Team name is required")
+    .matches(
+      /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/,
+      "Each word must start with a capital letter and contain only letters and only one space allowed btw words",
+    ),
   description: yup
     .string()
-    .strict()
-    .typeError("Team description must be string")
+    .trim()
     .required("Description is required")
     .min(10, "Description is too short"),
   members: yup

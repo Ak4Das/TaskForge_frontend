@@ -11,20 +11,57 @@ import {
   KeyRound,
 } from "lucide-react"
 import { fetchMe, updateUserProfile } from "../../services/requestToServer"
+import { useFormik } from "formik"
+import { editProfileSchema } from "../schemas/EditProfile.schema"
 
 export default function EditProfile() {
   const navigate = useNavigate()
-
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
-
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [currentPassword, setCurrentPassword] = useState("")
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const initialValues = {
+    name: name,
+    newPassword: "",
+    confirmPassword: "",
+    currentPassword: "",
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: editProfileSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+        const body = {
+          name: values.name,
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        }
+
+        const response = await updateUserProfile({ body, setIsError })
+
+        if (response && Object.keys(response).length) {
+          setSuccess("Account profile successfully updated.")
+          setTimeout(() => navigate("/"), 1200)
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
 
   useEffect(() => {
     const fetchCurrentProfile = async () => {
@@ -47,52 +84,6 @@ export default function EditProfile() {
 
     fetchCurrentProfile()
   }, [])
-
-  const handleProfileUpdateSubmit = async (e) => {
-    e.preventDefault()
-
-    if (newPassword) {
-      if (newPassword.length < 6) {
-        setIsError("Your new password must contain a minimum of 6 characters.")
-        return
-      }
-      if (newPassword !== confirmPassword) {
-        setIsError("The new password confirmation fields do not match.")
-        return
-      }
-      if (!currentPassword) {
-        setIsError(
-          "You must input your current password to authorize security updates.",
-        )
-        return
-      }
-    }
-
-    setSubmitting(true)
-
-    try {
-      const body = { name }
-      if (newPassword) {
-        body.currentPassword = currentPassword
-        body.newPassword = newPassword
-      }
-
-      await updateUserProfile({ body, setIsError })
-
-      setSuccess("Account profile successfully updated.")
-
-      setCurrentPassword("")
-      setNewPassword("")
-      setConfirmPassword("")
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -188,6 +179,7 @@ export default function EditProfile() {
             <span>{error}</span>
           </div>
         )}
+
         {success && (
           <div
             style={{
@@ -209,10 +201,9 @@ export default function EditProfile() {
         )}
 
         <form
-          onSubmit={handleProfileUpdateSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
-          {/* Email Identity (Read Only) */}
           <div>
             <label
               style={{
@@ -243,7 +234,6 @@ export default function EditProfile() {
             />
           </div>
 
-          {/* Profile Name Field */}
           <div>
             <label
               style={{
@@ -270,8 +260,8 @@ export default function EditProfile() {
               <input
                 type="text"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={values.name}
+                name="name"
                 placeholder="Your full name"
                 style={{
                   width: "100%",
@@ -282,11 +272,12 @@ export default function EditProfile() {
                   fontSize: "14px",
                   color: "#111827",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
 
-          {/* Security Divider Break Option */}
           <div
             style={{
               borderTop: "1px solid #F3F4F6",
@@ -320,7 +311,6 @@ export default function EditProfile() {
             </p>
           </div>
 
-          {/* New Password input */}
           <div>
             <label
               style={{
@@ -346,8 +336,8 @@ export default function EditProfile() {
               />
               <input
                 type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                value={values.newPassword}
+                name="newPassword"
                 placeholder="Leave blank to preserve current password"
                 style={{
                   width: "100%",
@@ -357,11 +347,12 @@ export default function EditProfile() {
                   borderRadius: "8px",
                   fontSize: "14px",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
 
-          {/* Confirm New Password */}
           <div>
             <label
               style={{
@@ -387,8 +378,8 @@ export default function EditProfile() {
               />
               <input
                 type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={values.confirmPassword}
+                name="confirmPassword"
                 placeholder="Confirm your selection"
                 style={{
                   width: "100%",
@@ -398,12 +389,13 @@ export default function EditProfile() {
                   borderRadius: "8px",
                   fontSize: "14px",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
 
-          {/* Verification Anchor Requirement */}
-          {newPassword && (
+          {values.newPassword && (
             <div
               style={{
                 backgroundColor: "#FFFBEB",
@@ -427,8 +419,8 @@ export default function EditProfile() {
               <input
                 type="password"
                 required
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
+                value={values.currentPassword}
+                name="currentPassword"
                 placeholder="Type your current access password"
                 style={{
                   width: "100%",
@@ -438,11 +430,12 @@ export default function EditProfile() {
                   borderRadius: "8px",
                   fontSize: "14px",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           )}
 
-          {/* Submit Triggers */}
           <button
             type="submit"
             disabled={submitting}
