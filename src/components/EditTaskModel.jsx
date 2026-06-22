@@ -16,21 +16,20 @@ import {
   fetchUsers,
   updateTask,
 } from "../../services/requestToServer"
+import { useFormik } from "formik"
+import { taskSchema } from "../schemas/EditTask.schema"
 
 export default function EditTask() {
   const { taskId } = useParams()
   const navigate = useNavigate()
-
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
-
   const [projects, setProjects] = useState([])
   const [teams, setTeams] = useState([])
   const [usersList, setUsersList] = useState([])
   const [tagsList, setTagsList] = useState([])
-
   const [name, setName] = useState("")
   const [project, setProject] = useState("")
   const [team, setTeam] = useState("")
@@ -39,6 +38,46 @@ export default function EditTask() {
   const [timeToComplete, setTimeToComplete] = useState(1)
   const [status, setStatus] = useState("To Do")
   const [priority, setPriority] = useState("Medium")
+  const [newOwners, setNewOwners] = useState([])
+  const [newTags, setNewTags] = useState([])
+
+  const initialValues = {
+    name: name,
+    project: project,
+    team: team,
+    owners: owners,
+    tags: tags,
+    status: status,
+    priority: priority,
+    timeToComplete: timeToComplete,
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: taskSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+
+        const response = await updateTask({ taskId, body: values, setIsError })
+        if (response && Object.keys(response).length) {
+          setSuccess("Task configurations have been successfully preserved.")
+          setTimeout(() => navigate(`/tasks/${taskId}`), 1200)
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
 
   useEffect(() => {
     const fetchFormContextAndTask = async () => {
@@ -68,9 +107,17 @@ export default function EditTask() {
               typeof owner === "object" ? owner._id : owner,
             ),
           )
+          setNewOwners(
+            task.owners.map((owner) =>
+              typeof owner === "object" ? owner._id : owner,
+            ),
+          )
         }
         if (task.tags) {
           setTags(
+            task.tags.map((tag) => (typeof tag === "object" ? tag._id : tag)),
+          )
+          setNewTags(
             task.tags.map((tag) => (typeof tag === "object" ? tag._id : tag)),
           )
         }
@@ -89,43 +136,36 @@ export default function EditTask() {
 
   const handleMultiSelectToggle = (id, selectedArray, setArrayTarget) => {
     if (selectedArray.includes(id)) {
+      formik.setValues({
+        name: values.name,
+        project: values.project,
+        team: values.team,
+        owners:
+          selectedArray === newOwners
+            ? selectedArray.filter((item) => item !== id)
+            : values.owners,
+        tags:
+          selectedArray === newTags
+            ? selectedArray.filter((item) => item !== id)
+            : values.tags,
+        status: values.status,
+        priority: values.priority,
+        timeToComplete: values.timeToComplete,
+      })
       setArrayTarget(selectedArray.filter((item) => item !== id))
     } else {
+      formik.setValues({
+        name: values.name,
+        project: values.project,
+        team: values.team,
+        owners:
+          selectedArray === newOwners ? [...selectedArray, id] : values.owners,
+        tags: selectedArray === newTags ? [...selectedArray, id] : values.tags,
+        status: values.status,
+        priority: values.priority,
+        timeToComplete: values.timeToComplete,
+      })
       setArrayTarget([...selectedArray, id])
-    }
-  }
-
-  const handleEditFormSubmit = async (e) => {
-    e.preventDefault()
-
-    setSubmitting(true)
-
-    try {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-
-      const payload = {
-        name: name.trim(),
-        project: project || null,
-        team: team || null,
-        owners,
-        tags,
-        timeToComplete: Number(timeToComplete),
-        status,
-        priority,
-      }
-
-      await updateTask({ taskId, body: payload, setIsError })
-
-      setSuccess("Task configurations have been successfully preserved.")
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
     }
   }
 
@@ -199,8 +239,8 @@ export default function EditTask() {
             Modify Task Configuration
           </h1>
           <p style={{ fontSize: "14px", color: "#4B5563", margin: 0 }}>
-            Update properties, handover to other teams, and update
-            execution metrics.
+            Update properties, handover to other teams, and update execution
+            metrics.
           </p>
         </div>
 
@@ -244,10 +284,9 @@ export default function EditTask() {
         )}
 
         <form
-          onSubmit={handleEditFormSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "18px" }}
         >
-          {/* 1. Name Field */}
           <div>
             <label
               style={{
@@ -263,8 +302,8 @@ export default function EditTask() {
             <input
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={values.name}
+              name="name"
               style={{
                 width: "100%",
                 boxSizing: "border-box",
@@ -273,10 +312,11 @@ export default function EditTask() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
-          {/* Dual Grid Split for Parent Relationships */}
           <div
             style={{
               display: "grid",
@@ -284,7 +324,6 @@ export default function EditTask() {
               gap: "16px",
             }}
           >
-            {/* Project Context */}
             <div>
               <label
                 style={{
@@ -298,8 +337,8 @@ export default function EditTask() {
                 Project Hub
               </label>
               <select
-                value={project}
-                onChange={(e) => setProject(e.target.value)}
+                value={values.project}
+                name="project"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -309,6 +348,8 @@ export default function EditTask() {
                   fontSize: "14px",
                   backgroundColor: "#fff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="">Select Target Project...</option>
                 {projects.map((project) => (
@@ -319,7 +360,6 @@ export default function EditTask() {
               </select>
             </div>
 
-            {/* Assigned Team */}
             <div>
               <label
                 style={{
@@ -333,8 +373,8 @@ export default function EditTask() {
                 Department Team
               </label>
               <select
-                value={team}
-                onChange={(e) => setTeam(e.target.value)}
+                value={values.team}
+                name="team"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -344,6 +384,8 @@ export default function EditTask() {
                   fontSize: "14px",
                   backgroundColor: "#fff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="">Cross-Functional Unit...</option>
                 {teams.map((team) => (
@@ -355,7 +397,6 @@ export default function EditTask() {
             </div>
           </div>
 
-          {/* 2. Owners Selection Panel */}
           <div>
             <label
               style={{
@@ -394,9 +435,9 @@ export default function EditTask() {
                 >
                   <input
                     type="checkbox"
-                    checked={owners.includes(user._id)}
+                    checked={newOwners.includes(user._id)}
                     onChange={() =>
-                      handleMultiSelectToggle(user._id, owners, setOwners)
+                      handleMultiSelectToggle(user._id, newOwners, setNewOwners)
                     }
                   />
                   <span>
@@ -408,7 +449,6 @@ export default function EditTask() {
             </div>
           </div>
 
-          {/* 3. Tags Selection Panel */}
           <div>
             <label
               style={{
@@ -434,13 +474,13 @@ export default function EditTask() {
             >
               {tagsList.map((tag) => {
                 const tagId = tag._id
-                const isChecked = tags.includes(tagId)
+                const isChecked = newTags.includes(tagId)
                 return (
                   <button
                     type="button"
                     key={tagId}
                     onClick={() =>
-                      handleMultiSelectToggle(tagId, tags, setTags)
+                      handleMultiSelectToggle(tagId, newTags, setNewTags)
                     }
                     style={{
                       border: "1px solid #D1D5DB",
@@ -460,7 +500,6 @@ export default function EditTask() {
             </div>
           </div>
 
-          {/* Triple Column Configuration Row split */}
           <div
             style={{
               display: "grid",
@@ -468,7 +507,6 @@ export default function EditTask() {
               gap: "16px",
             }}
           >
-            {/* Status State */}
             <div>
               <label
                 style={{
@@ -482,8 +520,8 @@ export default function EditTask() {
                 Workflow Status
               </label>
               <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                value={values.status}
+                name="status"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -493,6 +531,8 @@ export default function EditTask() {
                   fontSize: "13px",
                   backgroundColor: "#fff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="To Do">To Do</option>
                 <option value="In Progress">In Progress</option>
@@ -501,7 +541,6 @@ export default function EditTask() {
               </select>
             </div>
 
-            {/* Priority Grade */}
             <div>
               <label
                 style={{
@@ -515,8 +554,8 @@ export default function EditTask() {
                 Priority Grade
               </label>
               <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
+                value={values.priority}
+                name="priority"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -526,14 +565,14 @@ export default function EditTask() {
                   fontSize: "13px",
                   backgroundColor: "#fff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
             </div>
 
-            {/* Effort Time Estimate */}
             <div>
               <label
                 style={{
@@ -549,8 +588,8 @@ export default function EditTask() {
               <input
                 type="number"
                 min="1"
-                value={timeToComplete}
-                onChange={(e) => setTimeToComplete(e.target.value)}
+                value={values.timeToComplete}
+                name="timeToComplete"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -559,11 +598,12 @@ export default function EditTask() {
                   borderRadius: "8px",
                   fontSize: "13px",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
 
-          {/* Action Row */}
           <div
             style={{
               display: "flex",
