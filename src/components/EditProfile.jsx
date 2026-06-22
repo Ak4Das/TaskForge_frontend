@@ -276,6 +276,14 @@ export default function EditProfile() {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div
@@ -351,6 +359,14 @@ export default function EditProfile() {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.newPassword && touched.newPassword ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.newPassword}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -393,6 +409,14 @@ export default function EditProfile() {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.confirmPassword && touched.confirmPassword ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.confirmPassword}
+              </p>
+            ) : null}
           </div>
 
           {values.newPassword && (
@@ -433,6 +457,14 @@ export default function EditProfile() {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
+              {errors.currentPassword && touched.currentPassword ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.currentPassword}
+                </p>
+              ) : null}
             </div>
           )}
 

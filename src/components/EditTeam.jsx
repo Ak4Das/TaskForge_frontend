@@ -274,9 +274,12 @@ export default function EditTeam() {
               onBlur={handleBlur}
             />
             {errors.name && touched.name ? (
-              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
                 {errors.name}
-              </span>
+              </p>
             ) : null}
           </div>
 
@@ -313,9 +316,12 @@ export default function EditTeam() {
               onBlur={handleBlur}
             />
             {errors.description && touched.description ? (
-              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
                 {errors.description}
-              </span>
+              </p>
             ) : null}
           </div>
 
@@ -424,9 +430,12 @@ export default function EditTeam() {
               )}
             </div>
             {errors.members ? (
-              <span className={`text-danger`} style={{ fontSize: "12px" }}>
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
                 {errors.members}
-              </span>
+              </p>
             ) : null}
           </div>
 
