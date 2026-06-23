@@ -10,17 +10,10 @@ import {
 } from "../../services/requestToServer"
 import { useSearchParams } from "react-router-dom"
 import TagsModel from "./TagsModel"
+import { useFormik } from "formik"
+import { taskSchema } from "../schemas/EditTask.schema"
 
 export default function TaskModal({ setModalVisibilityState, fetchData }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    project: "",
-    team: "",
-    owners: [],
-    tags: "",
-    timeToComplete: 1,
-    status: "To Do",
-  })
   const [projects, setProjects] = useState([])
   const [teams, setTeams] = useState([])
   const [users, setUsers] = useState([])
@@ -30,6 +23,51 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const isTagsModalOpen = searchParams.get("newTagsModal") === "true"
+
+  const initialValues = {
+    name: "",
+    project: "",
+    team: "",
+    owners: [],
+    tags: [],
+    timeToComplete: 1,
+    status: "To Do",
+    priority: "High",
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: taskSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+
+        const response = await createTask({ body: values, setIsError })
+        if (response && Object.keys(response).length) {
+          setModalVisibilityState(false)
+          fetchData()
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    setFieldValue,
+    handleSubmit,
+  } = formik
 
   const fetchFormContextDependencies = async () => {
     try {
@@ -60,27 +98,6 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
       updatedParams.delete("newTagsModal")
     }
     setSearchParams(updatedParams)
-  }
-
-  const handleFormSubmission = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
-    try {
-      await createTask({
-        body: formData,
-        setIsError,
-      })
-
-      setModalVisibilityState(false)
-      fetchData()
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
   }
 
   return (
@@ -145,7 +162,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
         </div>
 
         <form
-          onSubmit={handleFormSubmission}
+          onSubmit={handleSubmit}
           style={{
             padding: "24px",
             display: "flex",
@@ -167,11 +184,10 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             </label>
             <input
               type="text"
+              name="name"
+              value={values.name}
               required
               placeholder="e.g., Fix auth failure edge cases"
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
               style={{
                 width: "100%",
                 boxSizing: "border-box",
@@ -180,6 +196,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
@@ -204,9 +222,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </label>
               <select
                 required
-                onChange={(e) =>
-                  setFormData({ ...formData, project: e.target.value })
-                }
+                name="project"
+                value={values.project}
                 style={{
                   width: "100%",
                   padding: "10px 12px",
@@ -215,6 +232,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   fontSize: "14px",
                   backgroundColor: "#ffffff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="">-- Choose Project --</option>
                 {projects.map((p) => (
@@ -238,9 +257,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </label>
               <select
                 required
-                onChange={(e) =>
-                  setFormData({ ...formData, team: e.target.value })
-                }
+                name="team"
+                value={values.team}
                 style={{
                   width: "100%",
                   padding: "10px 12px",
@@ -249,6 +267,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   fontSize: "14px",
                   backgroundColor: "#ffffff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="">-- Choose Team --</option>
                 {teams.map((t) => (
@@ -275,16 +295,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             <select
               multiple
               required
-              onChange={(e) => {
-                // Convert array like object to actual array
-                const selectedOptions = Array.from(e.target.selectedOptions)
-
-                const checkedOptionsArray = selectedOptions.map(
-                  (opt) => opt.value,
-                )
-
-                setFormData({ ...formData, owners: checkedOptionsArray })
-              }}
+              name="owners"
               style={{
                 width: "100%",
                 padding: "10px 12px",
@@ -294,6 +305,16 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 minHeight: "80px",
                 backgroundColor: "#ffffff",
               }}
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions)
+
+                const checkedOptionsArray = selectedOptions.map(
+                  (opt) => opt.value,
+                )
+
+                setFieldValue("owners", checkedOptionsArray)
+              }}
+              onBlur={handleBlur}
             >
               {users.map((user) => (
                 <option
@@ -331,15 +352,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             <select
               multiple
               required
-              onChange={(e) => {
-                // Convert array like object to actual array
-                const selectedOptions = Array.from(e.target.selectedOptions)
-
-                const checkedOptionsArray = selectedOptions.map(
-                  (opt) => opt.value,
-                )
-                setFormData({ ...formData, tags: checkedOptionsArray })
-              }}
+              name="tags"
               style={{
                 width: "100%",
                 padding: "10px 12px",
@@ -349,6 +362,16 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 minHeight: "80px",
                 backgroundColor: "#ffffff",
               }}
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions)
+
+                const checkedOptionsArray = selectedOptions.map(
+                  (opt) => opt.value,
+                )
+
+                setFieldValue("tags", checkedOptionsArray)
+              }}
+              onBlur={handleBlur}
             >
               {tags.map((tag) => (
                 <option
@@ -384,14 +407,9 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               <input
                 type="number"
                 min="1"
+                name="timeToComplete"
+                value={values.timeToComplete}
                 required
-                value={formData.timeToComplete}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    timeToComplete: Number(e.target.value),
-                  })
-                }
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
@@ -400,6 +418,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   borderRadius: "8px",
                   fontSize: "14px",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
             <div>
@@ -415,10 +435,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 Initial Core Status
               </label>
               <select
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData({ ...formData, status: e.target.value })
-                }
+                name="status"
+                value={values.status}
                 style={{
                   width: "100%",
                   padding: "10px 12px",
@@ -427,6 +445,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   fontSize: "14px",
                   backgroundColor: "#ffffff",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="To Do">To Do</option>
                 <option value="In Progress">In Progress</option>
