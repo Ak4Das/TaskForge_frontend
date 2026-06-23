@@ -37,9 +37,7 @@ export default function EditTask() {
   const [tags, setTags] = useState([])
   const [timeToComplete, setTimeToComplete] = useState(1)
   const [status, setStatus] = useState("To Do")
-  const [priority, setPriority] = useState("Medium")
-  const [newOwners, setNewOwners] = useState([])
-  const [newTags, setNewTags] = useState([])
+  const [priority, setPriority] = useState("High")
 
   const initialValues = {
     name: name,
@@ -76,8 +74,15 @@ export default function EditTask() {
     },
   })
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    formik
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    setFieldValue,
+    handleSubmit,
+  } = formik
 
   useEffect(() => {
     const fetchFormContextAndTask = async () => {
@@ -103,11 +108,9 @@ export default function EditTask() {
         setPriority(task.priority)
 
         setOwners(task.owners.map((owner) => owner._id))
-        setNewOwners(task.owners.map((owner) => owner._id))
 
         if (task.tags) {
           setTags(task.tags.map((tag) => tag._id))
-          setNewTags(task.tags.map((tag) => tag._id))
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -121,41 +124,6 @@ export default function EditTask() {
 
     fetchFormContextAndTask()
   }, [taskId])
-
-  const handleMultiSelectToggle = (id, selectedArray, setArrayTarget) => {
-    if (selectedArray.includes(id)) {
-      formik.setValues({
-        name: values.name,
-        project: values.project,
-        team: values.team,
-        owners:
-          selectedArray === newOwners
-            ? selectedArray.filter((item) => item !== id)
-            : values.owners,
-        tags:
-          selectedArray === newTags
-            ? selectedArray.filter((item) => item !== id)
-            : values.tags,
-        status: values.status,
-        priority: values.priority,
-        timeToComplete: values.timeToComplete,
-      })
-      setArrayTarget(selectedArray.filter((item) => item !== id))
-    } else {
-      formik.setValues({
-        name: values.name,
-        project: values.project,
-        team: values.team,
-        owners:
-          selectedArray === newOwners ? [...selectedArray, id] : values.owners,
-        tags: selectedArray === newTags ? [...selectedArray, id] : values.tags,
-        status: values.status,
-        priority: values.priority,
-        timeToComplete: values.timeToComplete,
-      })
-      setArrayTarget([...selectedArray, id])
-    }
-  }
 
   if (loading) {
     return (
@@ -419,7 +387,7 @@ export default function EditTask() {
                 marginBottom: "6px",
               }}
             >
-              Responsible Owners ({owners.length} bound)
+              Responsible Owners ({values.owners.length} bound)
             </label>
             <div
               style={{
@@ -447,10 +415,17 @@ export default function EditTask() {
                 >
                   <input
                     type="checkbox"
-                    checked={newOwners.includes(user._id)}
-                    onChange={() =>
-                      handleMultiSelectToggle(user._id, newOwners, setNewOwners)
-                    }
+                    checked={values.owners.includes(user._id)}
+                    onChange={() => {
+                      if (values.owners.includes(user._id)) {
+                        setFieldValue(
+                          "owners",
+                          values.owners.filter((item) => item !== user._id),
+                        )
+                      } else {
+                        setFieldValue("owners", [...values.owners, user._id])
+                      }
+                    }}
                   />
                   <span>
                     {user.name}
@@ -479,7 +454,7 @@ export default function EditTask() {
                 marginBottom: "6px",
               }}
             >
-              Taxonomy Tags ({tags.length} selected)
+              Taxonomy Tags ({values.tags.length} selected)
             </label>
             <div
               style={{
@@ -494,14 +469,21 @@ export default function EditTask() {
             >
               {tagsList.map((tag) => {
                 const tagId = tag._id
-                const isChecked = newTags.includes(tagId)
+                const isChecked = values.tags.includes(tagId)
                 return (
                   <button
                     type="button"
                     key={tagId}
-                    onClick={() =>
-                      handleMultiSelectToggle(tagId, newTags, setNewTags)
-                    }
+                    onClick={() => {
+                      if (values.tags.includes(tagId)) {
+                        setFieldValue(
+                          "tags",
+                          values.tags.filter((item) => item !== tagId),
+                        )
+                      } else {
+                        setFieldValue("tags", [...values.tags, tagId])
+                      }
+                    }}
                     style={{
                       border: "1px solid #D1D5DB",
                       background: isChecked ? "#EEF2F6" : "#ffffff",
