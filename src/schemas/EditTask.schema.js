@@ -7,7 +7,7 @@ export const taskSchema = yup.object({
     .required("Task name is required")
     .matches(
       /^[A-Z][a-zA-Z.,]*(?: [a-zA-Z.,]+)*$/,
-      "Each word must start with a capital letter and contain only letters and only one space allowed btw words",
+      "First word must start with a capital letter and contain only letters, '.', ',' and only one space allowed btw words no space is allowed in the beginning and end of name",
     ),
 
   project: yup

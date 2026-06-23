@@ -2,38 +2,50 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { X, FolderPlus, AlertCircle } from "lucide-react"
 import { createProject } from "../../services/requestToServer"
+import { useFormik } from "formik"
+import { projectSchema } from "../schemas/Project.schema"
 
 export default function ProjectModal({ setProjectModalVisibilityState }) {
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
-
-    try {
-      await createProject({
-        body: {
-          name: name.trim(),
-          description: description.trim(),
-          status: "To Do",
-        },
-        setIsError,
-      })
-
-      setProjectModalVisibilityState(false)
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
+  const initialValues = {
+    name: "",
+    description: "",
   }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: projectSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+        const body = {
+          name: values.name.trim(),
+          description: values.description.trim(),
+          status: "To Do",
+        }
+        const response = await createProject({
+          body,
+          setIsError,
+        })
+        if (response && Object.keys(response).length) {
+          setProjectModalVisibilityState(false)
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
 
   return (
     <div
@@ -111,7 +123,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
         </div>
 
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={handleSubmit}
           style={{
             padding: "24px",
             display: "flex",
@@ -153,8 +165,8 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
             <input
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={values.name}
+              name="name"
               placeholder="e.g., Workspace management for track projects..."
               style={{
                 width: "100%",
@@ -166,7 +178,17 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
                 color: "#111827",
                 outline: "none",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -183,8 +205,8 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
             </label>
             <textarea
               rows="4"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={values.description}
+              name="description"
               placeholder="Write project description here..."
               style={{
                 width: "100%",
@@ -199,7 +221,17 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
                 fontFamily: "inherit",
                 lineHeight: "1.4",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.description && touched.description ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.description}
+              </p>
+            ) : null}
           </div>
 
           <div

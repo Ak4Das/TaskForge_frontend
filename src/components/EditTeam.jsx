@@ -405,7 +405,10 @@ export default function EditTeam() {
                             values.members.filter((id) => id !== user._id),
                           )
                         } else {
-                          setFieldValue("members", [...values.members, user._id])
+                          setFieldValue("members", [
+                            ...values.members,
+                            user._id,
+                          ])
                         }
                       }}
                       style={{

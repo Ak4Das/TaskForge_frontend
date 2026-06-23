@@ -7,7 +7,7 @@ export const editProfileSchema = yup.object({
     .required("Name is required")
     .matches(
       /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/,
-      "Each word must start with a capital letter and contain only letters and only one space allowed btw words",
+      "Each word must start with a capital letter and contain only letters and only one space allowed btw words no space is allowed in the beginning and end of name",
     ),
   newPassword: yup
     .string()

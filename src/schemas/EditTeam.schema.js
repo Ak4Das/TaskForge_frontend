@@ -6,8 +6,8 @@ export const editTeamSchema = yup.object({
     .trim()
     .required("Team name is required")
     .matches(
-      /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/,
-      "Each word must start with a capital letter and contain only letters and only one space allowed btw words",
+      /^[A-Z][a-zA-Z]*(?: [a-zA-Z]+)*$/,
+      "First word must start with a capital letter and contain only letters and only one space allowed btw words no space is allowed in the beginning and end of name",
     ),
   description: yup
     .string()
