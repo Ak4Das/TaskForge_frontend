@@ -94,32 +94,20 @@ export default function EditTask() {
           ])
 
         const task = taskRes
-        setName(task.name || "")
-        setProject(task.project?._id || task.project || "")
-        setTeam(task.team?._id || task.team || "")
-        setTimeToComplete(task.timeToComplete || 1)
-        setStatus(task.status || "To Do")
-        setPriority(task.priority || "Medium")
 
-        if (task.owners) {
-          setOwners(
-            task.owners.map((owner) =>
-              typeof owner === "object" ? owner._id : owner,
-            ),
-          )
-          setNewOwners(
-            task.owners.map((owner) =>
-              typeof owner === "object" ? owner._id : owner,
-            ),
-          )
-        }
+        setName(task.name)
+        setProject(task.project._id)
+        setTeam(task.team._id)
+        setTimeToComplete(task.timeToComplete)
+        setStatus(task.status)
+        setPriority(task.priority)
+
+        setOwners(task.owners.map((owner) => owner._id))
+        setNewOwners(task.owners.map((owner) => owner._id))
+
         if (task.tags) {
-          setTags(
-            task.tags.map((tag) => (typeof tag === "object" ? tag._id : tag)),
-          )
-          setNewTags(
-            task.tags.map((tag) => (typeof tag === "object" ? tag._id : tag)),
-          )
+          setTags(task.tags.map((tag) => tag._id))
+          setNewTags(task.tags.map((tag) => tag._id))
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -315,6 +303,14 @@ export default function EditTask() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div
@@ -358,6 +354,14 @@ export default function EditTask() {
                   </option>
                 ))}
               </select>
+              {errors.project && touched.project ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.project}
+                </p>
+              ) : null}
             </div>
 
             <div>
@@ -394,6 +398,14 @@ export default function EditTask() {
                   </option>
                 ))}
               </select>
+              {errors.team && touched.team ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.team}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -447,6 +459,14 @@ export default function EditTask() {
                 </label>
               ))}
             </div>
+            {errors.owners ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.owners}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -498,6 +518,14 @@ export default function EditTask() {
                 )
               })}
             </div>
+            {errors.tags ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.tags}
+              </p>
+            ) : null}
           </div>
 
           <div
@@ -539,6 +567,14 @@ export default function EditTask() {
                 <option value="Blocked">Blocked</option>
                 <option value="Completed">Completed</option>
               </select>
+              {errors.status && touched.status ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.status}
+                </p>
+              ) : null}
             </div>
 
             <div>
@@ -571,6 +607,14 @@ export default function EditTask() {
                 <option value="Low">Low</option>
                 <option value="High">High</option>
               </select>
+              {errors.priority && touched.priority ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.priority}
+                </p>
+              ) : null}
             </div>
 
             <div>
@@ -601,6 +645,14 @@ export default function EditTask() {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
+              {errors.timeToComplete && touched.timeToComplete ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.timeToComplete}
+                </p>
+              ) : null}
             </div>
           </div>
 

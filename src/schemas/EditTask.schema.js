@@ -1,7 +1,14 @@
 import * as yup from "yup"
 
 export const taskSchema = yup.object({
-  name: yup.string().trim().required("Task name is required"),
+  name: yup
+    .string()
+    .trim()
+    .required("Task name is required")
+    .matches(
+      /^[A-Z][a-zA-Z.,]*(?: [a-zA-Z.,]+)*$/,
+      "Each word must start with a capital letter and contain only letters and only one space allowed btw words",
+    ),
 
   project: yup
     .string()
@@ -24,12 +31,9 @@ export const taskSchema = yup.object({
     .min(1, "At least one owner is required")
     .required("Owners are required"),
 
-  tags: yup.array().of(
-    yup
-      .string()
-      .required("Tag is required")
-      .matches(/^[0-9a-fA-F]{24}$/, "Invalid tag id"),
-  ),
+  tags: yup
+    .array()
+    .of(yup.string().matches(/^[0-9a-fA-F]{24}$/, "Invalid tag id")),
 
   timeToComplete: yup
     .number()
@@ -42,5 +46,8 @@ export const taskSchema = yup.object({
     .oneOf(["To Do", "In Progress", "Completed", "Blocked"], "Invalid status")
     .required("Status is required"),
 
-  priority: yup.string().oneOf(["High", "Low"], "Invalid priority"),
+  priority: yup
+    .string()
+    .oneOf(["High", "Low"], "Invalid priority")
+    .required("Priority is required"),
 })
