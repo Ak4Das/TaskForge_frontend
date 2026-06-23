@@ -199,6 +199,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div
@@ -242,6 +250,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   </option>
                 ))}
               </select>
+              {errors.project && touched.project ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.project}
+                </p>
+              ) : null}
             </div>
             <div>
               <label
@@ -277,6 +293,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                   </option>
                 ))}
               </select>
+              {errors.team && touched.team ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.team}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -326,6 +350,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 </option>
               ))}
             </select>
+            {errors.owners && touched.owners ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.owners}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -351,7 +383,6 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             </div>
             <select
               multiple
-              required
               name="tags"
               style={{
                 width: "100%",
@@ -383,6 +414,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 </option>
               ))}
             </select>
+            {errors.tags && touched.tags ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.tags}
+              </p>
+            ) : null}
           </div>
 
           <div
@@ -421,6 +460,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
+              {errors.timeToComplete && touched.timeToComplete ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.timeToComplete}
+                </p>
+              ) : null}
             </div>
             <div>
               <label
@@ -453,6 +500,14 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 <option value="Completed">Completed</option>
                 <option value="Blocked">Blocked</option>
               </select>
+              {errors.status && touched.status ? (
+                <p
+                  className={`text-danger my-0`}
+                  style={{ fontSize: "12px", lineHeight: "15px" }}
+                >
+                  {errors.status}
+                </p>
+              ) : null}
             </div>
           </div>
 
