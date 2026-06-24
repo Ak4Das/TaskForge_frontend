@@ -12,38 +12,56 @@ import {
   X,
 } from "lucide-react"
 import { signUp } from "../../services/requestToServer"
+import { useFormik } from "formik"
+import { userSchema } from "../schemas/User.schema"
 
 export default function UserModel({ setModalVisibilityState }) {
   const navigate = useNavigate()
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
 
-  const handleCreateUserSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      await signUp({
-        body: { name, email, password },
-        setIsError,
-      })
-
-      setSuccess(`Account profile for "${name}" has been successfully created.`)
-
-      setModalVisibilityState(false)
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setLoading(false)
-    }
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
   }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: userSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setLoading(true)
+        const response = await signUp({
+          body: values,
+          setIsError,
+        })
+        if (response && Object.keys(response).length) {
+          setSuccess(
+            `Account profile for "${values.name}" has been successfully created.`,
+          )
+
+          action.resetForm()
+
+          setTimeout(() => {
+            setModalVisibilityState(false)
+          }, 1200)
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
 
   return (
     <div
@@ -168,7 +186,7 @@ export default function UserModel({ setModalVisibilityState }) {
         )}
 
         <form
-          onSubmit={handleCreateUserSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "18px" }}
         >
           <div>
@@ -197,8 +215,8 @@ export default function UserModel({ setModalVisibilityState }) {
               <input
                 type="text"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={values.name}
+                name="name"
                 placeholder="e.g., Sarah Jenkins"
                 style={{
                   width: "100%",
@@ -209,6 +227,8 @@ export default function UserModel({ setModalVisibilityState }) {
                   fontSize: "14px",
                   color: "#111827",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
@@ -239,8 +259,8 @@ export default function UserModel({ setModalVisibilityState }) {
               <input
                 type="email"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={values.email}
+                name="email"
                 placeholder="sarah.jenkins@example.com"
                 style={{
                   width: "100%",
@@ -251,6 +271,8 @@ export default function UserModel({ setModalVisibilityState }) {
                   fontSize: "14px",
                   color: "#111827",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
@@ -281,8 +303,8 @@ export default function UserModel({ setModalVisibilityState }) {
               <input
                 type="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={values.password}
+                name="password"
                 placeholder="Minimum 6 characters"
                 style={{
                   width: "100%",
@@ -293,6 +315,8 @@ export default function UserModel({ setModalVisibilityState }) {
                   fontSize: "14px",
                   color: "#111827",
                 }}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
           </div>
