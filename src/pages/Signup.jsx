@@ -3,14 +3,50 @@ import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
 import { signUp } from "../../services/requestToServer"
 import { toast } from "react-toastify"
+import { useFormik } from "formik"
+import { userSchema } from "../schemas/User.schema"
 
 export default function Signup() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: userSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setLoading(true)
+        const response = await signUp({
+          body: values,
+          setIsError,
+        })
+        if (response && Object.keys(response).length) {
+          localStorage.setItem("token", response.token)
+          localStorage.setItem("user", JSON.stringify(response.user))
+
+          navigate("/")
+        }
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    formik
 
   useEffect(() => {
     if (error === "This email is already active.") {
@@ -18,36 +54,6 @@ export default function Signup() {
       navigate("/login")
     }
   }, [error])
-
-  const handleSignupSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      const response = await signUp({
-        body: {
-          name,
-          email,
-          password,
-        },
-        setIsError,
-      })
-
-      if (response) {
-        localStorage.setItem("token", response.token)
-        localStorage.setItem("user", JSON.stringify(response.user))
-      }
-
-      navigate("/dashboard")
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     <div
@@ -103,7 +109,7 @@ export default function Signup() {
         )}
 
         <form
-          onSubmit={handleSignupSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           <div>
@@ -121,8 +127,8 @@ export default function Signup() {
             <input
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={values.name}
+              name="name"
               placeholder="e.g., Alex Rivera"
               style={{
                 width: "100%",
@@ -132,7 +138,17 @@ export default function Signup() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -150,8 +166,8 @@ export default function Signup() {
             <input
               type="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={values.email}
+              name="email"
               placeholder="alex.rivera@workasana.com"
               style={{
                 width: "100%",
@@ -161,7 +177,17 @@ export default function Signup() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.email && touched.email ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.email}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -179,8 +205,8 @@ export default function Signup() {
             <input
               type="password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={values.password}
+              name="password"
               placeholder="Min 6 characters"
               style={{
                 width: "100%",
@@ -190,7 +216,17 @@ export default function Signup() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.password && touched.password ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.password}
+              </p>
+            ) : null}
           </div>
 
           <button
