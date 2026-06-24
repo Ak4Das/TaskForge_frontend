@@ -5,10 +5,12 @@ import { signUp } from "../../services/requestToServer"
 import { toast } from "react-toastify"
 import { useFormik } from "formik"
 import { userSchema } from "../schemas/User.schema"
+import { CheckCircle2 } from "lucide-react"
 
 export default function Signup() {
   const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState("")
   const navigate = useNavigate()
 
   const initialValues = {
@@ -32,7 +34,13 @@ export default function Signup() {
           localStorage.setItem("token", response.token)
           localStorage.setItem("user", JSON.stringify(response.user))
 
-          navigate("/")
+          action.resetForm()
+
+          setSuccess("Signup is Successful.")
+
+          setTimeout(() => {
+            navigate("/")
+          }, 1200)
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -50,8 +58,9 @@ export default function Signup() {
 
   useEffect(() => {
     if (error === "This email is already active.") {
-      toast("User already exists please login to continue.")
-      navigate("/login")
+      setTimeout(() => {
+        navigate("/login")
+      }, 1200)
     }
   }, [error])
 
@@ -105,6 +114,26 @@ export default function Signup() {
             }}
           >
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#ECFDF5",
+              border: "1px solid #A7F3D0",
+              color: "#065F46",
+              padding: "12px 14px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+              fontSize: "13px",
+            }}
+          >
+            <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
+            <span>{success}</span>
           </div>
         )}
 
