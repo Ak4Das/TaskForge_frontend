@@ -3,13 +3,48 @@ import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
 import { login } from "../../services/requestToServer"
 import { toast } from "react-toastify"
+import { useFormik } from "formik"
+import { loginSchema } from "../schemas/Login.schema"
 
 export default function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setIsError] = useState("")
   const navigate = useNavigate()
+
+  const initialValues = {
+    email: "",
+    password: "",
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: loginSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setLoading(true)
+
+        const response = await login({ body: values, setIsError })
+
+        if (response) {
+          localStorage.setItem("token", response.token)
+          localStorage.setItem("user", JSON.stringify(response.user))
+        }
+
+        navigate("/")
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    },
+  })
+
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    formik
 
   useEffect(() => {
     if (error === "User not found.") {
@@ -17,29 +52,6 @@ export default function Login() {
       navigate("/signup")
     }
   }, [error])
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      const response = await login({ body: { email, password }, setIsError })
-
-      if (response) {
-        localStorage.setItem("token", response.token)
-        localStorage.setItem("user", JSON.stringify(response.user))
-      }
-
-      navigate("/")
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     <div
@@ -96,7 +108,7 @@ export default function Login() {
         )}
 
         <form
-          onSubmit={handleLoginSubmit}
+          onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           <div>
@@ -114,8 +126,8 @@ export default function Login() {
             <input
               type="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={values.email}
+              name="email"
               placeholder="name@company.com"
               style={{
                 width: "100%",
@@ -125,6 +137,8 @@ export default function Login() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
@@ -143,8 +157,8 @@ export default function Login() {
             <input
               type="password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={values.password}
+              name="password"
               placeholder="••••••••"
               style={{
                 width: "100%",
@@ -154,6 +168,8 @@ export default function Login() {
                 borderRadius: "8px",
                 fontSize: "14px",
               }}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
           </div>
 
