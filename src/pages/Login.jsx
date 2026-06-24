@@ -140,6 +140,14 @@ export default function Login() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.email && touched.email ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.email}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -171,6 +179,14 @@ export default function Login() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
+            {errors.password && touched.password ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.password}
+              </p>
+            ) : null}
           </div>
 
           <button
