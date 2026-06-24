@@ -11,6 +11,8 @@ export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
   const handleFormSubmit = async (e) => {
     e.preventDefault()
     const cleanName = tagName.trim()
+    const laterPart = cleanName.slice(1)
+    const finalName = cleanName[0].toUpperCase() + laterPart
 
     setSubmitting(true)
 
@@ -21,7 +23,7 @@ export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
 
       await createTags({
         body: {
-          name: cleanName,
+          name: finalName,
         },
         setIsError,
       })
