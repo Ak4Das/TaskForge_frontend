@@ -82,6 +82,7 @@ export default function UserModel({ setModalVisibilityState }) {
     >
       <div
         style={{
+          maxWidth: "540px",
           backgroundColor: "#ffffff",
           border: "1px solid #E5E7EB",
           borderRadius: "16px",
@@ -231,6 +232,14 @@ export default function UserModel({ setModalVisibilityState }) {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.name && touched.name ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.name}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -275,6 +284,14 @@ export default function UserModel({ setModalVisibilityState }) {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.email && touched.email ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.email}
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -319,6 +336,14 @@ export default function UserModel({ setModalVisibilityState }) {
                 onBlur={handleBlur}
               />
             </div>
+            {errors.password && touched.password ? (
+              <p
+                className={`text-danger my-0`}
+                style={{ fontSize: "12px", lineHeight: "15px" }}
+              >
+                {errors.password}
+              </p>
+            ) : null}
           </div>
 
           <button
