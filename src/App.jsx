@@ -21,10 +21,33 @@ import TeamDetail from "./pages/TeamDetail"
 import EditTask from "./components/EditTaskModel"
 import EditProfile from "./components/EditProfile"
 import EditTeam from "./components/EditTeam"
+import CompressSidebar from "./components/CompressSidebar"
+import { useEffect, useState } from "react"
 
 const ProtectedLayout = ({ children }) => {
+  const [isCollapse, setCollapse] = useState(false)
+
   const hasActiveToken = !!localStorage.getItem("token")
-  if (!hasActiveToken) return <Navigate to="/login" replace />
+  
+  if (!hasActiveToken) {
+    return <Navigate to="/login" replace />
+  }
+
+  useEffect(() => {
+    function handleResize() {
+      if (innerWidth < 640) {
+        setCollapse(true)
+      } else {
+        setCollapse(false)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   return (
     <div
@@ -34,7 +57,7 @@ const ProtectedLayout = ({ children }) => {
         backgroundColor: "#F3F4F6",
       }}
     >
-      <Sidebar />
+      {!isCollapse ? <Sidebar /> : <CompressSidebar />}
       <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
     </div>
   )
