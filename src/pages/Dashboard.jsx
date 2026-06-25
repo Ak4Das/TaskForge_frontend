@@ -146,88 +146,29 @@ export default function Dashboard() {
   }
 
   return (
-    <div
-      style={{
-        padding: "24px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "32px",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: "28px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: "0 0 4px 0",
-            }}
-          >
-            Workasana Dashboard
-          </h1>
-          <p style={{ color: "#4B5563", margin: 0 }}>
-            Track projects, organize workloads, and keep your team aligned.
-          </p>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <div className="header-title-area">
+          <h1>Workasana Dashboard</h1>
+          <p>Track projects, organize workloads, and keep your team aligned.</p>
         </div>
 
         <button
           onClick={() => setModalVisibilityState(true)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#4F46E5",
-            color: "#ffffff",
-            border: "none",
-            padding: "12px 20px",
-            borderRadius: "8px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
+          className="btn-primary btn-primary-one"
         >
           <Plus size={18} /> Add New Task
         </button>
       </div>
 
       <section style={{ marginBottom: "40px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-          }}
-        >
-          <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
-            <h2
-              style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#374151",
-                marginBottom: "0px",
-              }}
-            >
-              Ongoing Projects
-            </h2>
+        <div className="section-header">
+          <div className="section-header-left">
+            <h2 className="section-title">Ongoing Projects</h2>
             <select
               // value={projectStatus}
               onChange={(e) => setProjectStatus(e.target.value)}
-              style={{
-                padding: "5px 10px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                backgroundColor: "#ffffff",
-              }}
+              className="dropdown"
             >
               <option value="">--- Choose Status ---</option>
               <option value="">All</option>
@@ -238,50 +179,18 @@ export default function Dashboard() {
             </select>
           </div>
           <button
+            className="btn-primary"
             onClick={() => setProjectModalVisibilityState(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#4F46E5",
-              color: "#ffffff",
-              border: "none",
-              padding: "12px 20px",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "background-color 0.2s",
-            }}
           >
             <Plus size={18} /> Add New Project
           </button>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "20px",
-            maxHeight: "300px",
-            overflow: "scroll",
-            scrollbarWidth: "none",
-          }}
-        >
+        <div className="projects-grid">
           {filteredProjects.map((project) => (
             <Link
               key={project._id}
               to={`/projects/${project._id}`}
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                backgroundColor: "#ffffff",
-                border: "1px solid #E5E7EB",
-                borderRadius: "12px",
-                padding: "20px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                transition: "transform 0.15s, box-shadow 0.15s",
-              }}
+              className="project-card"
             >
               <span style={getStatusBadgeStyle(project.status)}>
                 {project.status === "Completed" && <CheckCircle2 size={12} />}
@@ -290,28 +199,8 @@ export default function Dashboard() {
                 {project.status === "To Do" && <HelpCircle size={12} />}
                 {project.status}
               </span>
-              <h3
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "#111827",
-                  margin: "7px 0 8px 0",
-                }}
-              >
-                {project.name}
-              </h3>
-              <p
-                style={{
-                  fontSize: "14px",
-                  color: "#6B7280",
-                  margin: 0,
-                  lineBreak: "anywhere",
-                  display: "-webkit-box",
-                  WebkitLineBreak: "3",
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-              >
+              <h3>{project.name}</h3>
+              <p className="project-description">
                 {project.description ||
                   "No overview available for this project workspace."}
               </p>
@@ -320,54 +209,41 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Quick Filters Panel Section */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid #E5E7EB",
-          paddingBottom: "16px",
-          marginBottom: "24px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              color: "#4B5563",
-              fontSize: "14px",
-              fontWeight: "500",
-            }}
-          >
+      <div className="filters-panel">
+        <h2 className="section-title task-section-title-one">My Tasks</h2>
+        <div className="filters-panel-left">
+          <div className="filter-label">
             <Filter size={16} />
             <span>Quick Filters:</span>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className="filter-buttons-group">
             {["To Do", "In Progress", "Completed", "Blocked"].map((status) => (
               <button
                 key={status}
                 onClick={() => handleQuickFilterToggle(status)}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: "20px",
-                  border: "1px solid",
-                  borderColor:
-                    currentStatusFilter === status ? "#4F46E5" : "#D1D5DB",
-                  backgroundColor:
-                    currentStatusFilter === status ? "#EEF2F6" : "#ffffff",
-                  color: currentStatusFilter === status ? "#4F46E5" : "#374151",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                }}
+                className="filter-pill"
               >
                 {status}
               </button>
             ))}
           </div>
+          <select
+            name="filters"
+            className="dropdown task-filter-dropdown"
+            onChange={(e) => handleQuickFilterToggle(e.target.value)}
+          >
+            <option value="">--Choose Status--</option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Blocked">Blocked</option>
+          </select>
+          <button
+            onClick={() => setModalVisibilityState(true)}
+            className="btn-primary btn-primary-two"
+          >
+            <Plus size={18} /> Add New Task
+          </button>
         </div>
 
         {currentStatusFilter && (
@@ -377,69 +253,39 @@ export default function Dashboard() {
               updatedParams.delete("status")
               setSearchParams(updatedParams)
             }}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#4F46E5",
-              fontSize: "13px",
-              fontWeight: "500",
-              cursor: "pointer",
-            }}
+            className="clear-filters-btn clear-filters-btn-one"
           >
             Clear Filters
           </button>
         )}
       </div>
 
-      <section
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-        }}
-      >
-        <div
-          style={{
-            padding: "16px 20px",
-            borderBottom: "1px solid #E5E7EB",
-            backgroundColor: "#F9FAFB",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "16px",
-              fontWeight: "600",
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            My Tasks
-          </h2>
+      <section className="tasks-section">
+        <div className="tasks-section-title">
+          <h2 className="task-section-title-two">My Tasks</h2>
+          {currentStatusFilter && (
+            <button
+              onClick={() => {
+                const updatedParams = new URLSearchParams(searchParams)
+                updatedParams.delete("status")
+                setSearchParams(updatedParams)
+              }}
+              className="clear-filters-btn clear-filters-btn-two"
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
 
         {loading ? (
-          <div
-            style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
-          >
-            Loading items registry...
-          </div>
+          <div className="state-placeholder">Loading items registry...</div>
         ) : tasks.length === 0 ? (
-          <div
-            style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
-          >
+          <div className="state-placeholder">
             No active tasks found matching current filter parameters.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                textAlign: "left",
-              }}
-            >
+          <div className="responsive-table-wrapper">
+            <table className="tasks-table">
               <thead>
                 <tr
                   style={{
@@ -468,34 +314,12 @@ export default function Dashboard() {
                     }}
                   >
                     <td style={{ padding: "16px 20px" }}>
-                      <Link
-                        to={`/tasks/${task._id}`}
-                        style={{
-                          fontWeight: "500",
-                          color: "#4F46E5",
-                          textDecoration: "none",
-                        }}
-                      >
+                      <Link to={`/tasks/${task._id}`} className="task-link">
                         {task.name}
                       </Link>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "4px",
-                          marginTop: "6px",
-                        }}
-                      >
+                      <div className="tags-list">
                         {task.tags?.map((tag, i) => (
-                          <span
-                            key={i}
-                            style={{
-                              fontSize: "11px",
-                              background: "#F3F4F6",
-                              color: "#4B5563",
-                              padding: "2px 6px",
-                              borderRadius: "4px",
-                            }}
-                          >
+                          <span className="tag-badge" key={i}>
                             {tag.name}
                           </span>
                         ))}

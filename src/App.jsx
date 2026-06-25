@@ -25,17 +25,17 @@ import CompressSidebar from "./components/CompressSidebar"
 import { useEffect, useState } from "react"
 
 const ProtectedLayout = ({ children }) => {
-  const [isCollapse, setCollapse] = useState(false)
+  const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
 
   const hasActiveToken = !!localStorage.getItem("token")
-  
+
   if (!hasActiveToken) {
     return <Navigate to="/login" replace />
   }
 
   useEffect(() => {
     function handleResize() {
-      if (innerWidth < 640) {
+      if (window.innerWidth < 992) {
         setCollapse(true)
       } else {
         setCollapse(false)
