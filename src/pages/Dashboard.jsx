@@ -371,6 +371,104 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
+            <div className="tasks-cards" style={{ padding: "20px" }}>
+              <div className="row">
+                {tasks &&
+                  tasks.map((task) => {
+                    return (
+                      <div className="col-12 col-lg-6" key={task._id}>
+                        <div
+                          className={`mb-3`}
+                          style={{
+                            overflow: "hidden",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <div className={`card mb-3`}>
+                            <div className="card-body d-flex gap-2 justify-content-between">
+                              <div style={{ fontSize: "16px" }}>
+                                <p>
+                                  <Link
+                                    to={`/tasks/${task._id}`}
+                                    className="task-link"
+                                  >
+                                    {task.name}
+                                  </Link>
+                                </p>
+                                <p>
+                                  <b>Project Context:</b>{" "}
+                                  {task.project?.name || "Unassigned"}
+                                </p>
+                                <p>
+                                  <b>Assigned Team:</b>{" "}
+                                  {task.team?.name || "Cross-Functional"}
+                                </p>
+                                <p className="d-block d-sm-none">
+                                  <b>Workflow State:</b>{" "}
+                                  <span
+                                    style={getStatusBadgeStyle(task.status)}
+                                  >
+                                    {task.status === "Completed" && (
+                                      <CheckCircle2 size={12} />
+                                    )}
+                                    {task.status === "In Progress" && (
+                                      <Clock size={12} />
+                                    )}
+                                    {task.status === "Blocked" && (
+                                      <AlertTriangle size={12} />
+                                    )}
+                                    {task.status === "To Do" && (
+                                      <HelpCircle size={12} />
+                                    )}
+                                    {task.status}
+                                  </span>
+                                </p>
+                                <p>
+                                  <b>Allocation Duration:</b>{" "}
+                                  {task.timeToComplete}{" "}
+                                  {task.timeToComplete === 1 ? "day" : "days"}
+                                </p>
+                                <p>
+                                  <b>Tags:</b>{" "}
+                                  {task.tags?.map((tag, i) => (
+                                    <span className="tag-badge me-1" key={i}>
+                                      {tag.name}
+                                    </span>
+                                  ))}
+                                </p>
+                              </div>
+                              <div
+                                className="task-status-badge"
+                                style={{ minWidth: "100px" }}
+                              >
+                                <p className="d-flex justify-content-end">
+                                  <span
+                                    style={getStatusBadgeStyle(task.status)}
+                                  >
+                                    {task.status === "Completed" && (
+                                      <CheckCircle2 size={12} />
+                                    )}
+                                    {task.status === "In Progress" && (
+                                      <Clock size={12} />
+                                    )}
+                                    {task.status === "Blocked" && (
+                                      <AlertTriangle size={12} />
+                                    )}
+                                    {task.status === "To Do" && (
+                                      <HelpCircle size={12} />
+                                    )}
+                                    {task.status}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
           </div>
         )}
       </section>

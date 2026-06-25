@@ -314,6 +314,18 @@ body {
   }
 }
 
+@media (min-width: 850px) {
+  .tasks-cards {
+    display: none;
+  }
+}
+
+@media (max-width: 849px) {
+  .tasks-table {
+    display: none;
+  }
+}
+
 @media (max-width: 739px) {
   .filter-buttons-group {
     display: none;
@@ -341,6 +353,12 @@ body {
   }
 
   .clear-filters-btn-one {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .task-status-badge {
     display: none;
   }
 }
