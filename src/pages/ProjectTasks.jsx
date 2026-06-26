@@ -178,72 +178,30 @@ export default function ProjectTasks() {
     setTasks(finalTasks)
   }
 
-  // Helper method to assign proper color badges to statuses
-  const getStatusBadgeStyle = (status) => {
-    const base = {
-      padding: "4px 10px",
-      borderRadius: "12px",
-      fontSize: "12px",
-      fontWeight: "600",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "4px",
-    }
+  const getStatusClassName = (status) => {
     switch (status) {
       case "To Do":
-        return { ...base, backgroundColor: "#E5E7EB", color: "#374151" }
+        return "status-todo"
       case "In Progress":
-        return { ...base, backgroundColor: "#DBEAFE", color: "#1E40AF" }
+        return "status-inprogress"
       case "Completed":
-        return { ...base, backgroundColor: "#D1FAE5", color: "#065F46" }
+        return "status-completed"
       case "Blocked":
-        return { ...base, backgroundColor: "#FEE2E2", color: "#991B1B" }
+        return "status-blocked"
       default:
-        return base
+        return ""
     }
   }
 
   if (loading) {
-    return (
-      <div
-        style={{
-          padding: "32px",
-          textAlign: "center",
-          color: "#6B7280",
-          fontFamily: "sans-serif",
-        }}
-      >
-        Loading tasks...
-      </div>
-    )
+    return <div className="loading-state">Loading tasks...</div>
   }
 
   if (error || !project) {
     return (
-      <div style={{ padding: "32px", fontFamily: "sans-serif" }}>
-        <div
-          style={{
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px",
-            borderRadius: "8px",
-            marginBottom: "16px",
-          }}
-        >
-          {error}
-        </div>
-        <Link
-          to="/projects"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            color: "#4F46E5",
-            textDecoration: "none",
-            fontWeight: "500",
-          }}
-        >
+      <div className="error-wrapper">
+        <div className="error-message">{error}</div>
+        <Link className="back-link" to="/projects">
           <ArrowLeft size={16} /> Return to Projects Registry
         </Link>
       </div>
@@ -251,100 +209,27 @@ export default function ProjectTasks() {
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <Link
-        to="/projects"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          color: "#4F46E5",
-          textDecoration: "none",
-          fontSize: "14px",
-          fontWeight: "600",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="project-tasks-container">
+      <Link className="back-link" to="/projects">
         <ArrowLeft size={16} /> Back to Projects Track
       </Link>
 
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "32px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            marginBottom: "8px",
-          }}
-        >
-          <Layers style={{ color: "#4F46E5" }} size={24} />
-          <h1
-            style={{
-              fontSize: "24px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            {project.name}
-          </h1>
+      <div className="project-header-card">
+        <div className="project-title-row">
+          <Layers className="project-title-icon" size={24} />
+          <h1 className="project-title">{project.name}</h1>
         </div>
-        <p
-          style={{
-            color: "#4B5563",
-            margin: 0,
-            fontSize: "15px",
-            lineHeight: "1.5",
-          }}
-        >
-          {project.description}
-        </p>
+        <p className="project-description">{project.description}</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "10px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              color: "#4B5563",
-              fontSize: "14px",
-              fontWeight: "500",
-            }}
-          >
+      <div className="controls-row">
+        <div className="controls-group">
+          <div className="control-label">
             <Filter size={16} />
             <span>Quick Filters:</span>
           </div>
           <select
+            className="control-select"
             onChange={(e) => handleQuickFilterToggle(e.target.value)}
-            style={{
-              padding: "7px 10px",
-              border: "1px solid #D1D5DB",
-              borderRadius: "8px",
-              fontSize: "14px",
-              backgroundColor: "#ffffff",
-            }}
           >
             <option value="">--- Choose Status ---</option>
             <option value="">All</option>
@@ -355,15 +240,9 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
+              className="control-select"
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
-              style={{
-                padding: "7px 10px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                backgroundColor: "#ffffff",
-              }}
             >
               <option value="">--- Choose Owner ---</option>
               <option value="">All</option>
@@ -376,15 +255,9 @@ export default function ProjectTasks() {
           )}
           {tags.length !== 0 && (
             <select
+              className="control-select"
               value={tag}
               onChange={(e) => setTag(e.target.value)}
-              style={{
-                padding: "7px 10px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                backgroundColor: "#ffffff",
-              }}
             >
               <option value="">--- Choose Tags ---</option>
               <option value="">All</option>
@@ -397,36 +270,15 @@ export default function ProjectTasks() {
           )}
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "10px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              color: "#4B5563",
-              fontSize: "14px",
-              fontWeight: "500",
-            }}
-          >
+      <div className="controls-row">
+        <div className="controls-group">
+          <div className="control-label">
             <ArrowUpDown size={16} />
             <span>Sort By:</span>
           </div>
           <select
+            className="control-select"
             onChange={(e) => setPrioritySortOrder(e.target.value)}
-            style={{
-              padding: "7px 10px",
-              border: "1px solid #D1D5DB",
-              borderRadius: "8px",
-              fontSize: "14px",
-              backgroundColor: "#ffffff",
-            }}
           >
             <option value="">--- Priority ---</option>
             <option value="highToLow">High to Low</option>
@@ -435,6 +287,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
+              className="control-select"
               onChange={(e) => {
                 if (e.target.value === "highToLow") {
                   sortDueDateByDescOrder()
@@ -449,13 +302,6 @@ export default function ProjectTasks() {
                   })
                 }
               }}
-              style={{
-                padding: "7px 10px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                backgroundColor: "#ffffff",
-              }}
             >
               <option value="">--- Due Date ---</option>
               <option value="highToLow">High to Low</option>
@@ -466,87 +312,26 @@ export default function ProjectTasks() {
         </div>
       </div>
 
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div
-          style={{
-            padding: "10px 20px",
-            borderBottom: "1px solid #E5E7EB",
-            backgroundColor: "#F9FAFB",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "16px",
-              fontWeight: "600",
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            Project Scope Tasks ({tasks.length})
-          </h2>
+      <div className="tasks-panel">
+        <div className="panel-header">
+          <h2 className="panel-title">Project Scope Tasks ({tasks.length})</h2>
           <button
+            className="add-task-btn"
             onClick={() => setModalVisibilityState(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#4F46E5",
-              color: "#ffffff",
-              border: "none",
-              padding: "12px 20px",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "background-color 0.2s",
-            }}
           >
             <Plus size={18} /> Add New Task
           </button>
         </div>
 
         {tasks.length === 0 ? (
-          <div
-            style={{
-              padding: "48px",
-              textAlign: "center",
-              color: "#6B7280",
-              fontSize: "14px",
-            }}
-          >
+          <div className="empty-state">
             No task records have been initiated under this project.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                textAlign: "left",
-              }}
-            >
+          <div className="table-container">
+            <table className="tasks-table">
               <thead>
-                <tr
-                  style={{
-                    borderBottom: "1px solid #E5E7EB",
-                    color: "#4B5563",
-                    fontSize: "12px",
-                    fontWeight: "600",
-                    textTransform: "uppercase",
-                    backgroundColor: "#F9FAFB",
-                  }}
-                >
+                <tr className="table-header-row">
                   <th style={{ padding: "12px 20px" }}>Action Item Title</th>
                   <th style={{ padding: "12px 20px" }}>Assigned Team</th>
                   <th style={{ padding: "12px 20px" }}>Workflow State</th>
@@ -557,56 +342,29 @@ export default function ProjectTasks() {
               </thead>
               <tbody>
                 {tasks.map((task) => (
-                  <tr
-                    key={task._id}
-                    style={{ borderBottom: "1px solid #E5E7EB" }}
-                  >
+                  <tr className="table-data-row" key={task._id}>
                     <td style={{ padding: "16px 20px" }}>
                       <Link
+                        className="task-title-link"
                         to={`/tasks/${task._id}`}
-                        style={{
-                          fontWeight: "600",
-                          textDecoration: "none",
-                          color: "#0000ee",
-                          fontSize: "14px",
-                        }}
                       >
                         {task.name}
                       </Link>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "4px",
-                          marginTop: "6px",
-                        }}
-                      >
+                      <div className="tag-list">
                         {task.tags?.map((tag, i) => (
-                          <span
-                            key={i}
-                            style={{
-                              fontSize: "11px",
-                              background: "#F3F4F6",
-                              color: "#4B5563",
-                              padding: "2px 6px",
-                              borderRadius: "4px",
-                            }}
-                          >
+                          <span className="task-tag" key={i}>
                             {tag.name}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td
-                      style={{
-                        padding: "16px 20px",
-                        color: "#4B5563",
-                        fontSize: "14px",
-                      }}
-                    >
+                    <td style={{ padding: "16px 20px" }} className="team-cell">
                       {task.team?.name || "Cross-Functional"}
                     </td>
                     <td style={{ padding: "16px 20px" }}>
-                      <span style={getStatusBadgeStyle(task.status)}>
+                      <span
+                        className={`status-badge ${getStatusClassName(task.status)}`}
+                      >
                         {task.status === "Completed" && (
                           <CheckCircle2 size={12} />
                         )}
@@ -618,24 +376,18 @@ export default function ProjectTasks() {
                         {task.status}
                       </span>
                     </td>
-                    <td style={{ padding: "16px 20px" }}>{task.priority}</td>
+                    <td style={{ padding: "16px 20px" }} className="team-cell">
+                      {task.priority}
+                    </td>
                     <td
-                      style={{
-                        padding: "16px 20px",
-                        color: "#111827",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                      }}
+                      style={{ padding: "16px 20px" }}
+                      className="highlight-text"
                     >
                       {findDueDate(task.createdAt, task.timeToComplete)}
                     </td>
                     <td
-                      style={{
-                        padding: "16px 20px",
-                        color: "#111827",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                      }}
+                      style={{ padding: "16px 20px" }}
+                      className="highlight-text"
                     >
                       {findRemainingDays(task.createdAt, task.timeToComplete)}
                     </td>
