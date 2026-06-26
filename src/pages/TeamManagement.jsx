@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/TeamManagement.module.css"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import {
@@ -95,59 +96,69 @@ export default function TeamManagement() {
   }
 
   return (
-    <div className="team_container">
-      <div className="team_header">
-        <h1 className="main_title">Teams Management</h1>
-        <p className="sub_title">
+    <div className={`${styles.team_container}`}>
+      <div className={`${styles.team_header}`}>
+        <h1 className={`${styles.main_title}`}>Teams Management</h1>
+        <p className={`${styles.sub_title}`}>
           View teams, assigned members and establish new team.
         </p>
       </div>
 
       {error && (
-        <div className="alert_message alert_error">
+        <div className={`${styles.alert_message} ${styles.alert_error}`}>
           <ShieldAlert size={18} />
           <span>{error}</span>
         </div>
       )}
       {successMsg && (
-        <div className="alert_message alert_success">
+        <div className={`${styles.alert_message} ${styles.alert_success}`}>
           <CheckCircle2 size={18} />
           <span>{successMsg}</span>
         </div>
       )}
 
-      <div className="workspace_grid">
-        <section className="teams_card list_section">
-          <div className="card_header">
-            <Users className="brand_icon" size={18} />
-            <h2 className="section_title">
+      <div className={`${styles.workspace_grid}`}>
+        <section className={`${styles.teams_card} ${styles.list_section}`}>
+          <div className={`${styles.card_header}`}>
+            <Users className={`${styles.brand_icon}`} size={18} />
+            <h2 className={`${styles.section_title}`}>
               Active Departmental Scopes ({teams.length})
             </h2>
           </div>
 
           {loading ? (
-            <div className="loading_state">Loading teams registry...</div>
+            <div className={`${styles.loading_state}`}>
+              Loading teams registry...
+            </div>
           ) : teams.length === 0 ? (
-            <div className="empty_state">
+            <div className={`${styles.empty_state}`}>
               No team registered in database records.
             </div>
           ) : (
-            <div className="teams_list_wrapper">
+            <div className={`${styles.teams_list_wrapper}`}>
               {teams.map((team) => (
-                <div className="team_row_item" key={team._id}>
-                  <div className="team_row_top">
-                    <Link className="team_link" to={`/teams/${team._id}`}>
-                      <h3 className="team_name_title">{team.name}</h3>
+                <div className={`${styles.team_row_item}`} key={team._id}>
+                  <div className={`${styles.team_row_top}`}>
+                    <Link
+                      className={`${styles.team_link}`}
+                      to={`/teams/${team._id}`}
+                    >
+                      <h3 className={`${styles.team_name_title}`}>
+                        {team.name}
+                      </h3>
                     </Link>
-                    <span className="members_counter_badge">
-                      {team.members?.length || 0}{" "}
+                    <span className={`${styles.members_counter_badge}`}>
+                      {team.members?.length || 0}
+                      {` `}
                       {team.members?.length === 1 ? "Member" : "Members"}
                     </span>
                   </div>
-                  <p className="team_description_text">{team.description}</p>
+                  <p className={`${styles.team_description_text}`}>
+                    {team.description}
+                  </p>
 
                   {team.members && team.members.length > 0 && (
-                    <div className="member_tags_flexbox">
+                    <div className={`${styles.member_tags_flexbox}`}>
                       {team.members.map((member, i) => {
                         const nameString =
                           typeof member === "object"
@@ -155,7 +166,7 @@ export default function TeamManagement() {
                             : users.find((u) => u._id === member)?.name ||
                               "Account Linked"
                         return (
-                          <span className="member_tag" key={i}>
+                          <span className={`${styles.member_tag}`} key={i}>
                             {nameString}
                           </span>
                         )
@@ -168,21 +179,28 @@ export default function TeamManagement() {
           )}
         </section>
 
-        <section className="create_teams_card form_section">
-          <div className="create_teams_card_header border_bottom">
+        <section
+          className={`${styles.create_teams_card} ${styles.form_section}`}
+        >
+          <div
+            className={`${styles.create_teams_card_header} ${styles.border_bottom}`}
+          >
             <PlusCircle
-              className="success_icon"
+              className={`${styles.success_icon}`}
               size={18}
               style={{ color: "#059669" }}
             />
-            <h2 className="section_title">Establish New Team</h2>
+            <h2 className={`${styles.section_title}`}>Establish New Team</h2>
           </div>
 
-          <form className="creation_form" onSubmit={handleCreateTeamSubmit}>
-            <div className="form_group">
-              <label className="form_label">Team Name</label>
+          <form
+            className={`${styles.creation_form}`}
+            onSubmit={handleCreateTeamSubmit}
+          >
+            <div className={`${styles.form_group}`}>
+              <label className={`${styles.form_label}`}>Team Name</label>
               <input
-                className="form_input"
+                className={`${styles.form_input}`}
                 type="text"
                 required
                 value={newTeamName}
@@ -191,10 +209,12 @@ export default function TeamManagement() {
               />
             </div>
 
-            <div className="form_group">
-              <label className="form_label">Functional Scope Description</label>
+            <div className={`${styles.form_group}`}>
+              <label className={`${styles.form_label}`}>
+                Functional Scope Description
+              </label>
               <textarea
-                className="form_textarea"
+                className={`${styles.form_textarea}`}
                 rows="3"
                 value={newTeamDesc}
                 onChange={(e) => setNewTeamDesc(e.target.value)}
@@ -202,27 +222,33 @@ export default function TeamManagement() {
               />
             </div>
 
-            <div className="form_group">
-              <label className="form_label">
+            <div className={`${styles.form_group}`}>
+              <label className={`${styles.form_label}`}>
                 Assign Initial Team Members ({selectedMembers.length} selected)
               </label>
-              <div className="checkbox_scrollbox">
+              <div className={`${styles.checkbox_scrollbox}`}>
                 {users.length === 0 ? (
-                  <span className="no_users_text">
+                  <span className={`${styles.no_users_text}`}>
                     No registered users available.
                   </span>
                 ) : (
                   users.map((u) => (
-                    <label className="checkbox_label_item" key={u._id}>
+                    <label
+                      className={`${styles.checkbox_label_item}`}
+                      key={u._id}
+                    >
                       <input
-                        className="custom_checkbox"
+                        className={`${styles.custom_checkbox}`}
                         type="checkbox"
                         checked={selectedMembers.includes(u._id)}
                         onChange={() => handleMemberCheckboxToggle(u._id)}
                       />
-                      <span className="user_info_text">
-                        {u.name}{" "}
-                        <span className="user_email_subtext">({u.email})</span>
+                      <span className={`${styles.user_info_text}`}>
+                        {u.name}
+                        {` `}
+                        <span className={`${styles.user_email_subtext}`}>
+                          ({u.email})
+                        </span>
                       </span>
                     </label>
                   ))
@@ -231,7 +257,7 @@ export default function TeamManagement() {
             </div>
 
             <button
-              className="btn_submit_team"
+              className={`${styles.btn_submit_team}`}
               type="submit"
               disabled={submitting || !newTeamName.trim()}
               onMouseEnter={(e) =>
