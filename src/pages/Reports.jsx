@@ -183,163 +183,48 @@ export default function Reports() {
   }, [])
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "32px",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: "28px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: "0 0 6px 0",
-            }}
-          >
-            Workasana Reports
-          </h1>
-          <p style={{ color: "#4B5563", margin: 0 }}>
+    <div className="reports-container">
+      <div className="reports-header-bar">
+        <div className="title-area">
+          <h1 className="reports-main-title">Workasana Reports</h1>
+          <p className="reports-sub-title">
             Monitor task completion matrices and pending workloads.
           </p>
         </div>
 
         <button
+          className="btn-refresh-data"
           onClick={fetchAnalyticalReportMatrices}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#ffffff",
-            border: "1px solid #D1D5DB",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            fontSize: "13px",
-            fontWeight: "600",
-            color: "#374151",
-            cursor: "pointer",
-            transition: "background-color 0.15s",
-          }}
         >
           <RefreshCw size={14} /> Refresh Data
         </button>
       </div>
 
       {error && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px 16px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-            fontSize: "14px",
-          }}
-        >
+        <div className="reports-alert-box">
           <AlertCircle size={18} />
           <span>{error}</span>
         </div>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "24px",
-          marginBottom: "32px",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #E5E7EB",
-            borderRadius: "14px",
-            padding: "24px",
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-          }}
-        >
-          <div
-            style={{
-              p: "12px",
-              borderRadius: "10px",
-              backgroundColor: "#D1FAE5",
-              color: "#065F46",
-            }}
-          >
+      <div className="metrics-summary-grid">
+        <div className="metric-card">
+          <div className="icon-wrapper icon-closed-green">
             <TrendingUp size={24} />
           </div>
-          <div>
-            <span
-              style={{ fontSize: "14px", color: "#6B7280", fontWeight: "500" }}
-            >
-              Total Action Items Closed
-            </span>
-            <h3
-              style={{
-                fontSize: "28px",
-                fontWeight: "700",
-                color: "#111827",
-                margin: "4px 0 0 0",
-              }}
-            >
-              {summaryCards.totalClosed} Tasks
-            </h3>
+          <div className="metric-details">
+            <span className="metric-label">Total Action Items Closed</span>
+            <h3 className="metric-value">{summaryCards.totalClosed} Tasks</h3>
           </div>
         </div>
 
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #E5E7EB",
-            borderRadius: "14px",
-            padding: "24px",
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-          }}
-        >
-          <div
-            style={{
-              p: "12px",
-              borderRadius: "10px",
-              backgroundColor: "#DBEAFE",
-              color: "#1E40AF",
-            }}
-          >
+        <div className="metric-card">
+          <div className="icon-wrapper icon-pending-blue">
             <BarChart3 size={24} />
           </div>
-          <div>
-            <span
-              style={{ fontSize: "14px", color: "#6B7280", fontWeight: "500" }}
-            >
-              Pending Operational Allocation
-            </span>
-            <h3
-              style={{
-                fontSize: "28px",
-                fontWeight: "700",
-                color: "#111827",
-                margin: "4px 0 0 0",
-              }}
-            >
+          <div className="metric-details">
+            <span className="metric-label">Pending Operational Allocation</span>
+            <h3 className="metric-value">
               {summaryCards.pendingDays} Estimated Days
             </h3>
           </div>
@@ -348,40 +233,17 @@ export default function Reports() {
 
       {/* Analytical Charts Component Grid Rendering */}
       {loading ? (
-        <div
-          style={{ textAlign: "center", padding: "60px 0", color: "#6B7280" }}
-        >
+        <div className="reports-loading-state">
           Processing data and creating charts using chart.js...
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+        <div className="charts-workspace-vertical-flex">
           {/* Pending Work Across Projects (Bar Chart) */}
-          <div
-            style={{
-              backgroundColor: "#ffffff",
-              border: "1px solid #E5E7EB",
-              borderRadius: "14px",
-              padding: "28px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#111827",
-                margin: "0 0 20px 0",
-              }}
-            >
+          <div className="chart-full-width-card">
+            <h3 className="chart-panel-title">
               Pending Work Across Projects (Total Remaining Days)
             </h3>
-            <div
-              style={{
-                minHeight: "260px",
-                maxHeight: "320px",
-                position: "relative",
-              }}
-            >
+            <div className="bar-chart-container-frame">
               {projectBacklogData ? (
                 <Bar
                   data={projectBacklogData}
@@ -398,102 +260,44 @@ export default function Reports() {
                   }}
                 />
               ) : (
-                <div style={{ textAlign: "center", color: "#9CA3AF" }}>
-                  No backlog items.
-                </div>
+                <div className="chart-empty-fallback">No backlog items.</div>
               )}
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "32px",
-            }}
-          >
+          <div className="charts-split-two-column-grid">
             {/* Pie Chart: Closed Tasks by Functional Team */}
-            <div
-              style={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #E5E7EB",
-                borderRadius: "14px",
-                padding: "28px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "#111827",
-                  margin: "0 0 20px 0",
-                  width: "100%",
-                  textAlign: "left",
-                }}
-              >
+            <div className="chart-circular-card-wrapper">
+              <h3 className="chart-panel-title text-left">
                 Tasks Closed By Core Team
               </h3>
-              <div
-                style={{
-                  width: "100%",
-                  maxWidth: "240px",
-                  position: "relative",
-                }}
-              >
+              <div className="circular-chart-canvas-frame">
                 {teamPerformanceData ? (
                   <Pie
                     data={teamPerformanceData}
                     options={{ responsive: true }}
                   />
                 ) : (
-                  <div style={{ color: "#9CA3AF" }}>No team metrics.</div>
+                  <div className="chart-empty-fallback">No team metrics.</div>
                 )}
               </div>
             </div>
 
             {/* Doughnut Chart: Closed Tasks by Owner Assignment */}
-            <div
-              style={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #E5E7EB",
-                borderRadius: "14px",
-                padding: "28px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "#111827",
-                  margin: "0 0 20px 0",
-                  width: "100%",
-                  textAlign: "left",
-                }}
-              >
+            <div className="chart-circular-card-wrapper">
+              <h3 className="chart-panel-title text-left">
                 Tasks Closed By Responsible Owner
               </h3>
-              <div
-                style={{
-                  width: "100%",
-                  maxWidth: "240px",
-                  position: "relative",
-                }}
-              >
+              <div className="circular-chart-canvas-frame">
                 {ownerPerformanceData ? (
                   <Doughnut
                     data={ownerPerformanceData}
                     options={{ responsive: true }}
                   />
                 ) : (
-                  <div style={{ color: "#9CA3AF" }}>No individual records.</div>
+                  <div className="chart-empty-fallback">
+                    No individual records.
+                  </div>
                 )}
               </div>
             </div>
