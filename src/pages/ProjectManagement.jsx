@@ -88,144 +88,59 @@ export default function ProjectManagement() {
     setSearchParams(updatedParams)
   }
 
-  const getStatusBadgeStyle = (status) => {
-    const base = {
-      padding: "4px 10px",
-      borderRadius: "12px",
-      fontSize: "12px",
-      fontWeight: "600",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "4px",
-    }
+  const getStatusClass = (status) => {
     switch (status) {
       case "To Do":
-        return { ...base, backgroundColor: "#E5E7EB", color: "#374151" }
+        return "badge-todo"
       case "In Progress":
-        return { ...base, backgroundColor: "#DBEAFE", color: "#1E40AF" }
+        return "badge-progress"
       case "Completed":
-        return { ...base, backgroundColor: "#D1FAE5", color: "#065F46" }
+        return "badge-completed"
       case "Blocked":
-        return { ...base, backgroundColor: "#FEE2E2", color: "#991B1B" }
+        return "badge-blocked"
       default:
-        return base
+        return ""
     }
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "32px",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: "28px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: "0 0 6px 0",
-            }}
-          >
-            Projects Workspace
-          </h1>
-          <p style={{ color: "#4B5563", margin: 0 }}>
+    <div className="workspace-container">
+      <div className="workspace-header">
+        <div className="header-text">
+          <h1 className="main-title">Projects Workspace</h1>
+          <p className="sub-title">
             Review, search, and manage ongoing project initiatives across your
             company teams.
           </p>
         </div>
         <button
+          className="btn-add-project"
           onClick={() => setProjectModalVisibilityState(true)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#4F46E5",
-            color: "#ffffff",
-            border: "none",
-            padding: "12px 20px",
-            borderRadius: "8px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
         >
           <Plus size={18} /> Add New Project
         </button>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "25px",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "32px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#ffffff",
-            border: "1px solid #D1D5DB",
-            borderRadius: "10px",
-            padding: "10px 16px",
-            minWidth: "400px",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Search size={18} style={{ color: "#9CA3AF", marginRight: "10px" }} />
+      <div className="workspace-filters">
+        <div className="search-bar-wrapper">
+          <Search size={18} className="search-icon" />
           <input
+            className="search-input"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search projects by name..."
-            style={{
-              width: "100%",
-              border: "none",
-              outline: "none",
-              fontSize: "14px",
-              color: "#111827",
-              backgroundColor: "transparent",
-            }}
           />
           {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#6B7280",
-                fontSize: "12px",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
+            <button className="btn-clear" onClick={() => setSearchQuery("")}>
               Clear
             </button>
           )}
         </div>
         <select
+          className="status-dropdown"
           value={projectStatus}
           onChange={(e) => setProjectStatus(e.target.value)}
-          style={{
-            padding: "10px 12px",
-            border: "1px solid #D1D5DB",
-            borderRadius: "8px",
-            fontSize: "14px",
-            backgroundColor: "#ffffff",
-          }}
         >
           <option value="">--- Choose Status ---</option>
           <option value="">All</option>
@@ -236,114 +151,35 @@ export default function ProjectManagement() {
         </select>
       </div>
 
-      {/* Error Banner */}
-      {error && (
-        <div
-          style={{
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px 16px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-            fontSize: "14px",
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {loading ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "60px 0",
-            color: "#6B7280",
-            fontSize: "15px",
-          }}
-        >
-          Loading projects...
-        </div>
+        <div className="loading-state">Loading projects...</div>
       ) : finalProjects.length === 0 ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "60px 0",
-            border: "2px dashed #E5E7EB",
-            borderRadius: "12px",
-            backgroundColor: "#ffffff",
-          }}
-        >
-          <FolderKanban
-            size={40}
-            style={{ color: "#9CA3AF", marginBottom: "12px" }}
-          />
-          <h3
-            style={{
-              margin: "0 0 4px 0",
-              fontSize: "16px",
-              fontWeight: "600",
-              color: "#374151",
-            }}
-          >
-            No Projects Found
-          </h3>
-          <p style={{ margin: 0, color: "#6B7280", fontSize: "14px" }}>
+        <div className="empty-state">
+          <FolderKanban className="empty-icon" size={40} />
+          <h3 className="empty-title">No Projects Found</h3>
+          <p className="empty-subtitle">
             {searchQuery
               ? `No matching items found for "${searchQuery}"`
               : "Your project ecosystem is empty."}
           </p>
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "24px",
-          }}
-        >
+        <div className="projects-grid">
           {finalProjects.map((project) => (
-            <div
-              key={project._id}
-              style={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #E5E7EB",
-                borderRadius: "14px",
-                padding: "24px",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.02)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "between",
-                position: "relative",
-                transition: "box-shadow 0.2s",
-              }}
-            >
+            <div className="project-card" key={project._id}>
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "10px",
-                    color: "#6B7280",
-                    fontSize: "12px",
-                    fontWeight: "500",
-                    marginBottom: "12px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                    }}
-                  >
+                <div className="card-top-meta">
+                  <div className="creation-date">
                     <Calendar size={13} />
                     <span style={{ marginTop: "2px" }}>
                       Created: {formatCreationDate(project.createdAt)}
                     </span>
                   </div>
-                  <span style={getStatusBadgeStyle(project.status)}>
+                  <span
+                    className={`status-badge ${getStatusClass(project.status)}`}
+                  >
                     {project.status === "Completed" && (
                       <CheckCircle2 size={12} />
                     )}
@@ -356,55 +192,15 @@ export default function ProjectManagement() {
                   </span>
                 </div>
 
-                <h2
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    color: "#111827",
-                    margin: "0 0 10px 0",
-                  }}
-                >
-                  {project.name}
-                </h2>
+                <h2 className="project-name">{project.name}</h2>
 
-                <p
-                  style={{
-                    fontSize: "14px",
-                    color: "#4B5563",
-                    lineHeight: "1.5",
-                    margin: "0 0 24px 0",
-                    display: "-webkit-box",
-                    WebkitLineClamp: "3",
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {project.description}
-                </p>
+                <p className="project-description">{project.description}</p>
               </div>
 
-              <div
-                style={{
-                  marginTop: "auto",
-                  paddingTop: "16px",
-                  borderTop: "1px solid #F3F4F6",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <div className="card-footer">
                 <Link
+                  className="view-tasks-link"
                   to={`/projects/${project._id}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: "#4F46E5",
-                    textDecoration: "none",
-                    transition: "color 0.15s",
-                  }}
                 >
                   <span>View Tasks</span>
                   <ArrowRight size={14} />
