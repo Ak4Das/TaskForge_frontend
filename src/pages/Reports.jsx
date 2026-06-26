@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/Reports.module.css"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { Bar, Pie, Doughnut } from "react-chartjs-2"
@@ -183,17 +184,17 @@ export default function Reports() {
   }, [])
 
   return (
-    <div className="reports-container">
-      <div className="reports-header-bar">
-        <div className="title-area">
-          <h1 className="reports-main-title">Workasana Reports</h1>
-          <p className="reports-sub-title">
+    <div className={`${styles.reports_container}`}>
+      <div className={`${styles.reports_header_bar}`}>
+        <div className={`${styles.title_area}`}>
+          <h1 className={`${styles.reports_main_title}`}>Workasana Reports</h1>
+          <p className={`${styles.reports_sub_title}`}>
             Monitor task completion matrices and pending workloads.
           </p>
         </div>
 
         <button
-          className="btn-refresh-data"
+          className={`${styles.btn_refresh_data}`}
           onClick={fetchAnalyticalReportMatrices}
         >
           <RefreshCw size={14} /> Refresh Data
@@ -201,30 +202,36 @@ export default function Reports() {
       </div>
 
       {error && (
-        <div className="reports-alert-box">
+        <div className={`${styles.reports_alert_box}`}>
           <AlertCircle size={18} />
           <span>{error}</span>
         </div>
       )}
 
-      <div className="metrics-summary-grid">
-        <div className="metric-card">
-          <div className="icon-wrapper icon-closed-green">
+      <div className={`${styles.metrics_summary_grid}`}>
+        <div className={`${styles.metric_card}`}>
+          <div className={`${styles.icon_wrapper} ${styles.icon_closed_green}`}>
             <TrendingUp size={24} />
           </div>
-          <div className="metric-details">
-            <span className="metric-label">Total Action Items Closed</span>
-            <h3 className="metric-value">{summaryCards.totalClosed} Tasks</h3>
+          <div className={`${styles.metric_details}`}>
+            <span className={`${styles.metric_label}`}>
+              Total Action Items Closed
+            </span>
+            <h3 className={`${styles.metric_value}`}>
+              {summaryCards.totalClosed} Tasks
+            </h3>
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="icon-wrapper icon-pending-blue">
+        <div className={`${styles.metric_card}`}>
+          <div className={`${styles.icon_wrapper} ${styles.icon_pending_blue}`}>
             <BarChart3 size={24} />
           </div>
-          <div className="metric-details">
-            <span className="metric-label">Pending Operational Allocation</span>
-            <h3 className="metric-value">
+          <div className={`${styles.metric_details}`}>
+            <span className={`${styles.metric_label}`}>
+              Pending Operational Allocation
+            </span>
+            <h3 className={`${styles.metric_value}`}>
               {summaryCards.pendingDays} Estimated Days
             </h3>
           </div>
@@ -233,17 +240,17 @@ export default function Reports() {
 
       {/* Analytical Charts Component Grid Rendering */}
       {loading ? (
-        <div className="reports-loading-state">
+        <div className={`${styles.reports_loading_state}`}>
           Processing data and creating charts using chart.js...
         </div>
       ) : (
-        <div className="charts-workspace-vertical-flex">
+        <div className={`${styles.charts_workspace_vertical_flex}`}>
           {/* Pending Work Across Projects (Bar Chart) */}
-          <div className="chart-full-width-card">
-            <h3 className="chart-panel-title">
+          <div className={`${styles.chart_full_width_card}`}>
+            <h3 className={`${styles.chart_panel_title}`}>
               Pending Work Across Projects (Total Remaining Days)
             </h3>
-            <div className="bar-chart-container-frame">
+            <div className={`${styles.bar_chart_container_frame}`}>
               {projectBacklogData ? (
                 <Bar
                   data={projectBacklogData}
@@ -260,42 +267,46 @@ export default function Reports() {
                   }}
                 />
               ) : (
-                <div className="chart-empty-fallback">No backlog items.</div>
+                <div className={`${styles.chart_empty_fallback}`}>
+                  No backlog items.
+                </div>
               )}
             </div>
           </div>
 
-          <div className="charts-split-two-column-grid">
+          <div className={`${styles.charts_split_two_column_grid}`}>
             {/* Pie Chart: Closed Tasks by Functional Team */}
-            <div className="chart-circular-card-wrapper">
-              <h3 className="chart-panel-title text-left">
+            <div className={`${styles.chart_circular_card_wrapper}`}>
+              <h3 className={`${styles.chart_panel_title} ${styles.text_left}`}>
                 Tasks Closed By Core Team
               </h3>
-              <div className="circular-chart-canvas-frame">
+              <div className={`${styles.circular_chart_canvas_frame}`}>
                 {teamPerformanceData ? (
                   <Pie
                     data={teamPerformanceData}
                     options={{ responsive: true }}
                   />
                 ) : (
-                  <div className="chart-empty-fallback">No team metrics.</div>
+                  <div className={`${styles.chart_empty_fallback}`}>
+                    No team metrics.
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Doughnut Chart: Closed Tasks by Owner Assignment */}
-            <div className="chart-circular-card-wrapper">
-              <h3 className="chart-panel-title text-left">
+            <div className={`${styles.chart_circular_card_wrapper}`}>
+              <h3 className={`${styles.chart_panel_title} ${styles.text_left}`}>
                 Tasks Closed By Responsible Owner
               </h3>
-              <div className="circular-chart-canvas-frame">
+              <div className={`${styles.circular_chart_canvas_frame}`}>
                 {ownerPerformanceData ? (
                   <Doughnut
                     data={ownerPerformanceData}
                     options={{ responsive: true }}
                   />
                 ) : (
-                  <div className="chart-empty-fallback">
+                  <div className={`${styles.chart_empty_fallback}`}>
                     No individual records.
                   </div>
                 )}
