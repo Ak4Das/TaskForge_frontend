@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/Dashboard.module.css"
 import React, { useState, useEffect } from "react"
 import { useSearchParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -146,29 +147,29 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="header-title-area">
+    <div className={`${styles.dashboard_container}`}>
+      <div className={`${styles.dashboard_header}`}>
+        <div className={`${styles.header_title_area}`}>
           <h1>Workasana Dashboard</h1>
           <p>Track projects, organize workloads, and keep your team aligned.</p>
         </div>
 
         <button
           onClick={() => setModalVisibilityState(true)}
-          className="btn-primary btn-primary-one"
+          className={`${styles.btn_primary} ${styles.btn_primary_one}`}
         >
           <Plus size={18} /> Add New Task
         </button>
       </div>
 
       <section style={{ marginBottom: "40px" }}>
-        <div className="section-header">
-          <div className="section-header-left">
-            <h2 className="section-title">Ongoing Projects</h2>
+        <div className={`${styles.section_header}`}>
+          <div className={`${styles.section_header_left}`}>
+            <h2 className={`${styles.section_title}`}>Ongoing Projects</h2>
             <select
               // value={projectStatus}
               onChange={(e) => setProjectStatus(e.target.value)}
-              className="dropdown"
+              className={`${styles.dropdown}`}
             >
               <option value="">--- Choose Status ---</option>
               <option value="">All</option>
@@ -179,18 +180,18 @@ export default function Dashboard() {
             </select>
           </div>
           <button
-            className="btn-primary"
+            className={`${styles.btn_primary}`}
             onClick={() => setProjectModalVisibilityState(true)}
           >
             <Plus size={18} /> Add New Project
           </button>
         </div>
-        <div className="projects-grid">
+        <div className={`${styles.projects_grid}`}>
           {filteredProjects.map((project) => (
             <Link
               key={project._id}
               to={`/projects/${project._id}`}
-              className="project-card"
+              className={`${styles.project_card}`}
             >
               <span style={getStatusBadgeStyle(project.status)}>
                 {project.status === "Completed" && <CheckCircle2 size={12} />}
@@ -200,7 +201,7 @@ export default function Dashboard() {
                 {project.status}
               </span>
               <h3>{project.name}</h3>
-              <p className="project-description">
+              <p className={`${styles.project_description}`}>
                 {project.description ||
                   "No overview available for this project workspace."}
               </p>
@@ -209,19 +210,23 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="filters-panel">
-        <h2 className="section-title task-section-title-one">My Tasks</h2>
-        <div className="filters-panel-left">
-          <div className="filter-label">
+      <div className={`${styles.filters_panel}`}>
+        <h2
+          className={`${styles.section_title} ${styles.task_section_title_one}`}
+        >
+          My Tasks
+        </h2>
+        <div className={`${styles.filters_panel_left}`}>
+          <div className={`${styles.filter_label}`}>
             <Filter size={16} />
             <span>Quick Filters:</span>
           </div>
-          <div className="filter-buttons-group">
+          <div className={`${styles.filter_buttons_group}`}>
             {["To Do", "In Progress", "Completed", "Blocked"].map((status) => (
               <button
                 key={status}
                 onClick={() => handleQuickFilterToggle(status)}
-                className="filter-pill"
+                className={`${styles.filter_pill}`}
               >
                 {status}
               </button>
@@ -229,7 +234,7 @@ export default function Dashboard() {
           </div>
           <select
             name="filters"
-            className="dropdown task-filter-dropdown"
+            className={`${styles.dropdown} ${styles.task_filter_dropdown}`}
             onChange={(e) => handleQuickFilterToggle(e.target.value)}
           >
             <option value="">--Choose Status--</option>
@@ -240,7 +245,7 @@ export default function Dashboard() {
           </select>
           <button
             onClick={() => setModalVisibilityState(true)}
-            className="btn-primary btn-primary-two"
+            className={`${styles.btn_primary} ${styles.btn_primary_two}`}
           >
             <Plus size={18} /> Add New Task
           </button>
@@ -253,16 +258,16 @@ export default function Dashboard() {
               updatedParams.delete("status")
               setSearchParams(updatedParams)
             }}
-            className="clear-filters-btn clear-filters-btn-one"
+            className={`${styles.clear_filters_btn} ${styles.clear_filters_btn_one}`}
           >
             Clear Filters
           </button>
         )}
       </div>
 
-      <section className="tasks-section">
-        <div className="tasks-section-title">
-          <h2 className="task-section-title-two">My Tasks</h2>
+      <section className={`${styles.tasks_section}`}>
+        <div className={`${styles.tasks_section_title}`}>
+          <h2 className={`${styles.task_section_title_two}`}>My Tasks</h2>
           {currentStatusFilter && (
             <button
               onClick={() => {
@@ -270,7 +275,7 @@ export default function Dashboard() {
                 updatedParams.delete("status")
                 setSearchParams(updatedParams)
               }}
-              className="clear-filters-btn clear-filters-btn-two"
+              className={`${styles.clear_filters_btn} ${styles.clear_filters_btn_two}`}
             >
               Clear Filters
             </button>
@@ -278,14 +283,16 @@ export default function Dashboard() {
         </div>
 
         {loading ? (
-          <div className="state-placeholder">Loading items registry...</div>
+          <div className={`${styles.state_placeholder}`}>
+            Loading items registry...
+          </div>
         ) : tasks.length === 0 ? (
-          <div className="state-placeholder">
+          <div className={`${styles.state_placeholder}`}>
             No active tasks found matching current filter parameters.
           </div>
         ) : (
-          <div className="responsive-table-wrapper">
-            <table className="tasks-table">
+          <div className={`${styles.responsive_table_wrapper}`}>
+            <table className={`${styles.tasks_table}`}>
               <thead>
                 <tr
                   style={{
@@ -314,12 +321,15 @@ export default function Dashboard() {
                     }}
                   >
                     <td style={{ padding: "16px 20px" }}>
-                      <Link to={`/tasks/${task._id}`} className="task-link">
+                      <Link
+                        to={`/tasks/${task._id}`}
+                        className={`${styles.task_link}`}
+                      >
                         {task.name}
                       </Link>
-                      <div className="tags-list">
+                      <div className={`${styles.tags_list}`}>
                         {task.tags?.map((tag, i) => (
-                          <span className="tag-badge" key={i}>
+                          <span className={`${styles.tag_badge}`} key={i}>
                             {tag.name}
                           </span>
                         ))}
@@ -364,14 +374,18 @@ export default function Dashboard() {
                         fontWeight: "500",
                       }}
                     >
-                      {task.timeToComplete}{" "}
+                      {task.timeToComplete}
+                      {` `}
                       {task.timeToComplete === 1 ? "day" : "days"}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="tasks-cards" style={{ padding: "20px" }}>
+            <div
+              className={`${styles.tasks_cards}`}
+              style={{ padding: "20px" }}
+            >
               <div className="row">
                 {tasks &&
                   tasks.map((task) => {
@@ -390,21 +404,24 @@ export default function Dashboard() {
                                 <p>
                                   <Link
                                     to={`/tasks/${task._id}`}
-                                    className="task-link"
+                                    className={`${styles.task_link}`}
                                   >
                                     {task.name}
                                   </Link>
                                 </p>
                                 <p>
-                                  <b>Project Context:</b>{" "}
+                                  <b>Project Context:</b>
+                                  {` `}
                                   {task.project?.name || "Unassigned"}
                                 </p>
                                 <p>
-                                  <b>Assigned Team:</b>{" "}
+                                  <b>Assigned Team:</b>
+                                  {` `}
                                   {task.team?.name || "Cross-Functional"}
                                 </p>
                                 <p className="d-block d-sm-none">
-                                  <b>Workflow State:</b>{" "}
+                                  <b>Workflow State:</b>
+                                  {` `}
                                   <span
                                     style={getStatusBadgeStyle(task.status)}
                                   >
@@ -424,21 +441,27 @@ export default function Dashboard() {
                                   </span>
                                 </p>
                                 <p>
-                                  <b>Allocation Duration:</b>{" "}
-                                  {task.timeToComplete}{" "}
+                                  <b>Allocation Duration:</b>
+                                  {` `}
+                                  {task.timeToComplete}
+                                  {` `}
                                   {task.timeToComplete === 1 ? "day" : "days"}
                                 </p>
                                 <p>
-                                  <b>Tags:</b>{" "}
+                                  <b>Tags:</b>
+                                  {` `}
                                   {task.tags?.map((tag, i) => (
-                                    <span className="tag-badge me-1" key={i}>
+                                    <span
+                                      className={`${styles.tag_badge} me-1`}
+                                      key={i}
+                                    >
                                       {tag.name}
                                     </span>
                                   ))}
                                 </p>
                               </div>
                               <div
-                                className="task-status-badge"
+                                className={`${styles.task_status_badge}`}
                                 style={{ minWidth: "100px" }}
                               >
                                 <p className="d-flex justify-content-end">
