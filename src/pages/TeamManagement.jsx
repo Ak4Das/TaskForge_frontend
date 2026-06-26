@@ -95,194 +95,59 @@ export default function TeamManagement() {
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <div style={{ marginBottom: "32px" }}>
-        <h1
-          style={{
-            fontSize: "28px",
-            fontWeight: "700",
-            color: "#111827",
-            margin: "0 0 6px 0",
-          }}
-        >
-          Teams Management
-        </h1>
-        <p style={{ color: "#4B5563", margin: 0 }}>
+    <div className="team_container">
+      <div className="team_header">
+        <h1 className="main_title">Teams Management</h1>
+        <p className="sub_title">
           View teams, assigned members and establish new team.
         </p>
       </div>
 
       {error && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px 16px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-            fontSize: "14px",
-          }}
-        >
+        <div className="alert_message alert_error">
           <ShieldAlert size={18} />
           <span>{error}</span>
         </div>
       )}
       {successMsg && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#ECFDF5",
-            border: "1px solid #A7F3D0",
-            color: "#065F46",
-            padding: "14px 16px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-            fontSize: "14px",
-          }}
-        >
+        <div className="alert_message alert_success">
           <CheckCircle2 size={18} />
           <span>{successMsg}</span>
         </div>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.2fr 1fr",
-          gap: "32px",
-          alignItems: "start",
-        }}
-      >
-        <section
-          style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #E5E7EB",
-            borderRadius: "14px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              padding: "18px 24px",
-              borderBottom: "1px solid #E5E7EB",
-              backgroundColor: "#F9FAFB",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <Users size={18} style={{ color: "#4F46E5" }} />
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#111827",
-                margin: 0,
-              }}
-            >
+      <div className="workspace_grid">
+        <section className="teams_card list_section">
+          <div className="card_header">
+            <Users className="brand_icon" size={18} />
+            <h2 className="section_title">
               Active Departmental Scopes ({teams.length})
             </h2>
           </div>
 
           {loading ? (
-            <div
-              style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}
-            >
-              Loading teams registry...
-            </div>
+            <div className="loading_state">Loading teams registry...</div>
           ) : teams.length === 0 ? (
-            <div
-              style={{
-                padding: "40px",
-                textAlign: "center",
-                color: "#6B7280",
-                fontSize: "14px",
-              }}
-            >
+            <div className="empty_state">
               No team registered in database records.
             </div>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                divideY: "1px solid #F3F4F6",
-              }}
-            >
+            <div className="teams_list_wrapper">
               {teams.map((team) => (
-                <div
-                  key={team._id}
-                  style={{
-                    padding: "20px 24px",
-                    borderBottom: "1px solid #F3F4F6",
-                    transition: "background-color 0.15s",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "start",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    <Link
-                      to={`/teams/${team._id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <h3
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "600",
-                          color: "#111827",
-                          margin: 0,
-                          color: "#0000ee",
-                        }}
-                      >
-                        {team.name}
-                      </h3>
+                <div className="team_row_item" key={team._id}>
+                  <div className="team_row_top">
+                    <Link className="team_link" to={`/teams/${team._id}`}>
+                      <h3 className="team_name_title">{team.name}</h3>
                     </Link>
-                    <span
-                      style={{
-                        fontSize: "11px",
-                        fontWeight: "600",
-                        color: "#4F46E5",
-                        backgroundColor: "#EEF2F6",
-                        padding: "2px 8px",
-                        borderRadius: "12px",
-                      }}
-                    >
+                    <span className="members_counter_badge">
                       {team.members?.length || 0}{" "}
                       {team.members?.length === 1 ? "Member" : "Members"}
                     </span>
                   </div>
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "#4B5563",
-                      margin: "0 0 12px 0",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {team.description}
-                  </p>
+                  <p className="team_description_text">{team.description}</p>
 
                   {team.members && team.members.length > 0 && (
-                    <div
-                      style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}
-                    >
+                    <div className="member_tags_flexbox">
                       {team.members.map((member, i) => {
                         const nameString =
                           typeof member === "object"
@@ -290,16 +155,7 @@ export default function TeamManagement() {
                             : users.find((u) => u._id === member)?.name ||
                               "Account Linked"
                         return (
-                          <span
-                            key={i}
-                            style={{
-                              fontSize: "11px",
-                              background: "#F3F4F6",
-                              color: "#4B5563",
-                              padding: "2px 6px",
-                              borderRadius: "4px",
-                            }}
-                          >
+                          <span className="member_tag" key={i}>
                             {nameString}
                           </span>
                         )
@@ -312,165 +168,61 @@ export default function TeamManagement() {
           )}
         </section>
 
-        <section
-          style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #E5E7EB",
-            borderRadius: "14px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "20px",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "12px",
-            }}
-          >
-            <PlusCircle size={18} style={{ color: "#059669" }} />
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#111827",
-                margin: 0,
-              }}
-            >
-              Establish New Team
-            </h2>
+        <section className="create_teams_card form_section">
+          <div className="create_teams_card_header border_bottom">
+            <PlusCircle
+              className="success_icon"
+              size={18}
+              style={{ color: "#059669" }}
+            />
+            <h2 className="section_title">Establish New Team</h2>
           </div>
 
-          <form
-            onSubmit={handleCreateTeamSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Team Name
-              </label>
+          <form className="creation_form" onSubmit={handleCreateTeamSubmit}>
+            <div className="form_group">
+              <label className="form_label">Team Name</label>
               <input
+                className="form_input"
                 type="text"
                 required
                 value={newTeamName}
                 onChange={(e) => setNewTeamName(e.target.value)}
                 placeholder="e.g., Quality Assurance"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                }}
               />
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Functional Scope Description
-              </label>
+            <div className="form_group">
+              <label className="form_label">Functional Scope Description</label>
               <textarea
+                className="form_textarea"
                 rows="3"
                 value={newTeamDesc}
                 onChange={(e) => setNewTeamDesc(e.target.value)}
                 placeholder="Outline responsibility metrics handled by this unit group..."
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                }}
               />
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
+            <div className="form_group">
+              <label className="form_label">
                 Assign Initial Team Members ({selectedMembers.length} selected)
               </label>
-              <div
-                style={{
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  maxHeight: "180px",
-                  overflowY: "auto",
-                  padding: "8px 12px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                  backgroundColor: "#F9FAFB",
-                }}
-              >
+              <div className="checkbox_scrollbox">
                 {users.length === 0 ? (
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      color: "#9CA3AF",
-                      fontStyle: "italic",
-                    }}
-                  >
+                  <span className="no_users_text">
                     No registered users available.
                   </span>
                 ) : (
                   users.map((u) => (
-                    <label
-                      key={u._id}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        fontSize: "13px",
-                        color: "#374151",
-                        cursor: "pointer",
-                      }}
-                    >
+                    <label className="checkbox_label_item" key={u._id}>
                       <input
+                        className="custom_checkbox"
                         type="checkbox"
                         checked={selectedMembers.includes(u._id)}
                         onChange={() => handleMemberCheckboxToggle(u._id)}
-                        style={{
-                          width: "15px",
-                          height: "15px",
-                          accentColor: "#4F46E5",
-                          cursor: "pointer",
-                        }}
                       />
-                      <span>
+                      <span className="user_info_text">
                         {u.name}{" "}
-                        <span style={{ color: "#9CA3AF", fontSize: "11px" }}>
-                          ({u.email})
-                        </span>
+                        <span className="user_email_subtext">({u.email})</span>
                       </span>
                     </label>
                   ))
@@ -479,24 +231,9 @@ export default function TeamManagement() {
             </div>
 
             <button
+              className="btn_submit_team"
               type="submit"
               disabled={submitting || !newTeamName.trim()}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                border: "none",
-                backgroundColor: "#4F46E5",
-                color: "#ffffff",
-                padding: "12px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "background-color 0.15s",
-                marginTop: "8px",
-              }}
               onMouseEnter={(e) =>
                 !submitting && (e.target.style.backgroundColor = "#4338CA")
               }
