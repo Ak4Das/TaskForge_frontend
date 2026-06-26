@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/ProjectManagement.module.css"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import {
@@ -91,54 +92,57 @@ export default function ProjectManagement() {
   const getStatusClass = (status) => {
     switch (status) {
       case "To Do":
-        return "badge-todo"
+        return "badge_todo"
       case "In Progress":
-        return "badge-progress"
+        return "badge_progress"
       case "Completed":
-        return "badge-completed"
+        return "badge_completed"
       case "Blocked":
-        return "badge-blocked"
+        return "badge_blocked"
       default:
         return ""
     }
   }
 
   return (
-    <div className="workspace-container">
-      <div className="workspace-header">
-        <div className="header-text">
-          <h1 className="main-title">Projects Workspace</h1>
-          <p className="sub-title">
+    <div className={`${styles.workspace_container}`}>
+      <div className={`${styles.workspace_header}`}>
+        <div className={`${styles.header_text}`}>
+          <h1 className={`${styles.main_title}`}>Projects Workspace</h1>
+          <p className={`${styles.sub_title}`}>
             Review, search, and manage ongoing project initiatives across your
             company teams.
           </p>
         </div>
         <button
-          className="btn-add-project"
+          className={`${styles.btn_add_project}`}
           onClick={() => setProjectModalVisibilityState(true)}
         >
           <Plus size={18} /> Add New Project
         </button>
       </div>
 
-      <div className="workspace-filters">
-        <div className="search-bar-wrapper">
-          <Search size={18} className="search-icon" />
+      <div className={`${styles.workspace_filters}`}>
+        <div className={`${styles.search_bar_wrapper}`}>
+          <Search size={18} className={`${styles.search_icon}`} />
           <input
-            className="search-input"
+            className={`${styles.search_input}`}
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search projects by name..."
           />
           {searchQuery && (
-            <button className="btn-clear" onClick={() => setSearchQuery("")}>
+            <button
+              className={`${styles.btn_clear}`}
+              onClick={() => setSearchQuery("")}
+            >
               Clear
             </button>
           )}
         </div>
         <select
-          className="status-dropdown"
+          className={`${styles.status_dropdown}`}
           value={projectStatus}
           onChange={(e) => setProjectStatus(e.target.value)}
         >
@@ -151,34 +155,34 @@ export default function ProjectManagement() {
         </select>
       </div>
 
-      {error && <div className="error-banner">{error}</div>}
+      {error && <div className={`${styles.error_banner}`}>{error}</div>}
 
       {loading ? (
-        <div className="loading-state">Loading projects...</div>
+        <div className={`${styles.loading_state}`}>Loading projects...</div>
       ) : finalProjects.length === 0 ? (
-        <div className="empty-state">
-          <FolderKanban className="empty-icon" size={40} />
-          <h3 className="empty-title">No Projects Found</h3>
-          <p className="empty-subtitle">
+        <div className={`${styles.empty_state}`}>
+          <FolderKanban className={`${styles.empty_icon}`} size={40} />
+          <h3 className={`${styles.empty_title}`}>No Projects Found</h3>
+          <p className={`${styles.empty_subtitle}`}>
             {searchQuery
               ? `No matching items found for "${searchQuery}"`
               : "Your project ecosystem is empty."}
           </p>
         </div>
       ) : (
-        <div className="projects-grid">
+        <div className={`${styles.projects_grid}`}>
           {finalProjects.map((project) => (
-            <div className="project-card" key={project._id}>
+            <div className={`${styles.project_card}`} key={project._id}>
               <div>
-                <div className="card-top-meta">
-                  <div className="creation-date">
+                <div className={`${styles.card_top_meta}`}>
+                  <div className={`${styles.creation_date}`}>
                     <Calendar size={13} />
                     <span style={{ marginTop: "2px" }}>
                       Created: {formatCreationDate(project.createdAt)}
                     </span>
                   </div>
                   <span
-                    className={`status-badge ${getStatusClass(project.status)}`}
+                    className={`${styles.status_badge} ${styles[`${getStatusClass(project.status)}`]}`}
                   >
                     {project.status === "Completed" && (
                       <CheckCircle2 size={12} />
@@ -192,14 +196,16 @@ export default function ProjectManagement() {
                   </span>
                 </div>
 
-                <h2 className="project-name">{project.name}</h2>
+                <h2 className={`${styles.project_name}`}>{project.name}</h2>
 
-                <p className="project-description">{project.description}</p>
+                <p className={`${styles.project_description}`}>
+                  {project.description}
+                </p>
               </div>
 
-              <div className="card-footer">
+              <div className={`${styles.card_footer}`}>
                 <Link
-                  className="view-tasks-link"
+                  className={`${styles.view_tasks_link}`}
                   to={`/projects/${project._id}`}
                 >
                   <span>View Tasks</span>
