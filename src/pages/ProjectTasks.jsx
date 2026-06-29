@@ -181,27 +181,27 @@ export default function ProjectTasks() {
   const getStatusClassName = (status) => {
     switch (status) {
       case "To Do":
-        return "status-todo"
+        return "status_todo"
       case "In Progress":
-        return "status-inprogress"
+        return "status_inprogress"
       case "Completed":
-        return "status-completed"
+        return "status_completed"
       case "Blocked":
-        return "status-blocked"
+        return "status_blocked"
       default:
         return ""
     }
   }
 
   if (loading) {
-    return <div className="loading-state">Loading tasks...</div>
+    return <div className="loading_state">Loading tasks...</div>
   }
 
   if (error || !project) {
     return (
-      <div className="error-wrapper">
-        <div className="error-message">{error}</div>
-        <Link className="back-link" to="/projects">
+      <div className="error_wrapper">
+        <div className="error_message">{error}</div>
+        <Link className="back_link" to="/projects">
           <ArrowLeft size={16} /> Return to Projects Registry
         </Link>
       </div>
@@ -209,26 +209,26 @@ export default function ProjectTasks() {
   }
 
   return (
-    <div className="project-tasks-container">
-      <Link className="back-link" to="/projects">
+    <div className="project_tasks_container">
+      <Link className="back_link" to="/projects">
         <ArrowLeft size={16} /> Back to Projects Track
       </Link>
 
-      <div className="project-header-card">
-        <div className="project-title-row">
-          <Layers className="project-title-icon" size={24} />
-          <h1 className="project-title">{project.name}</h1>
+      <div className="project_header_card">
+        <div className="project_title_row">
+          <Layers className="project_title_icon" size={24} />
+          <h1 className="project_title">{project.name}</h1>
         </div>
-        <p className="project-description">{project.description}</p>
+        <p className="project_description">{project.description}</p>
       </div>
-      <div className="controls-row">
-        <div className="controls-group">
-          <div className="control-label">
+      <div className="controls_row">
+        <div className="controls_group">
+          <div className="control_label">
             <Filter size={16} />
             <span>Quick Filters:</span>
           </div>
           <select
-            className="control-select"
+            className="control_select"
             onChange={(e) => handleQuickFilterToggle(e.target.value)}
           >
             <option value="">--- Choose Status ---</option>
@@ -240,7 +240,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
-              className="control-select"
+              className="control_select"
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
             >
@@ -255,7 +255,7 @@ export default function ProjectTasks() {
           )}
           {tags.length !== 0 && (
             <select
-              className="control-select"
+              className="control_select"
               value={tag}
               onChange={(e) => setTag(e.target.value)}
             >
@@ -270,14 +270,14 @@ export default function ProjectTasks() {
           )}
         </div>
       </div>
-      <div className="controls-row">
-        <div className="controls-group">
-          <div className="control-label">
+      <div className="controls_row">
+        <div className="controls_group">
+          <div className="control_label">
             <ArrowUpDown size={16} />
             <span>Sort By:</span>
           </div>
           <select
-            className="control-select"
+            className="control_select"
             onChange={(e) => setPrioritySortOrder(e.target.value)}
           >
             <option value="">--- Priority ---</option>
@@ -287,7 +287,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
-              className="control-select"
+              className="control_select"
               onChange={(e) => {
                 if (e.target.value === "highToLow") {
                   sortDueDateByDescOrder()
@@ -312,11 +312,11 @@ export default function ProjectTasks() {
         </div>
       </div>
 
-      <div className="tasks-panel">
-        <div className="panel-header">
-          <h2 className="panel-title">Project Scope Tasks ({tasks.length})</h2>
+      <div className="tasks_panel">
+        <div className="panel_header">
+          <h2 className="panel_title">Project Scope Tasks ({tasks.length})</h2>
           <button
-            className="add-task-btn"
+            className="add_task_btn"
             onClick={() => setModalVisibilityState(true)}
           >
             <Plus size={18} /> Add New Task
@@ -324,14 +324,14 @@ export default function ProjectTasks() {
         </div>
 
         {tasks.length === 0 ? (
-          <div className="empty-state">
+          <div className="empty_state">
             No task records have been initiated under this project.
           </div>
         ) : (
-          <div className="table-container">
-            <table className="tasks-table">
+          <div className="table_container">
+            <table className="tasks_table">
               <thead>
-                <tr className="table-header-row">
+                <tr className="table_header_row">
                   <th style={{ padding: "12px 20px" }}>Action Item Title</th>
                   <th style={{ padding: "12px 20px" }}>Assigned Team</th>
                   <th style={{ padding: "12px 20px" }}>Workflow State</th>
@@ -342,28 +342,28 @@ export default function ProjectTasks() {
               </thead>
               <tbody>
                 {tasks.map((task) => (
-                  <tr className="table-data-row" key={task._id}>
+                  <tr className="table_data_row" key={task._id}>
                     <td style={{ padding: "16px 20px" }}>
                       <Link
-                        className="task-title-link"
+                        className="task_title_link"
                         to={`/tasks/${task._id}`}
                       >
                         {task.name}
                       </Link>
-                      <div className="tag-list">
+                      <div className="tag_list">
                         {task.tags?.map((tag, i) => (
-                          <span className="task-tag" key={i}>
+                          <span className="task_tag" key={i}>
                             {tag.name}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td style={{ padding: "16px 20px" }} className="team-cell">
+                    <td style={{ padding: "16px 20px" }} className="team_cell">
                       {task.team?.name || "Cross-Functional"}
                     </td>
                     <td style={{ padding: "16px 20px" }}>
                       <span
-                        className={`status-badge ${getStatusClassName(task.status)}`}
+                        className={`status_badge ${getStatusClassName(task.status)}`}
                       >
                         {task.status === "Completed" && (
                           <CheckCircle2 size={12} />
@@ -376,18 +376,18 @@ export default function ProjectTasks() {
                         {task.status}
                       </span>
                     </td>
-                    <td style={{ padding: "16px 20px" }} className="team-cell">
+                    <td style={{ padding: "16px 20px" }} className="team_cell">
                       {task.priority}
                     </td>
                     <td
                       style={{ padding: "16px 20px" }}
-                      className="highlight-text"
+                      className="highlight_text"
                     >
                       {findDueDate(task.createdAt, task.timeToComplete)}
                     </td>
                     <td
                       style={{ padding: "16px 20px" }}
-                      className="highlight-text"
+                      className="highlight_text"
                     >
                       {findRemainingDays(task.createdAt, task.timeToComplete)}
                     </td>
@@ -395,6 +395,115 @@ export default function ProjectTasks() {
                 ))}
               </tbody>
             </table>
+            <div className={`tasks_cards`} style={{ padding: "20px" }}>
+              <div className="row">
+                {tasks &&
+                  tasks.map((task) => {
+                    return (
+                      <div className="col-12 col-xl-6" key={task._id}>
+                        <div
+                          className={`mb-3`}
+                          style={{
+                            overflow: "hidden",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <div className={`card mb-3`}>
+                            <div className="card-body d-flex gap-2 justify-content-between">
+                              <div style={{ fontSize: "16px" }}>
+                                <p>
+                                  <Link
+                                    to={`/tasks/${task._id}`}
+                                    className="task_title_link"
+                                  >
+                                    {task.name}
+                                  </Link>
+                                </p>
+                                <p>
+                                  <b>Assigned Team:</b>
+                                  {` `}
+                                  {task.team?.name}
+                                </p>
+                                <p className="d-block d-sm-none">
+                                  <b>Workflow State:</b>
+                                  {` `}
+                                  <span
+                                    className={`status_badge ${getStatusClassName(task.status)}`}
+                                  >
+                                    {task.status === "Completed" && (
+                                      <CheckCircle2 size={12} />
+                                    )}
+                                    {task.status === "In Progress" && (
+                                      <Clock size={12} />
+                                    )}
+                                    {task.status === "Blocked" && (
+                                      <AlertTriangle size={12} />
+                                    )}
+                                    {task.status === "To Do" && (
+                                      <HelpCircle size={12} />
+                                    )}
+                                    {task.status}
+                                  </span>
+                                </p>
+                                <p>
+                                  <b>Priority:</b> {task.priority}
+                                </p>
+                                <p>
+                                  <b>Due Date:</b>{" "}
+                                  {findDueDate(
+                                    task.createdAt,
+                                    task.timeToComplete,
+                                  )}
+                                </p>
+                                <p>
+                                  <b>Remaining Days:</b>{" "}
+                                  {findRemainingDays(
+                                    task.createdAt,
+                                    task.timeToComplete,
+                                  )}
+                                </p>
+                                <p>
+                                  <b>Tags:</b>
+                                  {` `}
+                                  {task.tags?.map((tag, i) => (
+                                    <span className="ms-1 task_tag" key={i}>
+                                      {tag.name}
+                                    </span>
+                                  ))}
+                                </p>
+                              </div>
+                              <div
+                                className={`d-sm-block d-none`}
+                                style={{ minWidth: "100px" }}
+                              >
+                                <p className="d-flex justify-content-end">
+                                  <span
+                                    className={`status_badge ${getStatusClassName(task.status)}`}
+                                  >
+                                    {task.status === "Completed" && (
+                                      <CheckCircle2 size={12} />
+                                    )}
+                                    {task.status === "In Progress" && (
+                                      <Clock size={12} />
+                                    )}
+                                    {task.status === "Blocked" && (
+                                      <AlertTriangle size={12} />
+                                    )}
+                                    {task.status === "To Do" && (
+                                      <HelpCircle size={12} />
+                                    )}
+                                    {task.status}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
           </div>
         )}
       </div>
