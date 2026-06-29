@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/TaskDetail.module.css"
 import React, { useState, useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -90,73 +91,33 @@ export default function TaskDetail() {
     return dueDate.toLocaleDateString()
   }
 
-  // Status styling configurations lookup map block
-  const getStatusBadgeStyle = (status) => {
-    const base = {
-      padding: "6px 14px",
-      borderRadius: "20px",
-      fontSize: "13px",
-      fontWeight: "600",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "6px",
-    }
+  const getStatusClass = (status) => {
     switch (status) {
       case "To Do":
-        return { ...base, backgroundColor: "#E5E7EB", color: "#374151" }
+        return styles.statusTodo
       case "In Progress":
-        return { ...base, backgroundColor: "#DBEAFE", color: "#1E40AF" }
+        return styles.statusProgress
       case "Completed":
-        return { ...base, backgroundColor: "#D1FAE5", color: "#065F46" }
+        return styles.statusCompleted
       case "Blocked":
-        return { ...base, backgroundColor: "#FEE2E2", color: "#991B1B" }
+        return styles.statusBlocked
       default:
-        return base
+        return ""
     }
   }
 
   if (loading) {
-    return (
-      <div
-        style={{
-          padding: "40px",
-          textAlign: "center",
-          color: "#6B7280",
-          fontFamily: "sans-serif",
-        }}
-      >
-        Loading task...
-      </div>
-    )
+    return <div className={styles.loadingState}>Loading task...</div>
   }
 
   if (error || !task) {
     return (
-      <div style={{ padding: "32px", fontFamily: "sans-serif" }}>
-        <div
-          style={{
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px",
-            borderRadius: "8px",
-            marginBottom: "16px",
-          }}
-        >
+      <div className={styles.errorWrapper}>
+        <div className={styles.errorBanner}>
           {error ||
             "The targeted assignment file could not be localized within active records."}
         </div>
-        <Link
-          to="/dashboard"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            color: "#4F46E5",
-            textDecoration: "none",
-            fontWeight: "500",
-          }}
-        >
+        <Link className={styles.backLink} to="/dashboard">
           <ArrowLeft size={16} /> Return to Dashboard View
         </Link>
       </div>
@@ -164,52 +125,17 @@ export default function TaskDetail() {
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        maxWidth: "800px",
-        margin: "0 auto",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <button
-        onClick={() => navigate(-1)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          color: "#4F46E5",
-          backgroundColor: "transparent",
-          border: "none",
-          fontSize: "14px",
-          fontWeight: "600",
-          marginBottom: "24px",
-          cursor: "pointer",
-        }}
-      >
+    <div className={styles.container}>
+      <button className={styles.backWorkspaceBtn} onClick={() => navigate(-1)}>
         <ArrowLeft size={16} /> Return to Previous Workspace
       </button>
 
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "16px",
-          boxShadow:
-            "0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            padding: "28px 32px",
-            borderBottom: "1px solid #F3F4F6",
-            backgroundColor: "#F9FAFB",
-          }}
-        >
-          <div style={{ marginBottom: "12px" }}>
-            <span style={getStatusBadgeStyle(task.status)}>
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.badgeWrapper}>
+            <span
+              className={`${styles.statusBadge} ${getStatusClass(task.status)}`}
+            >
               {task.status === "Completed" && <CheckCircle2 size={14} />}
               {task.status === "In Progress" && <Clock size={14} />}
               {task.status === "Blocked" && <AlertTriangle size={14} />}
@@ -217,241 +143,80 @@ export default function TaskDetail() {
               {task.status}
             </span>
           </div>
-          <h1
-            style={{
-              fontSize: "24px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: 0,
-              lineHeight: "1.3",
-            }}
-          >
-            {task.name}
-          </h1>
+          <h1 className={styles.taskTitle}>{task.name}</h1>
         </div>
 
-        <div
-          style={{
-            padding: "32px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "center",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "14px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
+        <div className={styles.cardBody}>
+          <div className={styles.dataGridRow}>
+            <div className={styles.labelCell}>
               <Folder size={16} />
               <span>Project Context:</span>
             </div>
-            <div
-              style={{ fontSize: "15px", fontWeight: "600", color: "#111827" }}
-            >
-              {task.project?.name}
-            </div>
+            <div className={styles.valueCellBold}>{task.project?.name}</div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "center",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "14px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
+          <div className={styles.dataGridRow}>
+            <div className={styles.labelCell}>
               <Users size={16} />
               <span>Assigned Team:</span>
             </div>
-            <div style={{ fontSize: "14px", color: "#374151" }}>
-              {task.team?.name}
-            </div>
+            <div className={styles.valueCell}>{task.team?.name}</div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "start",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "14px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-                marginTop: "2px",
-              }}
-            >
+          <div className={styles.dataGridRow}>
+            <div className={`${styles.labelCell} ${styles.alignStart}`}>
               <User size={16} />
               <span>Responsible Owners:</span>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            <div className={styles.ownersFlexContainer}>
               {task.owners && task.owners.length > 0 ? (
                 task.owners.map((owner) => (
-                  <span
-                    key={owner._id}
-                    style={{
-                      fontSize: "13px",
-                      background: "#EEF2F6",
-                      color: "#1E40AF",
-                      padding: "4px 10px",
-                      borderRadius: "6px",
-                      fontWeight: "500",
-                    }}
-                  >
+                  <span className={styles.ownerTag} key={owner._id}>
                     {owner.name} ({owner.email})
                   </span>
                 ))
               ) : (
-                <span
-                  style={{
-                    fontSize: "14px",
-                    color: "#9CA3AF",
-                    fontStyle: "italic",
-                  }}
-                >
+                <span className={styles.emptyStateText}>
                   No profile node targets bound.
                 </span>
               )}
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "center",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "14px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
+          <div className={styles.dataGridRow}>
+            <div className={styles.labelCell}>
               <CalendarDays size={16} />
               <span>Due Date:</span>
             </div>
-            <div
-              style={{ fontSize: "14px", fontWeight: "600", color: "#111827" }}
-            >
+            <div className={styles.valueCellBold}>
               {findDueDate(task.createdAt, task.timeToComplete)}
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "center",
-              borderBottom: "1px solid #F3F4F6",
-              paddingBottom: "14px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
+          <div className={styles.dataGridRow}>
+            <div className={styles.labelCell}>
               <Clock3 size={16} />
               <span>Time Remaining:</span>
             </div>
-            <div
-              style={{ fontSize: "14px", fontWeight: "600", color: "#111827" }}
-            >
+            <div className={styles.valueCellBold}>
               {findRemainingDays(task.createdAt, task.timeToComplete)}
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "200px 1fr",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#6B7280",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
-            >
+          <div className={styles.dataGridRowLast}>
+            <div className={styles.labelCell}>
               <Tag size={16} />
               <span>Categorical Tags:</span>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+            <div className={styles.tagsFlexContainer}>
               {task.tags && task.tags.length > 0 ? (
                 task.tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      fontSize: "12px",
-                      background: "#F3F4F6",
-                      color: "#4B5563",
-                      padding: "4px 10px",
-                      borderRadius: "6px",
-                      border: "1px solid #E5E7EB",
-                      fontWeight: "500",
-                    }}
-                  >
+                  <span className={styles.categoryTag} key={i}>
                     {tag.name}
                   </span>
                 ))
               ) : (
-                <span
-                  style={{
-                    fontSize: "14px",
-                    color: "#9CA3AF",
-                    fontStyle: "italic",
-                  }}
-                >
+                <span className={styles.emptyStateText}>
                   No catalog markers attached.
                 </span>
               )}
@@ -460,33 +225,11 @@ export default function TaskDetail() {
         </div>
 
         {task.status !== "Completed" && (
-          <div
-            style={{
-              padding: "24px 32px",
-              borderTop: "1px solid #F3F4F6",
-              backgroundColor: "#F9FAFB",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className={styles.cardFooter}>
             <button
+              className={styles.submitBtn}
               onClick={handleMarkAsComplete}
               disabled={updating}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                border: "none",
-                backgroundColor: "#059669",
-                color: "#ffffff",
-                padding: "12px 24px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "background-color 0.15s",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-              }}
             >
               <CheckCircle2 size={16} />
               {updating ? "Updating state..." : "Mark as Complete"}
