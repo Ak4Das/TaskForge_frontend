@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/ProjectTasks.module.css"
 import React, { useState, useEffect } from "react"
 import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -194,14 +195,14 @@ export default function ProjectTasks() {
   }
 
   if (loading) {
-    return <div className="loading_state">Loading tasks...</div>
+    return <div className={`${styles.loading_state}`}>Loading tasks...</div>
   }
 
   if (error || !project) {
     return (
-      <div className="error_wrapper">
-        <div className="error_message">{error}</div>
-        <Link className="back_link" to="/projects">
+      <div className={`${styles.error_wrapper}`}>
+        <div className={`${styles.error_message}`}>{error}</div>
+        <Link className={`${styles.back_link}`} to="/projects">
           <ArrowLeft size={16} /> Return to Projects Registry
         </Link>
       </div>
@@ -209,26 +210,26 @@ export default function ProjectTasks() {
   }
 
   return (
-    <div className="project_tasks_container">
-      <Link className="back_link" to="/projects">
+    <div className={`${styles.project_tasks_container}`}>
+      <Link className={`${styles.back_link}`} to="/projects">
         <ArrowLeft size={16} /> Back to Projects Track
       </Link>
 
-      <div className="project_header_card">
-        <div className="project_title_row">
-          <Layers className="project_title_icon" size={24} />
-          <h1 className="project_title">{project.name}</h1>
+      <div className={`${styles.project_header_card}`}>
+        <div className={`${styles.project_title_row}`}>
+          <Layers className={`${styles.project_title_icon}`} size={24} />
+          <h1 className={`${styles.project_title}`}>{project.name}</h1>
         </div>
-        <p className="project_description">{project.description}</p>
+        <p className={`${styles.project_description}`}>{project.description}</p>
       </div>
-      <div className="controls_row">
-        <div className="controls_group">
-          <div className="control_label">
+      <div className={`${styles.controls_row}`}>
+        <div className={`${styles.controls_group}`}>
+          <div className={`${styles.control_label}`}>
             <Filter size={16} />
             <span>Quick Filters:</span>
           </div>
           <select
-            className="control_select"
+            className={`${styles.control_select}`}
             onChange={(e) => handleQuickFilterToggle(e.target.value)}
           >
             <option value="">--- Choose Status ---</option>
@@ -240,7 +241,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
-              className="control_select"
+              className={`${styles.control_select}`}
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
             >
@@ -255,7 +256,7 @@ export default function ProjectTasks() {
           )}
           {tags.length !== 0 && (
             <select
-              className="control_select"
+              className={`${styles.control_select}`}
               value={tag}
               onChange={(e) => setTag(e.target.value)}
             >
@@ -270,14 +271,14 @@ export default function ProjectTasks() {
           )}
         </div>
       </div>
-      <div className="controls_row">
-        <div className="controls_group">
-          <div className="control_label">
+      <div className={`${styles.controls_row}`}>
+        <div className={`${styles.controls_group}`}>
+          <div className={`${styles.control_label}`}>
             <ArrowUpDown size={16} />
             <span>Sort By:</span>
           </div>
           <select
-            className="control_select"
+            className={`${styles.control_select}`}
             onChange={(e) => setPrioritySortOrder(e.target.value)}
           >
             <option value="">--- Priority ---</option>
@@ -287,7 +288,7 @@ export default function ProjectTasks() {
           </select>
           {users.length !== 0 && (
             <select
-              className="control_select"
+              className={`${styles.control_select}`}
               onChange={(e) => {
                 if (e.target.value === "highToLow") {
                   sortDueDateByDescOrder()
@@ -312,11 +313,13 @@ export default function ProjectTasks() {
         </div>
       </div>
 
-      <div className="tasks_panel">
-        <div className="panel_header">
-          <h2 className="panel_title">Project Scope Tasks ({tasks.length})</h2>
+      <div className={`${styles.tasks_panel}`}>
+        <div className={`${styles.panel_header}`}>
+          <h2 className={`${styles.panel_title}`}>
+            Project Scope Tasks ({tasks.length})
+          </h2>
           <button
-            className="add_task_btn"
+            className={`${styles.add_task_btn}`}
             onClick={() => setModalVisibilityState(true)}
           >
             <Plus size={18} /> Add New Task
@@ -324,14 +327,14 @@ export default function ProjectTasks() {
         </div>
 
         {tasks.length === 0 ? (
-          <div className="empty_state">
+          <div className={`${styles.empty_state}`}>
             No task records have been initiated under this project.
           </div>
         ) : (
-          <div className="table_container">
-            <table className="tasks_table">
+          <div className={`${styles.table_container}`}>
+            <table className={`${styles.tasks_table}`}>
               <thead>
-                <tr className="table_header_row">
+                <tr className={`${styles.table_header_row}`}>
                   <th style={{ padding: "12px 20px" }}>Action Item Title</th>
                   <th style={{ padding: "12px 20px" }}>Assigned Team</th>
                   <th style={{ padding: "12px 20px" }}>Workflow State</th>
@@ -342,28 +345,31 @@ export default function ProjectTasks() {
               </thead>
               <tbody>
                 {tasks.map((task) => (
-                  <tr className="table_data_row" key={task._id}>
+                  <tr className={`${styles.table_data_row}`} key={task._id}>
                     <td style={{ padding: "16px 20px" }}>
                       <Link
-                        className="task_title_link"
+                        className={`${styles.task_title_link}`}
                         to={`/tasks/${task._id}`}
                       >
                         {task.name}
                       </Link>
-                      <div className="tag_list">
+                      <div className={`${styles.tag_list}`}>
                         {task.tags?.map((tag, i) => (
-                          <span className="task_tag" key={i}>
+                          <span className={`${styles.task_tag}`} key={i}>
                             {tag.name}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td style={{ padding: "16px 20px" }} className="team_cell">
+                    <td
+                      style={{ padding: "16px 20px" }}
+                      className={`${styles.team_cell}`}
+                    >
                       {task.team?.name || "Cross-Functional"}
                     </td>
                     <td style={{ padding: "16px 20px" }}>
                       <span
-                        className={`status_badge ${getStatusClassName(task.status)}`}
+                        className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
                       >
                         {task.status === "Completed" && (
                           <CheckCircle2 size={12} />
@@ -376,18 +382,21 @@ export default function ProjectTasks() {
                         {task.status}
                       </span>
                     </td>
-                    <td style={{ padding: "16px 20px" }} className="team_cell">
+                    <td
+                      style={{ padding: "16px 20px" }}
+                      className={`${styles.team_cell}`}
+                    >
                       {task.priority}
                     </td>
                     <td
                       style={{ padding: "16px 20px" }}
-                      className="highlight_text"
+                      className={`${styles.highlight_text}`}
                     >
                       {findDueDate(task.createdAt, task.timeToComplete)}
                     </td>
                     <td
                       style={{ padding: "16px 20px" }}
-                      className="highlight_text"
+                      className={`${styles.highlight_text}`}
                     >
                       {findRemainingDays(task.createdAt, task.timeToComplete)}
                     </td>
@@ -395,7 +404,10 @@ export default function ProjectTasks() {
                 ))}
               </tbody>
             </table>
-            <div className={`tasks_cards`} style={{ padding: "20px" }}>
+            <div
+              className={`${styles.tasks_cards}`}
+              style={{ padding: "20px" }}
+            >
               <div className="row">
                 {tasks &&
                   tasks.map((task) => {
@@ -414,7 +426,7 @@ export default function ProjectTasks() {
                                 <p>
                                   <Link
                                     to={`/tasks/${task._id}`}
-                                    className="task_title_link"
+                                    className={`${styles.task_title_link}`}
                                   >
                                     {task.name}
                                   </Link>
@@ -428,7 +440,7 @@ export default function ProjectTasks() {
                                   <b>Workflow State:</b>
                                   {` `}
                                   <span
-                                    className={`status_badge ${getStatusClassName(task.status)}`}
+                                    className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />
@@ -449,24 +461,29 @@ export default function ProjectTasks() {
                                   <b>Priority:</b> {task.priority}
                                 </p>
                                 <p>
-                                  <b>Due Date:</b>{" "}
+                                  <b>Due Date:</b>
+                                  {` `}
                                   {findDueDate(
                                     task.createdAt,
                                     task.timeToComplete,
                                   )}
                                 </p>
                                 <p>
-                                  <b>Remaining Days:</b>{" "}
+                                  <b>Remaining Days:</b>
+                                  {` `}
                                   {findRemainingDays(
                                     task.createdAt,
                                     task.timeToComplete,
                                   )}
                                 </p>
-                                <p>
+                                <p className="d-flex align-items-center flex-wrap gap-1">
                                   <b>Tags:</b>
                                   {` `}
                                   {task.tags?.map((tag, i) => (
-                                    <span className="ms-1 task_tag" key={i}>
+                                    <span
+                                      className={`${styles.task_tag}`}
+                                      key={i}
+                                    >
                                       {tag.name}
                                     </span>
                                   ))}
@@ -478,7 +495,7 @@ export default function ProjectTasks() {
                               >
                                 <p className="d-flex justify-content-end">
                                   <span
-                                    className={`status_badge ${getStatusClassName(task.status)}`}
+                                    className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />
