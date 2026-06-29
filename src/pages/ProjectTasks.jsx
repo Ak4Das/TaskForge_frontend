@@ -369,7 +369,7 @@ export default function ProjectTasks() {
                     </td>
                     <td style={{ padding: "16px 20px" }}>
                       <span
-                        className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
+                        className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
                       >
                         {task.status === "Completed" && (
                           <CheckCircle2 size={12} />
@@ -440,7 +440,7 @@ export default function ProjectTasks() {
                                   <b>Workflow State:</b>
                                   {` `}
                                   <span
-                                    className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
+                                    className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />
@@ -495,7 +495,7 @@ export default function ProjectTasks() {
                               >
                                 <p className="d-flex justify-content-end">
                                   <span
-                                    className={`${styles.status_badge} ${getStatusClassName(task.status)}`}
+                                    className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />
