@@ -158,56 +158,20 @@ export default function TeamDetail() {
 
   const renderSortIndicator = (columnKey) => {
     if (sortColumn !== columnKey) {
-      return (
-        <ArrowUpDown
-          size={14}
-          style={{ color: "#9CA3AF", marginLeft: "4px" }}
-        />
-      )
+      return <ArrowUpDown className="sort-icon-placeholder" size={14} />
     }
     return sortDirection === "asc" ? " ↑" : " ↓"
   }
 
   if (loading) {
-    return (
-      <div
-        style={{
-          padding: "32px",
-          textAlign: "center",
-          color: "#6B7280",
-          fontFamily: "sans-serif",
-        }}
-      >
-        Loading team...
-      </div>
-    )
+    return <div className="team-detail-loading">Loading team...</div>
   }
 
   if (error || !team) {
     return (
-      <div style={{ padding: "32px", fontFamily: "sans-serif" }}>
-        <div
-          style={{
-            backgroundColor: "#FEF2F2",
-            border: "1px solid #FCA5A5",
-            color: "#991B1B",
-            padding: "14px",
-            borderRadius: "8px",
-            marginBottom: "16px",
-          }}
-        >
-          {error}
-        </div>
-        <Link
-          to="/teams"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            color: "#4F46E5",
-            textDecoration: "none",
-          }}
-        >
+      <div className="team-detail-error-container">
+        <div className="team-detail-error-banner">{error}</div>
+        <Link className="team-detail-back-link" to="/teams">
           <ArrowLeft size={16} /> Return to Directory
         </Link>
       </div>
@@ -215,207 +179,62 @@ export default function TeamDetail() {
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <Link
-        to="/teams"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          color: "#4F46E5",
-          textDecoration: "none",
-          fontSize: "14px",
-          fontWeight: "600",
-          marginBottom: "24px",
-        }}
-      >
-        <ArrowLeft size={16} /> Back to Teams Management
-      </Link>
+    <div className="team-detail-container">
+      {" "}
+      <div className="team-detail-header-actions">
+        <Link className="team-detail-back-link text-semibold" to="/teams">
+          <ArrowLeft size={16} /> Back to Teams Management
+        </Link>
 
-      <button
-        onClick={() => setMemberModalVisibilityState(true)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          backgroundColor: "#4F46E5",
-          color: "#ffffff",
-          border: "none",
-          padding: "12px 20px",
-          borderRadius: "8px",
-          fontSize: "14px",
-          fontWeight: "600",
-          cursor: "pointer",
-          transition: "background-color 0.2s",
-          marginLeft: "auto",
-          marginBottom: "25px",
-        }}
-      >
-        <Plus size={18} /> Add New Member
-      </button>
-
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "32px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            marginBottom: "8px",
-          }}
+        <button
+          className="team-detail-add-btn"
+          onClick={() => setMemberModalVisibilityState(true)}
         >
-          <Users style={{ color: "#4F46E5" }} size={24} />
-          <h1
-            style={{
-              fontSize: "24px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            {team.name}
-          </h1>
-        </div>
-        <p style={{ color: "#4B5563", margin: 0, fontSize: "15px" }}>
-          {team.description}
-        </p>
+          <Plus size={18} /> Add New Member
+        </button>
       </div>
-
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "12px",
-          padding: "20px",
-          marginBottom: "24px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "16px",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "#4B5563",
-              textTransform: "uppercase",
-              marginBottom: "6px",
-            }}
-          >
-            Filter by Members Name
-          </label>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Search
-              size={14}
-              style={{ position: "absolute", left: "10px", color: "#9CA3AF" }}
-            />
+      <div className="team-detail-card">
+        <div className="team-card-title-row">
+          <Users className="team-card-icon" size={24} />
+          <h1 className="team-card-title">{team.name}</h1>
+        </div>
+        <p className="team-card-desc">{team.description}</p>
+      </div>
+      <div className="team-detail-filters-grid">
+        <div className="filter-group">
+          <label className="filter-label">Filter by Members Name</label>
+          <div className="search-input-wrapper">
+            <Search className="search-input-icon" size={14} />
             <input
+              className="filter-input"
               type="text"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
               placeholder="Type name..."
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "8px 8px 8px 32px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "6px",
-                fontSize: "13px",
-              }}
             />
           </div>
         </div>
 
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "#4B5563",
-              textTransform: "uppercase",
-              marginBottom: "6px",
-            }}
-          >
-            Filter by Email Address
-          </label>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Search
-              size={14}
-              style={{ position: "absolute", left: "10px", color: "#9CA3AF" }}
-            />
+        <div className="filter-group">
+          <label className="filter-label">Filter by Email Address</label>
+          <div className="search-input-wrapper">
+            <Search className="search-input-icon" size={14} />
             <input
+              className="filter-input"
               type="text"
               value={searchEmail}
               onChange={(e) => setSearchEmail(e.target.value)}
               placeholder="Type email address..."
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "8px 8px 8px 32px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "6px",
-                fontSize: "13px",
-              }}
             />
           </div>
         </div>
 
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "#4B5563",
-              textTransform: "uppercase",
-              marginBottom: "6px",
-            }}
-          >
-            Filter By Members Role
-          </label>
+        <div className="filter-group">
+          <label className="filter-label">Filter By Members Role</label>
           <select
+            className="filter-select"
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "8px",
-              border: "1px solid #D1D5DB",
-              borderRadius: "6px",
-              fontSize: "13px",
-              backgroundColor: "#ffffff",
-              height: "35px",
-            }}
           >
             <option value="All">--- Select Member Role ---</option>
             <option value="All">All Roles</option>
@@ -424,134 +243,62 @@ export default function TeamDetail() {
           </select>
         </div>
       </div>
-
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-        }}
-      >
+      <div className="team-table-container">
         {sortedMembers.length === 0 ? (
-          <div
-            style={{
-              padding: "48px",
-              textAlign: "center",
-              color: "#6B7280",
-              fontSize: "14px",
-            }}
-          >
+          <div className="table-empty-state">
             No registered team members satisfied the specified filter
             parameters.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                textAlign: "left",
-              }}
-            >
+          <div className="table-responsive-wrapper">
+            <table className="team-members-table">
               <thead>
-                <tr
-                  style={{
-                    borderBottom: "1px solid #E5E7EB",
-                    backgroundColor: "#F9FAFB",
-                    color: "#374151",
-                    fontSize: "12px",
-                    fontWeight: "600",
-                    textTransform: "uppercase",
-                    userSelect: "none",
-                  }}
-                >
+                <tr>
                   <th
+                    className="clickable-th"
                     onClick={() => requestSort("name")}
-                    style={{
-                      padding: "14px 20px",
-                      cursor: "pointer",
-                      hover: { background: "#F3F4F6" },
-                    }}
                   >
-                    <span
-                      style={{ display: "inline-flex", alignItems: "center" }}
-                    >
+                    <span className="th-content-wrapper">
                       Member Name {renderSortIndicator("name")}
                     </span>
                   </th>
                   <th
+                    className="clickable-th"
                     onClick={() => requestSort("email")}
-                    style={{ padding: "14px 20px", cursor: "pointer" }}
                   >
-                    <span
-                      style={{ display: "inline-flex", alignItems: "center" }}
-                    >
+                    <span className="th-content-wrapper">
                       Email Address {renderSortIndicator("email")}
                     </span>
                   </th>
                   <th
+                    className="clickable-th"
                     onClick={() => requestSort("role")}
-                    style={{ padding: "14px 20px", cursor: "pointer" }}
                   >
-                    <span
-                      style={{ display: "inline-flex", alignItems: "center" }}
-                    >
+                    <span className="th-content-wrapper">
                       System Role {renderSortIndicator("role")}
                     </span>
                   </th>
                   <th
+                    className="clickable-th text-center"
                     onClick={() => requestSort("totalTasks")}
-                    style={{
-                      padding: "14px 20px",
-                      cursor: "pointer",
-                      textAlign: "center",
-                    }}
                   >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <span className="th-content-wrapper center-content">
                       Total Tasks {renderSortIndicator("totalTasks")}
                     </span>
                   </th>
                   <th
+                    className="clickable-th text-center"
                     onClick={() => requestSort("closedTasks")}
-                    style={{
-                      padding: "14px 20px",
-                      cursor: "pointer",
-                      textAlign: "center",
-                    }}
                   >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <span className="th-content-wrapper center-content">
                       Closed Tasks {renderSortIndicator("closedTasks")}
                     </span>
                   </th>
                   <th
+                    className="clickable-th text-center"
                     onClick={() => requestSort("completionRate")}
-                    style={{
-                      padding: "14px 20px",
-                      cursor: "pointer",
-                      textAlign: "center",
-                    }}
                   >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <span className="th-content-wrapper center-content">
                       Efficiency {renderSortIndicator("completionRate")}
                     </span>
                   </th>
@@ -559,97 +306,46 @@ export default function TeamDetail() {
               </thead>
               <tbody>
                 {sortedMembers.map((member) => (
-                  <tr
-                    key={member.id}
-                    style={{
-                      borderBottom: "1px solid #E5E7EB",
-                      transition: "background-color 0.15s",
-                    }}
-                  >
-                    <td
-                      style={{
-                        padding: "16px 20px",
-                        fontWeight: "600",
-                        color: "#111827",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {member.name}
-                    </td>
-                    <td
-                      style={{
-                        padding: "16px 20px",
-                        color: "#4B5563",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {member.email}
-                    </td>
-                    <td style={{ padding: "16px 20px", fontSize: "13px" }}>
+                  <tr className="table-row-hover" key={member.id}>
+                    <td className="member-name-cell">{member.name}</td>
+                    <td className="member-email-cell">{member.email}</td>
+                    <td className="member-role-cell">
                       <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          padding: "3px 8px",
-                          borderRadius: "4px",
-                          fontWeight: "500",
-                          backgroundColor:
-                            member.role === "Team Lead" ? "#F59E0B" : "#E5E7EB",
-                          color:
-                            member.role === "Team Lead" ? "#ffffff" : "#374151",
-                        }}
+                        className={`role-badge ${
+                          member.role === "Team Lead"
+                            ? "badge-lead"
+                            : "badge-contributor"
+                        }`}
                       >
                         {member.role === "Team Lead" && <Shield size={12} />}
                         {member.role}
                       </span>
                     </td>
-                    <td
-                      style={{
-                        padding: "16px 20px",
-                        textAlign: "center",
-                        color: "#111827",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                      }}
-                    >
+                    <td className="member-metric-cell text-center">
                       {member.totalTasks} tasks
                     </td>
-                    <td style={{ padding: "16px 20px", textAlign: "center" }}>
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color: "#059669",
-                          fontWeight: "600",
-                          fontSize: "14px",
-                        }}
-                      >
+                    <td
+                      className="text-center"
+                      style={{ padding: "16px 20px" }}
+                    >
+                      <span className="closed-tasks-badge">
                         <CheckCircle2 size={13} />
                         {member.closedTasks}
                       </span>
                     </td>
-                    <td style={{ padding: "16px 20px", textAlign: "center" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: "4px",
-                        }}
-                      >
+                    <td
+                      className="text-center"
+                      style={{ padding: "16px 20px" }}
+                    >
+                      <div className="efficiency-wrapper">
                         <span
-                          style={{
-                            fontSize: "13px",
-                            fontWeight: "700",
-                            color:
-                              member.completionRate > 70
-                                ? "#059669"
-                                : member.completionRate > 40
-                                  ? "#F59E0B"
-                                  : "#EF4444",
-                          }}
+                          className={`efficiency-text ${
+                            member.completionRate > 70
+                              ? "efficiency-high"
+                              : member.completionRate > 40
+                                ? "efficiency-medium"
+                                : "efficiency-low"
+                          }`}
                         >
                           {member.completionRate}%
                         </span>
