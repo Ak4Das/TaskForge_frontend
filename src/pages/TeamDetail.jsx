@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/TeamDetail.module.css"
 import React, { useState, useEffect } from "react"
 import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -158,20 +159,24 @@ export default function TeamDetail() {
 
   const renderSortIndicator = (columnKey) => {
     if (sortColumn !== columnKey) {
-      return <ArrowUpDown className="sort-icon-placeholder" size={14} />
+      return (
+        <ArrowUpDown className={`${styles.sort_icon_placeholder}`} size={14} />
+      )
     }
     return sortDirection === "asc" ? " ↑" : " ↓"
   }
 
   if (loading) {
-    return <div className="team-detail-loading">Loading team...</div>
+    return (
+      <div className={`${styles.team_detail_loading}`}>Loading team...</div>
+    )
   }
 
   if (error || !team) {
     return (
-      <div className="team-detail-error-container">
-        <div className="team-detail-error-banner">{error}</div>
-        <Link className="team-detail-back-link" to="/teams">
+      <div className={`${styles.team_detail_error_container}`}>
+        <div className={`${styles.team_detail_error_banner}`}>{error}</div>
+        <Link className={`${styles.team_detail_back_link}`} to="/teams">
           <ArrowLeft size={16} /> Return to Directory
         </Link>
       </div>
@@ -179,34 +184,39 @@ export default function TeamDetail() {
   }
 
   return (
-    <div className="team-detail-container">
-      {" "}
-      <div className="team-detail-header-actions">
-        <Link className="team-detail-back-link text-semibold" to="/teams">
+    <div className={`${styles.team_detail_container}`}>
+      {` `}
+      <div className={`${styles.team_detail_header_actions}`}>
+        <Link
+          className={`${styles.team_detail_back_link} ${styles.text_semibold}`}
+          to="/teams"
+        >
           <ArrowLeft size={16} /> Back to Teams Management
         </Link>
 
         <button
-          className="team-detail-add-btn"
+          className={`${styles.team_detail_add_btn}`}
           onClick={() => setMemberModalVisibilityState(true)}
         >
           <Plus size={18} /> Add New Member
         </button>
       </div>
-      <div className="team-detail-card">
-        <div className="team-card-title-row">
-          <Users className="team-card-icon" size={24} />
-          <h1 className="team-card-title">{team.name}</h1>
+      <div className={`${styles.team_detail_card}`}>
+        <div className={`${styles.team_card_title_row}`}>
+          <Users className={`${styles.team_card_icon}`} size={24} />
+          <h1 className={`${styles.team_card_title}`}>{team.name}</h1>
         </div>
-        <p className="team-card-desc">{team.description}</p>
+        <p className={`${styles.team_card_desc}`}>{team.description}</p>
       </div>
-      <div className="team-detail-filters-grid">
-        <div className="filter-group">
-          <label className="filter-label">Filter by Members Name</label>
-          <div className="search-input-wrapper">
-            <Search className="search-input-icon" size={14} />
+      <div className={`${styles.team_detail_filters_grid}`}>
+        <div className={`${styles.filter_group}`}>
+          <label className={`${styles.filter_label}`}>
+            Filter by Members Name
+          </label>
+          <div className={`${styles.search_input_wrapper}`}>
+            <Search className={`${styles.search_input_icon}`} size={14} />
             <input
-              className="filter-input"
+              className={`${styles.filter_input}`}
               type="text"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
@@ -215,12 +225,14 @@ export default function TeamDetail() {
           </div>
         </div>
 
-        <div className="filter-group">
-          <label className="filter-label">Filter by Email Address</label>
-          <div className="search-input-wrapper">
-            <Search className="search-input-icon" size={14} />
+        <div className={`${styles.filter_group}`}>
+          <label className={`${styles.filter_label}`}>
+            Filter by Email Address
+          </label>
+          <div className={`${styles.search_input_wrapper}`}>
+            <Search className={`${styles.search_input_icon}`} size={14} />
             <input
-              className="filter-input"
+              className={`${styles.filter_input}`}
               type="text"
               value={searchEmail}
               onChange={(e) => setSearchEmail(e.target.value)}
@@ -229,10 +241,12 @@ export default function TeamDetail() {
           </div>
         </div>
 
-        <div className="filter-group">
-          <label className="filter-label">Filter By Members Role</label>
+        <div className={`${styles.filter_group}`}>
+          <label className={`${styles.filter_label}`}>
+            Filter By Members Role
+          </label>
           <select
-            className="filter-select"
+            className={`${styles.filter_select}`}
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
           >
@@ -243,39 +257,45 @@ export default function TeamDetail() {
           </select>
         </div>
       </div>
-      <div className="filters_panel">
-        <div className="filters_panel_left">
-          <div className="filter_label">
+      <div className={`${styles.filters_panel}`}>
+        <div className={`${styles.filters_panel_left}`}>
+          <div className={`${styles.filter_label}`}>
             <ArrowUpDown size={14} />
             <span>Quick Sort:</span>
           </div>
-          <div className="filter_buttons_group">
-            <button className="filter_pill" onClick={() => requestSort("name")}>
+          <div className={`${styles.filter_buttons_group}`}>
+            <button
+              className={`${styles.filter_pill}`}
+              onClick={() => requestSort("name")}
+            >
               Name
             </button>
             <button
-              className="filter_pill"
+              className={`${styles.filter_pill}`}
               onClick={() => requestSort("email")}
             >
               Email
             </button>
-            <button className="filter_pill" onClick={() => requestSort("role")}>
+            <button
+              className={`${styles.filter_pill}`}
+              onClick={() => requestSort("role")}
+            >
               Role
             </button>
             <button
-              className="filter_pill"
+              className={`${styles.filter_pill}`}
               onClick={() => requestSort("totalTasks")}
             >
               Total Tasks
             </button>
             <button
-              className="filter_pill"
+              className={`${styles.filter_pill}`}
               onClick={() => requestSort("closedTasks")}
             >
               Closed Tasks
             </button>
             <button
-              className="filter_pill"
+              className={`${styles.filter_pill}`}
               onClick={() => requestSort("completionRate")}
             >
               Efficiency
@@ -283,62 +303,68 @@ export default function TeamDetail() {
           </div>
         </div>
       </div>
-      <div className="team-table-container">
+      <div className={`${styles.team_table_container}`}>
         {sortedMembers.length === 0 ? (
-          <div className="table-empty-state">
+          <div className={`${styles.table_empty_state}`}>
             No registered team members satisfied the specified filter
             parameters.
           </div>
         ) : (
-          <div className="table-responsive-wrapper">
-            <table className="team-members-table">
+          <div className={`${styles.table_responsive_wrapper}`}>
+            <table className={`${styles.team_members_table}`}>
               <thead>
                 <tr>
                   <th
-                    className="clickable-th"
+                    className={`${styles.clickable_th}`}
                     onClick={() => requestSort("name")}
                   >
-                    <span className="th-content-wrapper">
+                    <span className={`${styles.th_content_wrapper}`}>
                       Member Name {renderSortIndicator("name")}
                     </span>
                   </th>
                   <th
-                    className="clickable-th"
+                    className={`${styles.clickable_th}`}
                     onClick={() => requestSort("email")}
                   >
-                    <span className="th-content-wrapper">
+                    <span className={`${styles.th_content_wrapper}`}>
                       Email Address {renderSortIndicator("email")}
                     </span>
                   </th>
                   <th
-                    className="clickable-th"
+                    className={`${styles.clickable_th}`}
                     onClick={() => requestSort("role")}
                   >
-                    <span className="th-content-wrapper">
+                    <span className={`${styles.th_content_wrapper}`}>
                       System Role {renderSortIndicator("role")}
                     </span>
                   </th>
                   <th
-                    className="clickable-th text-center"
+                    className={`${styles.clickable_th} ${styles.text_center}`}
                     onClick={() => requestSort("totalTasks")}
                   >
-                    <span className="th-content-wrapper center-content">
+                    <span
+                      className={`${styles.th_content_wrapper} ${styles.center_content}`}
+                    >
                       Total Tasks {renderSortIndicator("totalTasks")}
                     </span>
                   </th>
                   <th
-                    className="clickable-th text-center"
+                    className={`${styles.clickable_th} ${styles.text_center}`}
                     onClick={() => requestSort("closedTasks")}
                   >
-                    <span className="th-content-wrapper center-content">
+                    <span
+                      className={`${styles.th_content_wrapper} ${styles.center_content}`}
+                    >
                       Closed Tasks {renderSortIndicator("closedTasks")}
                     </span>
                   </th>
                   <th
-                    className="clickable-th text-center"
+                    className={`${styles.clickable_th} ${styles.text_center}`}
                     onClick={() => requestSort("completionRate")}
                   >
-                    <span className="th-content-wrapper center-content">
+                    <span
+                      className={`${styles.th_content_wrapper} ${styles.center_content}`}
+                    >
                       Efficiency {renderSortIndicator("completionRate")}
                     </span>
                   </th>
@@ -346,45 +372,55 @@ export default function TeamDetail() {
               </thead>
               <tbody>
                 {sortedMembers.map((member) => (
-                  <tr className="table-row-hover" key={member.id}>
-                    <td className="member-name-cell">{member.name}</td>
-                    <td className="member-email-cell">{member.email}</td>
-                    <td className="member-role-cell">
+                  <tr className={`${styles.table_row_hover}`} key={member.id}>
+                    <td className={`${styles.member_name_cell}`}>
+                      {member.name}
+                    </td>
+                    <td className={`${styles.member_email_cell}`}>
+                      {member.email}
+                    </td>
+                    <td className={`${styles.member_role_cell}`}>
                       <span
-                        className={`role-badge ${
-                          member.role === "Team Lead"
-                            ? "badge-lead"
-                            : "badge-contributor"
+                        className={`${styles.role_badge} ${
+                          styles[
+                            member.role === "Team Lead"
+                              ? "badge_lead"
+                              : "badge_contributor"
+                          ]
                         }`}
                       >
                         {member.role === "Team Lead" && <Shield size={12} />}
                         {member.role}
                       </span>
                     </td>
-                    <td className="member-metric-cell text-center">
+                    <td
+                      className={`${styles.member_metric_cell} ${styles.text_center}`}
+                    >
                       {member.totalTasks} tasks
                     </td>
                     <td
-                      className="text-center"
+                      className={`${styles.text_center}`}
                       style={{ padding: "16px 20px" }}
                     >
-                      <span className="closed-tasks-badge">
+                      <span className={`${styles.closed_tasks_badge}`}>
                         <CheckCircle2 size={13} />
                         {member.closedTasks}
                       </span>
                     </td>
                     <td
-                      className="text-center"
+                      className={`${styles.text_center}`}
                       style={{ padding: "16px 20px" }}
                     >
-                      <div className="efficiency-wrapper">
+                      <div className={`${styles.efficiency_wrapper}`}>
                         <span
-                          className={`efficiency-text ${
-                            member.completionRate > 70
-                              ? "efficiency-high"
-                              : member.completionRate > 40
-                                ? "efficiency-medium"
-                                : "efficiency-low"
+                          className={`${styles.efficiency_text} ${
+                            styles[
+                              member.completionRate > 70
+                                ? "efficiency_high"
+                                : member.completionRate > 40
+                                  ? "efficiency_medium"
+                                  : "efficiency_low"
+                            ]
                           }`}
                         >
                           {member.completionRate}%
@@ -395,7 +431,10 @@ export default function TeamDetail() {
                 ))}
               </tbody>
             </table>
-            <div className="tasks-cards" style={{ padding: "20px" }}>
+            <div
+              className={`${styles.tasks_cards}`}
+              style={{ padding: "20px" }}
+            >
               <div className="row">
                 {sortedMembers &&
                   sortedMembers.map((member) => {
@@ -421,14 +460,16 @@ export default function TeamDetail() {
                                   {` `}
                                   {member.email}
                                 </p>
-                                <p className="systemRole1">
+                                <p className={`${styles.systemRole1}`}>
                                   <b>System Role:</b>
                                   {` `}
                                   <span
-                                    className={`role-badge ${
-                                      member.role === "Team Lead"
-                                        ? "badge-lead"
-                                        : "badge-contributor"
+                                    className={`${styles.role_badge} ${
+                                      styles[
+                                        member.role === "Team Lead"
+                                          ? "badge_lead"
+                                          : "badge_contributor"
+                                      ]
                                     }`}
                                   >
                                     {member.role === "Team Lead" && (
@@ -445,7 +486,9 @@ export default function TeamDetail() {
                                 <p>
                                   <b>Closed Tasks:</b>
                                   {` `}
-                                  <span className="closed-tasks-badge">
+                                  <span
+                                    className={`${styles.closed_tasks_badge}`}
+                                  >
                                     <CheckCircle2 size={13} />
                                     {member.closedTasks}
                                   </span>
@@ -454,12 +497,14 @@ export default function TeamDetail() {
                                   <b>Efficiency:</b>
                                   {` `}
                                   <span
-                                    className={`efficiency-text ${
-                                      member.completionRate > 70
-                                        ? "efficiency-high"
-                                        : member.completionRate > 40
-                                          ? "efficiency-medium"
-                                          : "efficiency-low"
+                                    className={`${styles.efficiency_text} ${
+                                      styles[
+                                        member.completionRate > 70
+                                          ? "efficiency_high"
+                                          : member.completionRate > 40
+                                            ? "efficiency_medium"
+                                            : "efficiency_low"
+                                      ]
                                     }`}
                                   >
                                     {member.completionRate}%
@@ -467,13 +512,17 @@ export default function TeamDetail() {
                                 </p>
                               </div>
                               <div style={{ minWidth: "100px" }}>
-                                <div className="systemRole2">
-                                  <p className="systemRole2 d-flex justify-content-end">
+                                <div className={`${styles.systemRole2}`}>
+                                  <p
+                                    className={`${styles.systemRole2} d-flex justify-content-end`}
+                                  >
                                     <span
-                                      className={`role-badge ${
-                                        member.role === "Team Lead"
-                                          ? "badge-lead"
-                                          : "badge-contributor"
+                                      className={`${styles.role_badge} ${
+                                        styles[
+                                          member.role === "Team Lead"
+                                            ? "badge_lead"
+                                            : "badge_contributor"
+                                        ]
                                       }`}
                                     >
                                       {member.role === "Team Lead" && (
