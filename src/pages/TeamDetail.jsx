@@ -243,6 +243,46 @@ export default function TeamDetail() {
           </select>
         </div>
       </div>
+      <div className="filters_panel">
+        <div className="filters_panel_left">
+          <div className="filter_label">
+            <ArrowUpDown size={14} />
+            <span>Quick Sort:</span>
+          </div>
+          <div className="filter_buttons_group">
+            <button className="filter_pill" onClick={() => requestSort("name")}>
+              Name
+            </button>
+            <button
+              className="filter_pill"
+              onClick={() => requestSort("email")}
+            >
+              Email
+            </button>
+            <button className="filter_pill" onClick={() => requestSort("role")}>
+              Role
+            </button>
+            <button
+              className="filter_pill"
+              onClick={() => requestSort("totalTasks")}
+            >
+              Total Tasks
+            </button>
+            <button
+              className="filter_pill"
+              onClick={() => requestSort("closedTasks")}
+            >
+              Closed Tasks
+            </button>
+            <button
+              className="filter_pill"
+              onClick={() => requestSort("completionRate")}
+            >
+              Efficiency
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="team-table-container">
         {sortedMembers.length === 0 ? (
           <div className="table-empty-state">
