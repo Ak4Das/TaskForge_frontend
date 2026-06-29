@@ -337,9 +337,42 @@ body {
   color: #ef4444;
 }
 
+@media (min-width: 1300px) {
+  .tasks-cards {
+    display: none;
+  }
+}
+
+@media (min-width: 1450px) {
+  .systemRole1 {
+    display: none;
+  }
+}
+
+@media (max-width: 1449px) {
+  .systemRole2 {
+    display: none;
+  }
+}
+
+@media (max-width: 1299px) {
+  .team-members-table {
+    display: none;
+  }
+}
+
 @media (max-width: 1024px) {
   .team-detail-filters-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 991px) {
+  .systemRole1 {
+    display: none;
+  }
+  .systemRole2 {
+    display: block;
   }
 }
 
@@ -364,7 +397,16 @@ body {
   }
 }
 
-@media (max-width: 48px) {
+@media (max-width: 649px) {
+  .systemRole2 {
+    display: none;
+  }
+  .systemRole1 {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
   .team-detail-card {
     padding: 16px;
   }

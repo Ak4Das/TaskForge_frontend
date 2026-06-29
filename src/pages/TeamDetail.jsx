@@ -355,6 +355,103 @@ export default function TeamDetail() {
                 ))}
               </tbody>
             </table>
+            <div className="tasks-cards" style={{ padding: "20px" }}>
+              <div className="row">
+                {sortedMembers &&
+                  sortedMembers.map((member) => {
+                    return (
+                      <div className="col-12 col-lg-6" key={member.id}>
+                        <div
+                          className={`mb-3`}
+                          style={{
+                            overflow: "hidden",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <div className={`card mb-3`}>
+                            <div className="card-body d-flex gap-2 justify-content-between">
+                              <div style={{ fontSize: "16px" }}>
+                                <p>
+                                  <b>Member Name:</b>
+                                  {` `}
+                                  {member.name}
+                                </p>
+                                <p>
+                                  <b>Email Address:</b>
+                                  {` `}
+                                  {member.email}
+                                </p>
+                                <p className="systemRole1">
+                                  <b>System Role:</b>
+                                  {` `}
+                                  <span
+                                    className={`role-badge ${
+                                      member.role === "Team Lead"
+                                        ? "badge-lead"
+                                        : "badge-contributor"
+                                    }`}
+                                  >
+                                    {member.role === "Team Lead" && (
+                                      <Shield size={12} />
+                                    )}
+                                    {member.role}
+                                  </span>
+                                </p>
+                                <p>
+                                  <b>Total Tasks:</b>
+                                  {` `}
+                                  {member.totalTasks} tasks
+                                </p>
+                                <p>
+                                  <b>Closed Tasks:</b>
+                                  {` `}
+                                  <span className="closed-tasks-badge">
+                                    <CheckCircle2 size={13} />
+                                    {member.closedTasks}
+                                  </span>
+                                </p>
+                                <p>
+                                  <b>Efficiency:</b>
+                                  {` `}
+                                  <span
+                                    className={`efficiency-text ${
+                                      member.completionRate > 70
+                                        ? "efficiency-high"
+                                        : member.completionRate > 40
+                                          ? "efficiency-medium"
+                                          : "efficiency-low"
+                                    }`}
+                                  >
+                                    {member.completionRate}%
+                                  </span>
+                                </p>
+                              </div>
+                              <div style={{ minWidth: "100px" }}>
+                                <div className="systemRole2">
+                                  <p className="systemRole2 d-flex justify-content-end">
+                                    <span
+                                      className={`role-badge ${
+                                        member.role === "Team Lead"
+                                          ? "badge-lead"
+                                          : "badge-contributor"
+                                      }`}
+                                    >
+                                      {member.role === "Team Lead" && (
+                                        <Shield size={12} />
+                                      )}
+                                      {member.role}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
           </div>
         )}
       </div>
