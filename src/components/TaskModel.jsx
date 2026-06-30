@@ -1,3 +1,4 @@
+import styles from "../style/component_modules/TaskModel.module.css"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { X } from "lucide-react"
@@ -101,145 +102,46 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(17, 24, 39, 0.6)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-        fontFamily: "-apple-system, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          width: "100%",
-          maxWidth: "520px",
-          borderRadius: "16px",
-          boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "20px 24px",
-            borderBottom: "1px solid #E5E7EB",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "18px",
-              fontWeight: "600",
-              color: "#111827",
-              margin: 0,
-            }}
-          >
-            Create New Task
-          </h3>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalCard}>
+        <div className={styles.modalHeader}>
+          <h3 className={styles.modalTitle}>Create New Task</h3>
           <button
+            className={styles.closeHeaderBtn}
             onClick={() => setModalVisibilityState(false)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#9CA3AF",
-              cursor: "pointer",
-              padding: "4px",
-              borderRadius: "6px",
-            }}
           >
             <X size={20} />
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            padding: "24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-          }}
-        >
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "14px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "6px",
-              }}
-            >
-              Task Title Name
-            </label>
+        <form className={styles.modalForm} onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Task Title Name</label>
             <input
+              className={styles.formInput}
               type="text"
               name="name"
               value={values.name}
               required
               placeholder="e.g., Fix auth failure edge cases"
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "10px 12px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-              }}
               onChange={handleChange}
               onBlur={handleBlur}
             />
             {errors.name && touched.name ? (
-              <p
-                className={`text-danger my-0`}
-                style={{ fontSize: "12px", lineHeight: "15px" }}
-              >
+              <p className={styles.errorMessage} className={`text-danger my-0`}>
                 {errors.name}
               </p>
             ) : null}
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Projects List
-              </label>
+          <div className={styles.formGridTwoCol}>
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Projects List</label>
               <select
+                className={styles.formSelect}
                 required
                 name="project"
                 value={values.project}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  backgroundColor: "#ffffff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -252,37 +154,20 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </select>
               {errors.project && touched.project ? (
                 <p
+                  className={styles.errorMessage}
                   className={`text-danger my-0`}
-                  style={{ fontSize: "12px", lineHeight: "15px" }}
                 >
                   {errors.project}
                 </p>
               ) : null}
             </div>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Teams List
-              </label>
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Teams List</label>
               <select
+                className={styles.formSelect}
                 required
                 name="team"
                 value={values.team}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  backgroundColor: "#ffffff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -295,8 +180,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </select>
               {errors.team && touched.team ? (
                 <p
+                  className={styles.errorMessage}
                   className={`text-danger my-0`}
-                  style={{ fontSize: "12px", lineHeight: "15px" }}
                 >
                   {errors.team}
                 </p>
@@ -304,31 +189,15 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             </div>
           </div>
 
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "14px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "4px",
-              }}
-            >
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>
               Task Owners Assigned (Hold Cmd/Ctrl to choose multiple)
             </label>
             <select
+              className={styles.formSelectMultiple}
               multiple
               required
               name="owners"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                minHeight: "80px",
-                backgroundColor: "#ffffff",
-              }}
               onChange={(e) => {
                 const selectedOptions = Array.from(e.target.selectedOptions)
 
@@ -342,39 +211,28 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             >
               {users.map((user) => (
                 <option
+                  className={styles.selectOptionItem}
                   key={user._id}
                   value={user._id}
-                  style={{ marginBottom: "5px" }}
                 >
                   {user.name}
                 </option>
               ))}
             </select>
             {errors.owners && touched.owners ? (
-              <p
-                className={`text-danger my-0`}
-                style={{ fontSize: "12px", lineHeight: "15px" }}
-              >
+              <p className={styles.errorMessage} className={`text-danger my-0`}>
                 {errors.owners}
               </p>
             ) : null}
           </div>
 
-          <div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
+          <div className={styles.formGroup}>
+            <div className={styles.labelActionRow}>
+              <label className={styles.formLabelInline}>
                 Tags (Hold Cmd/Ctrl to choose multiple)
               </label>
               <button
-                className="btn btn-primary btn-sm"
+                className={styles.inlineActionBtn}
                 onClick={() => setTagsModalVisibilityState(true)}
                 type="button"
               >
@@ -382,17 +240,9 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </button>
             </div>
             <select
+              className={styles.formSelectMultiple}
               multiple
               name="tags"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-                minHeight: "80px",
-                backgroundColor: "#ffffff",
-              }}
               onChange={(e) => {
                 const selectedOptions = Array.from(e.target.selectedOptions)
 
@@ -406,92 +256,51 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             >
               {tags.map((tag) => (
                 <option
+                  className={styles.selectOptionItem}
                   key={tag._id}
                   value={tag._id}
-                  style={{ marginBottom: "5px" }}
                 >
                   {tag.name}
                 </option>
               ))}
             </select>
             {errors.tags && touched.tags ? (
-              <p
-                className={`text-danger my-0`}
-                style={{ fontSize: "12px", lineHeight: "15px" }}
-              >
+              <p className={styles.errorMessage} className={`text-danger my-0`}>
                 {errors.tags}
               </p>
             ) : null}
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
+          <div className={styles.formGridTwoCol}>
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>
                 Estimated Effort (Days)
               </label>
               <input
+                className={styles.formInput}
                 type="number"
                 min="1"
                 name="timeToComplete"
                 value={values.timeToComplete}
                 required
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               {errors.timeToComplete && touched.timeToComplete ? (
                 <p
+                  className={styles.errorMessage}
                   className={`text-danger my-0`}
-                  style={{ fontSize: "12px", lineHeight: "15px" }}
                 >
                   {errors.timeToComplete}
                 </p>
               ) : null}
             </div>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Initial Core Status
-              </label>
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Initial Core Status</label>
               <select
+                className={styles.formSelect}
                 name="status"
                 value={values.status}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  backgroundColor: "#ffffff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -502,8 +311,8 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               </select>
               {errors.status && touched.status ? (
                 <p
+                  className={styles.errorMessage}
                   className={`text-danger my-0`}
-                  style={{ fontSize: "12px", lineHeight: "15px" }}
                 >
                   {errors.status}
                 </p>
@@ -511,45 +320,18 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "12px",
-              marginTop: "12px",
-              borderTop: "1px solid #E5E7EB",
-              paddingTop: "16px",
-            }}
-          >
+          <div className={styles.modalFooter}>
             <button
+              className={styles.cancelBtn}
               type="button"
               onClick={() => setModalVisibilityState(false)}
-              style={{
-                border: "1px solid #D1D5DB",
-                background: "#ffffff",
-                color: "#374151",
-                padding: "10px 18px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "500",
-                cursor: "pointer",
-              }}
             >
               Cancel
             </button>
             <button
+              className={styles.submitBtn}
               type="submit"
               disabled={submitting}
-              style={{
-                border: "none",
-                background: "#4F46E5",
-                color: "#ffffff",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
             >
               {submitting ? "Creating..." : "Create Assignment"}
             </button>
