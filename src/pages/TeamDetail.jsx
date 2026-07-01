@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Plus,
+  SquarePen,
 } from "lucide-react"
 import { fetchTasks, fetchTeamsById } from "../../services/requestToServer"
 import UserModel from "../components/UserModel"
@@ -194,12 +195,20 @@ export default function TeamDetail() {
           <ArrowLeft size={16} /> Back to Teams Management
         </Link>
 
-        <button
-          className={`${styles.team_detail_add_btn}`}
-          onClick={() => setMemberModalVisibilityState(true)}
-        >
-          <Plus size={18} /> Add New Member
-        </button>
+        <div className={`${styles.btn_wrapper}`}>
+          <button
+            className={`${styles.team_detail_add_btn}`}
+            onClick={() => navigate(`/teams/edit/${teamId}`)}
+          >
+            <SquarePen size={18} /> Edit Team
+          </button>
+          <button
+            className={`${styles.team_detail_add_btn}`}
+            onClick={() => setMemberModalVisibilityState(true)}
+          >
+            <Plus size={18} /> Add New Member
+          </button>
+        </div>
       </div>
       <div className={`${styles.team_detail_card}`}>
         <div className={`${styles.team_card_title_row}`}>

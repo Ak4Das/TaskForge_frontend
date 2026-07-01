@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify"
 import TeamDetail from "./pages/TeamDetail"
 import EditTask from "./pages/EditTaskModel"
 import EditProfile from "./pages/EditProfile"
-import EditTeam from "./components/EditTeam"
+import EditTeam from "./pages/EditTeam"
 import CompressSidebar from "./components/CompressSidebar"
 import { useEffect, useState } from "react"
 
