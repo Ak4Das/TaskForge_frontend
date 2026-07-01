@@ -1,5 +1,5 @@
 import styles from "../style/page_modules/Dashboard.module.css"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { useSearchParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import {
@@ -17,6 +17,7 @@ import {
   fetchTasks,
 } from "../../services/requestToServer.js"
 import ProjectModal from "../components/ProjectModel.jsx"
+import context from "../contexts/createContexts.js"
 
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -25,31 +26,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false)
   const [error, setIsError] = useState("")
   const navigate = useNavigate()
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
   const [projectStatus, setProjectStatus] = useState("")
+
+  const user = Object.values(useContext(context))[0]
 
   const filteredProjects = projectStatus
     ? projects.filter((project) => project.status === projectStatus)
     : projects
-
-  useEffect(() => {
-    async function fetchData() {
-      const token = localStorage.getItem("token")
-      if (token && !user) {
-        const user = await fetchMe({ setFunction: setUser, setIsError })
-        if (user) {
-          localStorage.setItem("user", JSON.stringify(user))
-        }
-      }
-    }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    if (error === "Invalid Token.") {
-      navigate("/login")
-    }
-  }, [error])
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
@@ -64,7 +47,7 @@ export default function Dashboard() {
           setIsError,
         })
 
-        if (user) {
+        if (Object.keys(user).length) {
           const taskEndpoint = currentStatusFilter
             ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
             : `http://localhost:3000/api/tasks?owner=${user.id}`

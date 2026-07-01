@@ -23,6 +23,7 @@ import EditProfile from "./pages/EditProfile"
 import EditTeam from "./pages/EditTeam"
 import CompressSidebar from "./components/CompressSidebar"
 import { useEffect, useState } from "react"
+import ContextProvider from "./contexts/contextProvider"
 
 const ProtectedLayout = ({ children }) => {
   const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
@@ -65,94 +66,96 @@ const ProtectedLayout = ({ children }) => {
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedLayout>
-              <Dashboard />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <ProtectedLayout>
-              <ProjectManagement />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/projects/:projectId"
-          element={
-            <ProtectedLayout>
-              <ProjectTasks />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/tasks/:taskId"
-          element={
-            <ProtectedLayout>
-              <TaskDetail />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams"
-          element={
-            <ProtectedLayout>
-              <TeamManagement />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedLayout>
-              <Reports />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams/:teamId"
-          element={
-            <ProtectedLayout>
-              <TeamDetail />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/tasks/edit/:taskId"
-          element={
-            <ProtectedLayout>
-              <EditTask />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/edit/profile"
-          element={
-            <ProtectedLayout>
-              <EditProfile />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams/edit/:teamId"
-          element={
-            <ProtectedLayout>
-              <EditTeam />
-            </ProtectedLayout>
-          }
-        />
+    <ContextProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedLayout>
+                <Dashboard />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedLayout>
+                <ProjectManagement />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/projects/:projectId"
+            element={
+              <ProtectedLayout>
+                <ProjectTasks />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/tasks/:taskId"
+            element={
+              <ProtectedLayout>
+                <TaskDetail />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams"
+            element={
+              <ProtectedLayout>
+                <TeamManagement />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedLayout>
+                <Reports />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams/:teamId"
+            element={
+              <ProtectedLayout>
+                <TeamDetail />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/tasks/edit/:taskId"
+            element={
+              <ProtectedLayout>
+                <EditTask />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/edit/profile"
+            element={
+              <ProtectedLayout>
+                <EditProfile />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams/edit/:teamId"
+            element={
+              <ProtectedLayout>
+                <EditTeam />
+              </ProtectedLayout>
+            }
+          />
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-      <ToastContainer />
-    </Router>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+        <ToastContainer />
+      </Router>
+    </ContextProvider>
   )
 }
