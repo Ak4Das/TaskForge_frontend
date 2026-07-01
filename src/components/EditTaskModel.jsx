@@ -1,3 +1,4 @@
+import styles from "../style/page_modules/EditTaskModel.module.css"
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -127,147 +128,49 @@ export default function EditTask() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          padding: "40px",
-          textAlign: "center",
-          color: "#6B7280",
-          fontFamily: "sans-serif",
-        }}
-      >
+      <div className={styles.loaderContainer}>
         Loading task profile and workspace records...
       </div>
     )
   }
 
   return (
-    <div
-      style={{
-        padding: "32px",
-        maxWidth: "640px",
-        margin: "0 auto",
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
-      <button
-        onClick={() => navigate(-1)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          color: "#4F46E5",
-          backgroundColor: "transparent",
-          border: "none",
-          fontSize: "14px",
-          fontWeight: "600",
-          marginBottom: "24px",
-          cursor: "pointer",
-        }}
-      >
+    <div className={styles.container}>
+      <button className={styles.backButton} onClick={() => navigate(-1)}>
         <ArrowLeft size={16} /> Discard & Return
       </button>
 
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #E5E7EB",
-          borderRadius: "16px",
-          padding: "32px",
-          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)",
-        }}
-      >
-        <div
-          style={{
-            marginBottom: "24px",
-            borderBottom: "1px solid #F3F4F6",
-            paddingBottom: "16px",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              color: "#111827",
-              margin: "0 0 6px 0",
-            }}
-          >
-            Modify Task Configuration
-          </h1>
-          <p style={{ fontSize: "14px", color: "#4B5563", margin: 0 }}>
+      <div className={styles.formCard}>
+        <div className={styles.formHeader}>
+          <h1>Modify Task Configuration</h1>
+          <p>
             Update properties, handover to other teams, and update execution
             metrics.
           </p>
         </div>
 
         {error && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#FEF2F2",
-              border: "1px solid #FCA5A5",
-              color: "#991B1B",
-              padding: "12px",
-              borderRadius: "8px",
-              marginBottom: "20px",
-              fontSize: "13px",
-            }}
-          >
+          <div className={styles.alertError}>
             <AlertCircle size={16} />
             <span>{error}</span>
           </div>
         )}
         {success && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#ECFDF5",
-              border: "1px solid #A7F3D0",
-              color: "#065F46",
-              padding: "12px",
-              borderRadius: "8px",
-              marginBottom: "20px",
-              fontSize: "13px",
-            }}
-          >
+          <div className={styles.alertSuccess}>
             <CheckCircle2 size={16} />
             <span>{success}</span>
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "18px" }}
-        >
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "13px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "6px",
-              }}
-            >
-              Action Item Title
-            </label>
+        <form className={styles.taskForm} onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label>Action Item Title</label>
             <input
+              className={styles.textInput}
               type="text"
               required
               value={values.name}
               name="name"
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "10px 12px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                fontSize: "14px",
-              }}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -281,37 +184,13 @@ export default function EditTask() {
             ) : null}
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Project Hub
-              </label>
+          <div className={styles.gridLayoutTwo}>
+            <div className={styles.formGroup}>
+              <label>Project Hub</label>
               <select
+                className={styles.selectInput}
                 value={values.project}
                 name="project"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  backgroundColor: "#fff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -332,30 +211,12 @@ export default function EditTask() {
               ) : null}
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Department Team
-              </label>
+            <div className={styles.formGroup}>
+              <label>Department Team</label>
               <select
+                className={styles.selectInput}
                 value={values.team}
                 name="team"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  backgroundColor: "#fff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -377,42 +238,11 @@ export default function EditTask() {
             </div>
           </div>
 
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "13px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "6px",
-              }}
-            >
-              Responsible Owners ({values.owners.length} bound)
-            </label>
-            <div
-              style={{
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                maxHeight: "120px",
-                overflowY: "auto",
-                padding: "8px 12px",
-                backgroundColor: "#F9FAFB",
-                display: "flex",
-                flexDirection: "column",
-                gap: "6px",
-              }}
-            >
+          <div className={styles.formGroup}>
+            <label>Responsible Owners ({values.owners.length} bound)</label>
+            <div className={styles.scrollContainer}>
               {usersList.map((user) => (
-                <label
-                  key={user._id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "13px",
-                    cursor: "pointer",
-                  }}
-                >
+                <label className={styles.checkboxLabel} key={user._id}>
                   <input
                     type="checkbox"
                     checked={values.owners.includes(user._id)}
@@ -428,8 +258,8 @@ export default function EditTask() {
                     }}
                   />
                   <span>
-                    {user.name}
-                    <span style={{ color: "#9CA3AF" }}>({user.email})</span>
+                    {" "}
+                    {user.name} <span>({user.email})</span>
                   </span>
                 </label>
               ))}
@@ -444,34 +274,15 @@ export default function EditTask() {
             ) : null}
           </div>
 
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "13px",
-                fontWeight: "500",
-                color: "#374151",
-                marginBottom: "6px",
-              }}
-            >
-              Taxonomy Tags ({values.tags.length} selected)
-            </label>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "8px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
-                padding: "10px",
-                backgroundColor: "#F9FAFB",
-              }}
-            >
+          <div className={styles.formGroup}>
+            <label>Taxonomy Tags ({values.tags.length} selected)</label>
+            <div className={styles.tagsContainer}>
               {tagsList.map((tag) => {
                 const tagId = tag._id
                 const isChecked = values.tags.includes(tagId)
                 return (
                   <button
+                    className={styles.tagButton}
                     type="button"
                     key={tagId}
                     onClick={() => {
@@ -485,14 +296,9 @@ export default function EditTask() {
                       }
                     }}
                     style={{
-                      border: "1px solid #D1D5DB",
                       background: isChecked ? "#EEF2F6" : "#ffffff",
                       color: isChecked ? "#1E40AF" : "#4B5563",
-                      padding: "4px 10px",
-                      borderRadius: "6px",
-                      fontSize: "12px",
                       fontWeight: isChecked ? "600" : "400",
-                      cursor: "pointer",
                     }}
                   >
                     {tag.name}
@@ -510,37 +316,13 @@ export default function EditTask() {
             ) : null}
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "16px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Workflow Status
-              </label>
+          <div className={styles.gridLayoutThree}>
+            <div className={styles.formGroup}>
+              <label>Workflow Status</label>
               <select
+                className={styles.selectInput}
                 value={values.status}
                 name="status"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "13px",
-                  backgroundColor: "#fff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -559,30 +341,12 @@ export default function EditTask() {
               ) : null}
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Priority Grade
-              </label>
+            <div className={styles.formGroup}>
+              <label>Priority Grade</label>
               <select
+                className={styles.selectInput}
                 value={values.priority}
                 name="priority"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "13px",
-                  backgroundColor: "#fff",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
@@ -599,31 +363,14 @@ export default function EditTask() {
               ) : null}
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#374151",
-                  marginBottom: "6px",
-                }}
-              >
-                Time Allocation (Days)
-              </label>
+            <div className={styles.formGroup}>
+              <label>Time Allocation (Days)</label>
               <input
+                className={styles.textInput}
                 type="number"
                 min="1"
                 value={values.timeToComplete}
                 name="timeToComplete"
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "9px 10px",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontSize: "13px",
-                }}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -638,49 +385,19 @@ export default function EditTask() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "12px",
-              marginTop: "12px",
-              paddingTop: "16px",
-              borderTop: "1px solid #F3F4F6",
-            }}
-          >
+          <div className={styles.actionRow}>
             <button
+              className={styles.btnCancel}
               type="button"
               onClick={() => navigate(-1)}
               disabled={submitting}
-              style={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #D1D5DB",
-                color: "#374151",
-                padding: "10px 16px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
             >
               Cancel
             </button>
             <button
+              className={styles.btnSubmit}
               type="submit"
               disabled={submitting}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                backgroundColor: "#4F46E5",
-                border: "none",
-                color: "#ffffff",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
             >
               <Save size={16} />
               {submitting ? "Preserving changes..." : "Save Updates"}
