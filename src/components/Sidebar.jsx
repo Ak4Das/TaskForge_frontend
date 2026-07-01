@@ -75,7 +75,6 @@ export default function Sidebar() {
         }}
       >
         <NavLink
-          key="Dashboard"
           to="/"
           style={({ isActive }) => ({
             display: "flex",
@@ -96,7 +95,6 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          key="Projects"
           to="/projects"
           style={({ isActive }) => ({
             display: "flex",
@@ -117,7 +115,6 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          key="Teams Management"
           to="/teams"
           style={({ isActive }) => ({
             display: "flex",
@@ -138,7 +135,6 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          key="Analytics Reports"
           to="/reports"
           style={({ isActive }) => ({
             display: "flex",
@@ -159,8 +155,7 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          key="Settings"
-          to="/settings"
+          to="/edit/profile"
           style={({ isActive }) => ({
             display: "flex",
             alignItems: "center",

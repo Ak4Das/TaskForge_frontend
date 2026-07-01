@@ -19,7 +19,7 @@ import Sidebar from "./components/Sidebar"
 import { ToastContainer } from "react-toastify"
 import TeamDetail from "./pages/TeamDetail"
 import EditTask from "./components/EditTaskModel"
-import EditProfile from "./components/EditProfile"
+import EditProfile from "./pages/EditProfile"
 import EditTeam from "./components/EditTeam"
 import CompressSidebar from "./components/CompressSidebar"
 import { useEffect, useState } from "react"
@@ -134,7 +134,7 @@ export default function App() {
           }
         />
         <Route
-          path="/profile"
+          path="/edit/profile"
           element={
             <ProtectedLayout>
               <EditProfile />

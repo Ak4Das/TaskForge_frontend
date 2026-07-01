@@ -48,7 +48,7 @@ export default function CompressSidebar() {
           <BarChart3 size={18} />
         </NavLink>
 
-        <NavLink className={getNavLinkClass} to="/settings">
+        <NavLink className={getNavLinkClass} to="/edit/profile">
           <Settings size={18} />
         </NavLink>
       </nav>
