@@ -198,6 +198,7 @@
   background-color: #f9fafb;
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 }
 
 .submitBtn {
@@ -246,6 +247,12 @@
   .submitBtn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 540px) {
+  .cardFooter {
+    flex-direction: column;
   }
 }
 

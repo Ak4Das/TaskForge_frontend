@@ -14,6 +14,7 @@ import {
   Tag,
   CalendarDays,
   Clock3,
+  SquarePen,
 } from "lucide-react"
 import { fetchTasksById, updateTask } from "../../services/requestToServer"
 
@@ -226,6 +227,14 @@ export default function TaskDetail() {
 
         {task.status !== "Completed" && (
           <div className={styles.cardFooter}>
+            <button
+              className={styles.submitBtn}
+              onClick={() => navigate(`/tasks/edit/${taskId}`)}
+              disabled={updating}
+            >
+              <SquarePen size={16} />
+              Edit Task
+            </button>
             <button
               className={styles.submitBtn}
               onClick={handleMarkAsComplete}
