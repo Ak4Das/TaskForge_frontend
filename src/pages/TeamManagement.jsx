@@ -14,6 +14,8 @@ import {
   fetchUsers,
 } from "../../services/requestToServer"
 import { Link, useNavigate } from "react-router-dom"
+import { useFormik } from "formik"
+import { editTeamSchema } from "../schemas/EditTeam.schema"
 
 export default function TeamManagement() {
   const [teams, setTeams] = useState([])
@@ -21,11 +23,55 @@ export default function TeamManagement() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
-  const [newTeamName, setNewTeamName] = useState("")
-  const [newTeamDesc, setNewTeamDesc] = useState("")
-  const [selectedMembers, setSelectedMembers] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
+
+  const initialValues = {
+    name: "",
+    description: "",
+    members: [],
+  }
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: editTeamSchema,
+    enableReinitialize: true,
+    onSubmit: async (values, action) => {
+      try {
+        setSubmitting(true)
+
+        const response = await createTeam({
+          body: values,
+          setIsError,
+        })
+
+        if (response && Object.keys(response).length) {
+          setSuccessMsg(`Team "${values.name}" created successfully.`)
+          setTimeout(() => navigate("/teams"), 600)
+        }
+        await teamManagementContextData()
+        action.resetForm()
+      } catch (error) {
+        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+          console.error(error)
+        }
+        setIsError(error.message)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+  })
+
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    setFieldValue,
+    setFieldTouched,
+    handleSubmit,
+  } = formik
 
   useEffect(() => {
     if (error === "Invalid Token.") {
@@ -54,46 +100,6 @@ export default function TeamManagement() {
   useEffect(() => {
     teamManagementContextData()
   }, [])
-
-  const handleMemberCheckboxToggle = (userId) => {
-    if (selectedMembers.includes(userId)) {
-      setSelectedMembers(selectedMembers.filter((id) => id !== userId))
-    } else {
-      setSelectedMembers([...selectedMembers, userId])
-    }
-  }
-
-  const handleCreateTeamSubmit = async (e) => {
-    e.preventDefault()
-
-    setSubmitting(true)
-
-    try {
-      await createTeam({
-        body: {
-          name: newTeamName,
-          description: newTeamDesc,
-          members: selectedMembers,
-        },
-        setIsError,
-      })
-
-      setSuccessMsg(`${newTeamName} team created successfully.`)
-
-      setNewTeamName("")
-      setNewTeamDesc("")
-      setSelectedMembers([])
-
-      await teamManagementContextData()
-    } catch (error) {
-      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-        console.error(error)
-      }
-      setIsError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   return (
     <div className={`${styles.team_container}`}>
@@ -193,20 +199,24 @@ export default function TeamManagement() {
             <h2 className={`${styles.section_title}`}>Establish New Team</h2>
           </div>
 
-          <form
-            className={`${styles.creation_form}`}
-            onSubmit={handleCreateTeamSubmit}
-          >
+          <form className={`${styles.creation_form}`} onSubmit={handleSubmit}>
             <div className={`${styles.form_group}`}>
               <label className={`${styles.form_label}`}>Team Name</label>
               <input
                 className={`${styles.form_input}`}
                 type="text"
                 required
-                value={newTeamName}
-                onChange={(e) => setNewTeamName(e.target.value)}
+                value={values.name}
+                name="name"
                 placeholder="e.g., Quality Assurance"
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
+              {errors.name && touched.name ? (
+                <p className={`text-danger my-0 ${styles.errorText}`}>
+                  {errors.name}
+                </p>
+              ) : null}
             </div>
 
             <div className={`${styles.form_group}`}>
@@ -216,15 +226,22 @@ export default function TeamManagement() {
               <textarea
                 className={`${styles.form_textarea}`}
                 rows="3"
-                value={newTeamDesc}
-                onChange={(e) => setNewTeamDesc(e.target.value)}
+                value={values.description}
+                name="description"
+                onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Outline responsibility metrics handled by this unit group..."
               />
+              {errors.description && touched.description ? (
+                <p className={`text-danger my-0 ${styles.errorText}`}>
+                  {errors.description}
+                </p>
+              ) : null}
             </div>
 
             <div className={`${styles.form_group}`}>
               <label className={`${styles.form_label}`}>
-                Assign Initial Team Members ({selectedMembers.length} selected)
+                Assign Initial Team Members ({values.members.length} selected)
               </label>
               <div className={`${styles.checkbox_scrollbox}`}>
                 {users.length === 0 ? (
@@ -240,8 +257,18 @@ export default function TeamManagement() {
                       <input
                         className={`${styles.custom_checkbox}`}
                         type="checkbox"
-                        checked={selectedMembers.includes(u._id)}
-                        onChange={() => handleMemberCheckboxToggle(u._id)}
+                        checked={values.members.includes(u._id)}
+                        onChange={() => {
+                          if (values.members.includes(u._id)) {
+                            setFieldValue(
+                              "members",
+                              values.members.filter((id) => id !== u._id),
+                            )
+                          } else {
+                            setFieldValue("members", [...values.members, u._id])
+                          }
+                        }}
+                        onBlur={() => setFieldTouched("members", true)}
                       />
                       <span className={`${styles.user_info_text}`}>
                         {u.name}
@@ -254,18 +281,17 @@ export default function TeamManagement() {
                   ))
                 )}
               </div>
+              {errors.members && touched.members ? (
+                <p className={`text-danger my-0 ${styles.errorText}`}>
+                  {errors.members}
+                </p>
+              ) : null}
             </div>
 
             <button
               className={`${styles.btn_submit_team}`}
               type="submit"
-              disabled={submitting || !newTeamName.trim()}
-              onMouseEnter={(e) =>
-                !submitting && (e.target.style.backgroundColor = "#4338CA")
-              }
-              onMouseLeave={(e) =>
-                !submitting && (e.target.style.backgroundColor = "#4F46E5")
-              }
+              disabled={submitting}
             >
               <UserPlus size={16} />
               {submitting
