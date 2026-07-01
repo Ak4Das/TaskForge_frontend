@@ -1,4 +1,3 @@
-/* Fixed Dimmed Backdrop Overlay */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -14,10 +13,9 @@
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
-  padding: 16px; /* Strategic safety space for mobile screens */
+  padding: 16px;
 }
 
-/* Modal Content Card Wrapper */
 .modalCard {
   background-color: #ffffff;
   width: 100%;
@@ -33,7 +31,6 @@
   margin-inline: 10px;
 }
 
-/* Header Container Block */
 .modalHeader {
   display: flex;
   justify-content: space-between;
@@ -69,7 +66,6 @@
   background-color: #f3f4f6;
 }
 
-/* Main Form Elements and Layouts */
 .modalForm {
   padding: 24px;
   display: flex;
@@ -97,7 +93,6 @@
   margin-bottom: 6px;
 }
 
-/* Combined Grid for Side-by-Side Element Fields */
 .formGridTwoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -105,7 +100,6 @@
   width: 100%;
 }
 
-/* Input Fields Baseline Controls */
 .formInput,
 .formSelect {
   width: 100%;
@@ -125,7 +119,6 @@
   border-color: #4f46e5;
 }
 
-/* Specialized Select Multiple Form Lists */
 .formSelectMultiple {
   width: 100%;
   box-sizing: border-box;
@@ -148,7 +141,6 @@
   padding: 2px;
 }
 
-/* Row wrapper replacing manual bootstrap classes */
 .labelActionRow {
   display: flex;
   justify-content: space-between;
@@ -179,15 +171,13 @@
   background-color: #4338ca;
 }
 
-/* Error Typography styling */
 .errorMessage {
   font-size: 12px;
   line-height: 15px;
-  color: #dc3545; /* Clean accessible red error color */
+  color: #dc3545;
   margin: 4px 0 0 0;
 }
 
-/* Form Action Buttons Container Footer */
 .modalFooter {
   display: flex;
   justify-content: flex-end;
@@ -234,8 +224,6 @@
   cursor: not-allowed;
 }
 
-/* --- RESPONSIVE MEDIA BREAKPOINTS (Supporting screens down to 350px) --- */
-
 @media (max-width: 540px) {
   .modalOverlay {
     padding: 8px;
@@ -250,14 +238,13 @@
     gap: 14px;
   }
 
-  /* Collapses two columns to stack vertically on mobile */
   .formGridTwoCol {
     grid-template-columns: 1fr;
     gap: 14px;
   }
 
   .modalFooter {
-    flex-direction: column-reverse; /* Puts submit button on top when stacked */
+    flex-direction: column-reverse;
     gap: 8px;
   }
 
@@ -265,7 +252,7 @@
   .submitBtn {
     width: 100%;
     text-align: center;
-    padding: 12px; /* Marginally bigger touch target areas */
+    padding: 12px;
   }
 }
 
