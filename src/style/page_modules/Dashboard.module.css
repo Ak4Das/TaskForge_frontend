@@ -279,6 +279,34 @@
   border-radius: 4px;
 }
 
+.status_badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.status_todo {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+.status_inprogress {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+.status_completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.status_blocked {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
 @media (min-width: 550px) {
   .task_section_title_one {
     display: none;

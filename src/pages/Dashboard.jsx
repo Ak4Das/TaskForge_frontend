@@ -1,6 +1,6 @@
 import styles from "../style/page_modules/Dashboard.module.css"
 import React, { useState, useEffect, useContext } from "react"
-import { useSearchParams, Link, useNavigate } from "react-router-dom"
+import { useSearchParams, Link } from "react-router-dom"
 import axios from "axios"
 import {
   Plus,
@@ -25,7 +25,6 @@ export default function Dashboard() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setIsError] = useState("")
-  const navigate = useNavigate()
   const [projectStatus, setProjectStatus] = useState("")
 
   const user = Object.values(useContext(context))[0]
@@ -105,27 +104,18 @@ export default function Dashboard() {
     setSearchParams(updatedParams)
   }
 
-  const getStatusBadgeStyle = (status) => {
-    const base = {
-      padding: "4px 10px",
-      borderRadius: "12px",
-      fontSize: "12px",
-      fontWeight: "600",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "4px",
-    }
+  const getStatusClassName = (status) => {
     switch (status) {
       case "To Do":
-        return { ...base, backgroundColor: "#E5E7EB", color: "#374151" }
+        return "status_todo"
       case "In Progress":
-        return { ...base, backgroundColor: "#DBEAFE", color: "#1E40AF" }
+        return "status_inprogress"
       case "Completed":
-        return { ...base, backgroundColor: "#D1FAE5", color: "#065F46" }
+        return "status_completed"
       case "Blocked":
-        return { ...base, backgroundColor: "#FEE2E2", color: "#991B1B" }
+        return "status_blocked"
       default:
-        return base
+        return ""
     }
   }
 
@@ -176,7 +166,9 @@ export default function Dashboard() {
               to={`/projects/${project._id}`}
               className={`${styles.project_card}`}
             >
-              <span style={getStatusBadgeStyle(project.status)}>
+              <span
+                className={`${styles.status_badge} ${styles[getStatusClassName(project.status)]}`}
+              >
                 {project.status === "Completed" && <CheckCircle2 size={12} />}
                 {project.status === "In Progress" && <Clock size={12} />}
                 {project.status === "Blocked" && <AlertTriangle size={12} />}
@@ -337,7 +329,9 @@ export default function Dashboard() {
                       {task.team?.name || "Cross-Functional"}
                     </td>
                     <td style={{ padding: "16px 20px" }}>
-                      <span style={getStatusBadgeStyle(task.status)}>
+                      <span
+                        className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
+                      >
                         {task.status === "Completed" && (
                           <CheckCircle2 size={12} />
                         )}
@@ -406,7 +400,7 @@ export default function Dashboard() {
                                   <b>Workflow State:</b>
                                   {` `}
                                   <span
-                                    style={getStatusBadgeStyle(task.status)}
+                                    className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />
@@ -449,7 +443,7 @@ export default function Dashboard() {
                               >
                                 <p className="d-flex justify-content-end">
                                   <span
-                                    style={getStatusBadgeStyle(task.status)}
+                                    className={`${styles.status_badge} ${styles[getStatusClassName(task.status)]}`}
                                   >
                                     {task.status === "Completed" && (
                                       <CheckCircle2 size={12} />

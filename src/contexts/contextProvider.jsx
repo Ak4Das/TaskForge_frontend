@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import context from "./createContexts"
 import { fetchMe } from "../../services/requestToServer"
+import { useNavigate } from "react-router-dom"
 
 export default function ContextProvider({ children }) {
   const [user, setUser] = useState({})
   const [error, setIsError] = useState("")
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchData() {

@@ -66,8 +66,8 @@ const ProtectedLayout = ({ children }) => {
 
 export default function App() {
   return (
-    <ContextProvider>
-      <Router>
+    <Router>
+      <ContextProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -155,7 +155,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
         <ToastContainer />
-      </Router>
-    </ContextProvider>
+      </ContextProvider>
+    </Router>
   )
 }
