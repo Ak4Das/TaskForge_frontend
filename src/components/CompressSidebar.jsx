@@ -17,7 +17,6 @@ export default function CompressSidebar() {
 
   const executeLogoutSequence = () => {
     localStorage.removeItem("token")
-    localStorage.removeItem("user")
 
     navigate("/login")
   }
