@@ -274,7 +274,8 @@
   font-size: 11px;
 }
 
-.btn_submit_team {
+.btn_submit_team,
+.edit_team_btn {
   display: flex;
   align-items: center;
   justify-content: center;

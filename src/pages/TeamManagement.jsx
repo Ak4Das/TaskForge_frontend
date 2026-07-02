@@ -7,6 +7,7 @@ import {
   ShieldAlert,
   CheckCircle2,
   UserPlus,
+  SquarePen,
 } from "lucide-react"
 import {
   createTeam,
@@ -179,6 +180,14 @@ export default function TeamManagement() {
                       })}
                     </div>
                   )}
+
+                  <button
+                    className={`mt-3 ${styles.edit_team_btn}`}
+                    onClick={() => navigate(`/teams/edit/${team._id}`)}
+                  >
+                    <SquarePen size={18} />
+                    Edit {team.name} Team
+                  </button>
                 </div>
               ))}
             </div>
