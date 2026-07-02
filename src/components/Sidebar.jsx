@@ -1,5 +1,5 @@
 import styles from "../style/component_modules/Sidebar.module.css"
-import React from "react"
+import React, { useContext } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import {
   LayoutDashboard,
@@ -10,18 +10,19 @@ import {
   ClipboardMinus,
   Settings,
 } from "lucide-react"
+import context from "../contexts/createContexts"
 
 export default function Sidebar() {
   const navigate = useNavigate()
 
-  const storedUserObj = localStorage.getItem("user")
-  const userMetadata = storedUserObj
-    ? JSON.parse(storedUserObj)
+  const storedUserObj = Object.values(useContext(context))[0]
+
+  const userMetadata = Object.keys(storedUserObj).length
+    ? storedUserObj
     : { name: "Team Member" }
 
   const executeLogoutSequence = () => {
     localStorage.removeItem("token")
-    localStorage.removeItem("user")
 
     navigate("/login")
   }
