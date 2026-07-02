@@ -1,0 +1,116 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: #1f2937;
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.headerArea {
+  padding: 24px;
+  border-bottom: 1px solid #374151;
+}
+
+.brandTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.brandSubtitle {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.navigationHub {
+  flex: 1;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  color: #9ca3af;
+  background-color: transparent;
+}
+
+.navLinkActive {
+  color: #ffffff;
+  background-color: #374151;
+}
+
+.navLink:hover:not(.navLinkActive) {
+  color: #ffffff;
+  background-color: #2d3748;
+}
+
+.footerArea {
+  padding: 16px;
+  border-top: 1px solid #374151;
+  background-color: #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.userProfileMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.userEmail {
+  font-size: 11px;
+  color: #9ca3af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid #4b5563;
+  color: #f9fafb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.logoutButton:hover {
+  background-color: #991b1b;
+  border-color: #991b1b;
+}

@@ -192,7 +192,6 @@
   cursor: not-allowed;
 }
 
-/* Local keyframe for the entry animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
