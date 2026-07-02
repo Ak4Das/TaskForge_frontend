@@ -1,5 +1,5 @@
 import styles from "../style/page_modules/EditProfile.module.css"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import {
@@ -14,18 +14,18 @@ import {
 import { fetchMe, updateUserProfile } from "../../services/requestToServer"
 import { useFormik } from "formik"
 import { editProfileSchema } from "../schemas/EditProfile.schema"
+import context from "../contexts/createContexts"
 
 export default function EditProfile() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+
+  const user = Object.values(useContext(context))[0]
 
   const initialValues = {
-    name: name,
+    name: user.name || "",
     newPassword: "",
     confirmPassword: "",
     currentPassword: "",
@@ -48,7 +48,7 @@ export default function EditProfile() {
 
         if (response && Object.keys(response).length) {
           setSuccess("Account profile successfully updated.")
-          setTimeout(() => navigate("/"), 1200)
+          setTimeout(() => window.location.reload(), 1200)
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -64,37 +64,13 @@ export default function EditProfile() {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     formik
 
-  useEffect(() => {
-    const fetchCurrentProfile = async () => {
-      try {
-        setLoading(true)
-
-        const response = await fetchMe({ setIsError })
-
-        setName(response.name || "")
-        setEmail(response.email || "")
-      } catch (error) {
-        if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
-          console.error(error)
-        }
-        setIsError(error.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCurrentProfile()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className={styles.loadingState}>Loading user's profile data...</div>
-    )
+  if (Object.keys(user).length === 0) {
+    return
   }
 
   return (
     <div className={styles.container}>
-      <button className={styles.backButton} onClick={() => navigate(-1)}>
+      <button className={styles.backButton} onClick={() => navigate("/")}>
         <ArrowLeft size={16} /> Back to Dashboard
       </button>
 
@@ -128,7 +104,7 @@ export default function EditProfile() {
               className={styles.inputDisabled}
               type="text"
               disabled
-              value={email}
+              value={user.email}
             />
           </div>
 
