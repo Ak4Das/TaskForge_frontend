@@ -41,9 +41,6 @@ export default function TeamDetail() {
 
   useEffect(() => {
     const fetchTeamPerformanceMetrics = async () => {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
       try {
         setLoading(true)
 

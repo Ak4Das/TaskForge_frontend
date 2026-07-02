@@ -69,7 +69,6 @@ export default function ProjectManagement() {
     : filteredProjects
 
   const formatCreationDate = (dateString) => {
-    if (!dateString) return "Recent"
     const dateObj = new Date(dateString)
     return dateObj.toLocaleDateString("en-US", {
       year: "numeric",

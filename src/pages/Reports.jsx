@@ -21,7 +21,6 @@ import {
 } from "../../services/requestToServer"
 import { useNavigate } from "react-router-dom"
 
-// Register essential modular dependencies required by Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -117,7 +116,6 @@ export default function Reports() {
         labels: Object.keys(teamCounts),
         datasets: [
           {
-            label: "Tasks Closed",
             data: Object.values(teamCounts),
             backgroundColor: [
               "#4F46E5",
@@ -136,7 +134,6 @@ export default function Reports() {
         labels: Object.keys(ownerCounts),
         datasets: [
           {
-            label: "Assignments Finished",
             data: Object.values(ownerCounts),
             backgroundColor: [
               "#3B82F6",
@@ -156,7 +153,6 @@ export default function Reports() {
           labels: Object.keys(projectPendingEffort),
           datasets: [
             {
-              label: "Pending Work Effort (Days)",
               data: Object.values(projectPendingEffort),
               backgroundColor: "#4F46E5",
               borderRadius: 6,
@@ -238,7 +234,6 @@ export default function Reports() {
         </div>
       </div>
 
-      {/* Analytical Charts Component Grid Rendering */}
       {loading ? (
         <div className={`${styles.reports_loading_state}`}>
           Processing data and creating charts using chart.js...
