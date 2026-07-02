@@ -12,6 +12,7 @@ import {
   Plus,
   Filter,
   ArrowUpDown,
+  SquarePen,
 } from "lucide-react"
 import {
   fetchAllProjects,
@@ -341,6 +342,7 @@ export default function ProjectTasks() {
                   <th style={{ padding: "12px 20px" }}>Priority</th>
                   <th style={{ padding: "12px 20px" }}>Due Date</th>
                   <th style={{ padding: "12px 20px" }}>Remaining Days</th>
+                  <th style={{ padding: "12px 20px" }}>Edit Task</th>
                 </tr>
               </thead>
               <tbody>
@@ -399,6 +401,18 @@ export default function ProjectTasks() {
                       className={`${styles.highlight_text}`}
                     >
                       {findRemainingDays(task.createdAt, task.timeToComplete)}
+                    </td>
+                    <td
+                      style={{ padding: "16px 20px" }}
+                      className={`${styles.highlight_text}`}
+                    >
+                      <button
+                        className={`${styles.edit_task_btn}`}
+                        onClick={() => navigate(`/tasks/edit/${task._id}`)}
+                      >
+                        <SquarePen size={18} />
+                        Edit Task
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -514,6 +528,15 @@ export default function ProjectTasks() {
                                 </p>
                               </div>
                             </div>
+                            <button
+                              className={`${styles.edit_task_btn}`}
+                              onClick={() =>
+                                navigate(`/tasks/edit/${task._id}`)
+                              }
+                            >
+                              <SquarePen size={18} />
+                              Edit Task
+                            </button>
                           </div>
                         </div>
                       </div>

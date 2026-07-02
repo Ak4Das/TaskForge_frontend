@@ -131,15 +131,17 @@
   margin: 0;
 }
 
-.add_task_btn {
+.add_task_btn,
+.edit_task_btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background-color: #4f46e5;
   color: #ffffff;
   border: none;
   padding: 10px 16px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -261,13 +263,13 @@
   color: #991b1b;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1380px) {
   .tasks_cards {
     display: none;
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1379px) {
   .tasks_table {
     display: none;
   }
