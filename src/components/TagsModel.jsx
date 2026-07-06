@@ -18,10 +18,6 @@ export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
     setSubmitting(true)
 
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-
       await createTags({
         body: {
           name: finalName,

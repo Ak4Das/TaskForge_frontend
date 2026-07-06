@@ -33,7 +33,6 @@ export default function Signup() {
         })
         if (response && Object.keys(response).length) {
           localStorage.setItem("token", response.token)
-          localStorage.setItem("user", JSON.stringify(response.user))
 
           action.resetForm()
 
