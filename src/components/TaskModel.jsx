@@ -47,7 +47,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
         const response = await createTask({ body: values, setIsError })
         if (response && Object.keys(response).length) {
           setModalVisibilityState(false)
-          fetchData()
+          fetchData && fetchData()
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {

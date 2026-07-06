@@ -150,14 +150,15 @@ export default function ProjectTasks() {
   }
 
   const finalTasks = tasks.map((task) => {
-    const dueDate = findDueDate(task.createdAt, task.timeToComplete)
-    return { ...task, dueDate }
+    const remainingDays = findRemainingDays(task.createdAt, task.timeToComplete)
+    const arr = remainingDays.split(" ")
+    return { ...task, remainingDays: Number(arr[0]) }
   })
 
-  function sortDueDateByAscOrder() {
+  function sortRemainingDaysByAscOrder() {
     for (let i = 0; i < finalTasks.length; i++) {
       for (let j = i + 1; j < finalTasks.length; j++) {
-        if (finalTasks[i].dueDate > finalTasks[j].dueDate) {
+        if (finalTasks[i].remainingDays > finalTasks[j].remainingDays) {
           const hold = finalTasks[i]
           finalTasks[i] = finalTasks[j]
           finalTasks[j] = hold
@@ -167,10 +168,10 @@ export default function ProjectTasks() {
     setTasks(finalTasks)
   }
 
-  function sortDueDateByDescOrder() {
+  function sortRemainingDaysByDescOrder() {
     for (let i = 0; i < finalTasks.length; i++) {
       for (let j = i + 1; j < finalTasks.length; j++) {
-        if (finalTasks[i].dueDate < finalTasks[j].dueDate) {
+        if (finalTasks[i].remainingDays < finalTasks[j].remainingDays) {
           const hold = finalTasks[i]
           finalTasks[i] = finalTasks[j]
           finalTasks[j] = hold
@@ -292,9 +293,9 @@ export default function ProjectTasks() {
               className={`${styles.control_select}`}
               onChange={(e) => {
                 if (e.target.value === "highToLow") {
-                  sortDueDateByDescOrder()
+                  sortRemainingDaysByDescOrder()
                 } else if (e.target.value === "lowToHigh") {
-                  sortDueDateByAscOrder()
+                  sortRemainingDaysByAscOrder()
                 } else {
                   const taskEndpoint = `http://localhost:3000/api/tasks?project=${projectId}`
                   fetchTasks({
@@ -305,7 +306,7 @@ export default function ProjectTasks() {
                 }
               }}
             >
-              <option value="">--- Due Date ---</option>
+              <option value="">--- Remaining Days ---</option>
               <option value="highToLow">High to Low</option>
               <option value="lowToHigh">Low to High</option>
               <option value="">Unsort</option>
