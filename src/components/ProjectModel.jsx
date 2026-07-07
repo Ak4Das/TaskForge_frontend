@@ -1,7 +1,7 @@
 import styles from "../style/component_modules/ProjectModel.module.css"
 import React, { useEffect, useState } from "react"
 import axios from "axios"
-import { X, FolderPlus, AlertCircle } from "lucide-react"
+import { X, FolderPlus, AlertCircle, CircleCheckBig } from "lucide-react"
 import { createProject } from "../../services/requestToServer"
 import { useFormik } from "formik"
 import { projectSchema } from "../schemas/Project.schema"
@@ -9,6 +9,7 @@ import { projectSchema } from "../schemas/Project.schema"
 export default function ProjectModal({ setProjectModalVisibilityState }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
+  const [success, setSuccess] = useState("")
 
   const initialValues = {
     name: "",
@@ -31,9 +32,14 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
           body,
           setIsError,
         })
-        if (response && Object.keys(response).length) {
-          setProjectModalVisibilityState(false)
+        if (response) {
+          setSuccess("Project Initialized Successfully")
         }
+        setTimeout(() => {
+          if (response && Object.keys(response).length) {
+            setProjectModalVisibilityState(false)
+          }
+        }, 1500)
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
           console.error(error)
@@ -65,6 +71,13 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
+          {success && (
+            <div className={styles.successAlert}>
+              <CircleCheckBig size={16} style={{ flexShrink: 0 }} />
+              <span>{success}</span>
+            </div>
+          )}
+
           {error && (
             <div className={styles.errorAlert}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
@@ -85,10 +98,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
               onBlur={handleBlur}
             />
             {errors.name && touched.name ? (
-              <p
-                className={`text-danger my-0 ${styles.errorText}`}
-                className={`text-danger my-0`}
-              >
+              <p className={`text-danger my-0 ${styles.errorText}`}>
                 {errors.name}
               </p>
             ) : null}
@@ -106,10 +116,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
               onBlur={handleBlur}
             />
             {errors.description && touched.description ? (
-              <p
-                className={`text-danger my-0 ${styles.errorText}`}
-                className={`text-danger my-0`}
-              >
+              <p className={`text-danger my-0 ${styles.errorText}`}>
                 {errors.description}
               </p>
             ) : null}
