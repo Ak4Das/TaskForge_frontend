@@ -1,7 +1,7 @@
 import styles from "../style/component_modules/TaskModel.module.css"
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import { X } from "lucide-react"
+import { AlertCircle, CircleCheckBig, X } from "lucide-react"
 import {
   createTask,
   fetchAllProjects,
@@ -20,6 +20,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
   const [users, setUsers] = useState([])
   const [tags, setTags] = useState([])
   const [submitting, setSubmitting] = useState(false)
+  const [success, setSuccess] = useState("")
   const [error, setIsError] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -45,10 +46,17 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
         setSubmitting(true)
 
         const response = await createTask({ body: values, setIsError })
-        if (response && Object.keys(response).length) {
-          setModalVisibilityState(false)
-          fetchData && fetchData()
+
+        if (response) {
+          setSuccess("Task Created Successfully")
         }
+
+        setTimeout(() => {
+          if (response && Object.keys(response).length) {
+            setModalVisibilityState(false)
+            fetchData && fetchData()
+          }
+        }, 1500)
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
           console.error(error)
@@ -115,6 +123,20 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
         </div>
 
         <form className={styles.modalForm} onSubmit={handleSubmit}>
+          {success && (
+            <div className={styles.successAlert}>
+              <CircleCheckBig size={16} style={{ flexShrink: 0 }} />
+              <span>{success}</span>
+            </div>
+          )}
+
+          {error && (
+            <div className={styles.errorAlert}>
+              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
+            </div>
+          )}
+
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Task Title Name</label>
             <input
@@ -128,7 +150,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               onBlur={handleBlur}
             />
             {errors.name && touched.name ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.name}
               </p>
             ) : null}
@@ -153,10 +175,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 ))}
               </select>
               {errors.project && touched.project ? (
-                <p
-                  className={styles.errorMessage}
-                  className={`text-danger my-0`}
-                >
+                <p className={`text-danger my-0 ${styles.errorMessage}`}>
                   {errors.project}
                 </p>
               ) : null}
@@ -179,10 +198,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 ))}
               </select>
               {errors.team && touched.team ? (
-                <p
-                  className={styles.errorMessage}
-                  className={`text-danger my-0`}
-                >
+                <p className={`text-danger my-0 ${styles.errorMessage}`}>
                   {errors.team}
                 </p>
               ) : null}
@@ -220,7 +236,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               ))}
             </select>
             {errors.owners && touched.owners ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.owners}
               </p>
             ) : null}
@@ -265,7 +281,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
               ))}
             </select>
             {errors.tags && touched.tags ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.tags}
               </p>
             ) : null}
@@ -287,10 +303,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 onBlur={handleBlur}
               />
               {errors.timeToComplete && touched.timeToComplete ? (
-                <p
-                  className={styles.errorMessage}
-                  className={`text-danger my-0`}
-                >
+                <p className={`text-danger my-0 ${styles.errorMessage}`}>
                   {errors.timeToComplete}
                 </p>
               ) : null}
@@ -310,10 +323,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
                 <option value="Blocked">Blocked</option>
               </select>
               {errors.status && touched.status ? (
-                <p
-                  className={styles.errorMessage}
-                  className={`text-danger my-0`}
-                >
+                <p className={`text-danger my-0 ${styles.errorMessage}`}>
                   {errors.status}
                 </p>
               ) : null}
