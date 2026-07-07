@@ -1,12 +1,13 @@
 import styles from "../style/component_modules/TagsModel.module.css"
 import React, { useState } from "react"
 import axios from "axios"
-import { X, Tag, AlertCircle, CheckCircle2 } from "lucide-react"
+import { X, Tag, AlertCircle, CheckCircle2, CircleCheckBig } from "lucide-react"
 import { createTags } from "../../services/requestToServer"
 
 export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
   const [tagName, setTagName] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const [success, setSuccess] = useState("")
   const [error, setIsError] = useState("")
 
   const handleFormSubmit = async (e) => {
@@ -18,15 +19,21 @@ export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
     setSubmitting(true)
 
     try {
-      await createTags({
+      const response = await createTags({
         body: {
           name: finalName,
         },
         setIsError,
       })
 
-      setTagsModalVisibilityState(false)
-      fetchData()
+      if (response) {
+        setSuccess("Tag Created Successfully")
+      }
+
+      setTimeout(() => {
+        setTagsModalVisibilityState(false)
+        fetchData()
+      }, 1000)
     } catch (error) {
       if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
         console.error(error)
@@ -54,6 +61,13 @@ export default function TagsModel({ setTagsModalVisibilityState, fetchData }) {
         </div>
 
         <form className={styles.form} onSubmit={handleFormSubmit}>
+          {success && (
+            <div className={styles.successAlert}>
+              <CircleCheckBig size={16} style={{ flexShrink: 0 }} />
+              <span>{success}</span>
+            </div>
+          )}
+
           {error && (
             <div className={styles.errorAlert}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
