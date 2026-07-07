@@ -41,6 +41,16 @@
   margin: 0;
 }
 
+.successAlertBanner {
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
 .errorAlertBanner {
   background-color: #fef2f2;
   border: 1px solid #fca5a5;

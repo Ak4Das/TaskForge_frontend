@@ -1,18 +1,20 @@
 import styles from "../style/page_modules/Signup.module.css"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
-import { signUp } from "../../services/requestToServer"
+import { fetchMe, signUp } from "../../services/requestToServer"
 import { toast } from "react-toastify"
 import { useFormik } from "formik"
 import { userSchema } from "../schemas/User.schema"
 import { CheckCircle2 } from "lucide-react"
+import context from "../contexts/createContexts"
 
 export default function Signup() {
   const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState("")
   const navigate = useNavigate()
+  const { user, setUser } = useContext(context)
 
   const initialValues = {
     name: "",
@@ -38,7 +40,8 @@ export default function Signup() {
 
           setSuccess("Signup is Successful.")
 
-          setTimeout(() => {
+          setTimeout(async () => {
+            await fetchMe({ setFunction: setUser })
             navigate("/")
           }, 1200)
         }
@@ -97,7 +100,7 @@ export default function Signup() {
               onBlur={handleBlur}
             />
             {errors.name && touched.name ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.name}
               </p>
             ) : null}
@@ -116,7 +119,7 @@ export default function Signup() {
               onBlur={handleBlur}
             />
             {errors.email && touched.email ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.email}
               </p>
             ) : null}
@@ -135,7 +138,7 @@ export default function Signup() {
               onBlur={handleBlur}
             />
             {errors.password && touched.password ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.password}
               </p>
             ) : null}

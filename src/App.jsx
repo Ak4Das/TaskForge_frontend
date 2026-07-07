@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom"
 import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -22,17 +23,22 @@ import EditTask from "./pages/EditTaskModel"
 import EditProfile from "./pages/EditProfile"
 import EditTeam from "./pages/EditTeam"
 import CompressSidebar from "./components/CompressSidebar"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import ContextProvider from "./contexts/contextProvider"
+import context from "./contexts/createContexts"
+import { fetchMe } from "../services/requestToServer"
 
 const ProtectedLayout = ({ children }) => {
   const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
+  const navigate = useNavigate()
 
-  const hasActiveToken = !!localStorage.getItem("token")
+  const { user } = useContext(context)
 
-  if (!hasActiveToken) {
-    return <Navigate to="/login" replace />
-  }
+  useEffect(() => {
+    if (user === null) {
+      navigate("/login")
+    }
+  }, [user])
 
   useEffect(() => {
     function handleResize() {
@@ -50,6 +56,10 @@ const ProtectedLayout = ({ children }) => {
     }
   }, [])
 
+  if (!user) {
+    return
+  }
+
   return (
     <div
       style={{
@@ -58,10 +68,8 @@ const ProtectedLayout = ({ children }) => {
         backgroundColor: "#F3F4F6",
       }}
     >
-      <ContextProvider>
-        {!isCollapse ? <Sidebar /> : <CompressSidebar />}
-        <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
-      </ContextProvider>
+      {!isCollapse ? <Sidebar /> : <CompressSidebar />}
+      <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
     </div>
   )
 }
@@ -69,92 +77,94 @@ const ProtectedLayout = ({ children }) => {
 export default function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedLayout>
-              <Dashboard />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <ProtectedLayout>
-              <ProjectManagement />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/projects/:projectId"
-          element={
-            <ProtectedLayout>
-              <ProjectTasks />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/tasks/:taskId"
-          element={
-            <ProtectedLayout>
-              <TaskDetail />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams"
-          element={
-            <ProtectedLayout>
-              <TeamManagement />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedLayout>
-              <Reports />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams/:teamId"
-          element={
-            <ProtectedLayout>
-              <TeamDetail />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/tasks/edit/:taskId"
-          element={
-            <ProtectedLayout>
-              <EditTask />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/edit/profile"
-          element={
-            <ProtectedLayout>
-              <EditProfile />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/teams/edit/:teamId"
-          element={
-            <ProtectedLayout>
-              <EditTeam />
-            </ProtectedLayout>
-          }
-        />
+      <ContextProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedLayout>
+                <Dashboard />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedLayout>
+                <ProjectManagement />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/projects/:projectId"
+            element={
+              <ProtectedLayout>
+                <ProjectTasks />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/tasks/:taskId"
+            element={
+              <ProtectedLayout>
+                <TaskDetail />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams"
+            element={
+              <ProtectedLayout>
+                <TeamManagement />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedLayout>
+                <Reports />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams/:teamId"
+            element={
+              <ProtectedLayout>
+                <TeamDetail />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/tasks/edit/:taskId"
+            element={
+              <ProtectedLayout>
+                <EditTask />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/edit/profile"
+            element={
+              <ProtectedLayout>
+                <EditProfile />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/teams/edit/:teamId"
+            element={
+              <ProtectedLayout>
+                <EditTeam />
+              </ProtectedLayout>
+            }
+          />
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </ContextProvider>
       <ToastContainer />
     </Router>
   )

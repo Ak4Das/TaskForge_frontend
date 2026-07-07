@@ -1,16 +1,19 @@
 import styles from "../style/page_modules/Login.module.css"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import axios from "axios"
-import { login } from "../../services/requestToServer"
+import { fetchMe, login } from "../../services/requestToServer"
 import { toast } from "react-toastify"
 import { useFormik } from "formik"
 import { loginSchema } from "../schemas/Login.schema"
+import context from "../contexts/createContexts"
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState("")
   const [error, setIsError] = useState("")
   const navigate = useNavigate()
+  const { user, setUser } = useContext(context)
 
   const initialValues = {
     email: "",
@@ -29,9 +32,14 @@ export default function Login() {
 
         if (response) {
           localStorage.setItem("token", response.token)
-        }
 
-        navigate("/")
+          setSuccess("Login Successful")
+
+          setTimeout(async () => {
+            await fetchMe({ setFunction: setUser })
+            navigate("/")
+          }, 2000)
+        }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
           console.error(error)
@@ -63,6 +71,8 @@ export default function Login() {
           </p>
         </div>
 
+        {success && <div className={styles.successAlertBanner}>{success}</div>}
+
         {error && <div className={styles.errorAlertBanner}>{error}</div>}
 
         <form className={styles.loginForm} onSubmit={handleSubmit}>
@@ -79,7 +89,7 @@ export default function Login() {
               onBlur={handleBlur}
             />
             {errors.email && touched.email ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.email}
               </p>
             ) : null}
@@ -98,7 +108,7 @@ export default function Login() {
               onBlur={handleBlur}
             />
             {errors.password && touched.password ? (
-              <p className={styles.errorMessage} className={`text-danger my-0`}>
+              <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.password}
               </p>
             ) : null}

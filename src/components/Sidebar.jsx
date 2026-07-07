@@ -15,11 +15,9 @@ import context from "../contexts/createContexts"
 export default function Sidebar() {
   const navigate = useNavigate()
 
-  const storedUserObj = Object.values(useContext(context))[0]
+  const { user } = useContext(context)
 
-  const userMetadata = Object.keys(storedUserObj).length
-    ? storedUserObj
-    : { name: "Team Member" }
+  const userMetadata = Object.keys(user).length ? user : { name: "Team Member" }
 
   const executeLogoutSequence = () => {
     localStorage.removeItem("token")

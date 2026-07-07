@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [error, setIsError] = useState("")
   const [projectStatus, setProjectStatus] = useState("")
 
-  const user = Object.values(useContext(context))[0]
+  const { user } = useContext(context)
 
   const filteredProjects = projectStatus
     ? projects.filter((project) => project.status === projectStatus)

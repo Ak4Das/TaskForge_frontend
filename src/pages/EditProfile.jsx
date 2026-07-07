@@ -22,7 +22,7 @@ export default function EditProfile() {
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
 
-  const user = Object.values(useContext(context))[0]
+  const { user } = useContext(context)
 
   const initialValues = {
     name: user.name || "",
