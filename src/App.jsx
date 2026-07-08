@@ -67,7 +67,11 @@ const ProtectedLayout = ({ children }) => {
         backgroundColor: "#F3F4F6",
       }}
     >
-      {!isCollapse ? <Sidebar /> : <CompressSidebar />}
+      {!isCollapse ? (
+        <Sidebar setCollapse={setCollapse} />
+      ) : (
+        <CompressSidebar setCollapse={setCollapse} />
+      )}
       <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
     </div>
   )
@@ -100,7 +104,11 @@ const NormalLayout = ({ children }) => {
         backgroundColor: "#F3F4F6",
       }}
     >
-      {!isCollapse ? <Sidebar /> : <CompressSidebar />}
+      {!isCollapse ? (
+        <Sidebar setCollapse={setCollapse} />
+      ) : (
+        <CompressSidebar setCollapse={setCollapse} />
+      )}
       <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
     </div>
   )

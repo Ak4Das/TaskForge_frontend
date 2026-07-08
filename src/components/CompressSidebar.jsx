@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import taskForgeLogo from "../assets/TaskForge_Logo2.png"
 
-export default function CompressSidebar() {
+export default function CompressSidebar({ setCollapse }) {
   const navigate = useNavigate()
 
   const executeLogoutSequence = () => {
@@ -25,7 +25,14 @@ export default function CompressSidebar() {
     `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`
 
   return (
-    <div className={styles.sidebarContainer}>
+    <div
+      className={styles.sidebarContainer}
+      onMouseEnter={() => {
+        setTimeout(() => {
+          setCollapse(false)
+        }, 300)
+      }}
+    >
       <div className={styles.logoWrapper}>
         <img className={styles.brandLogo} src={taskForgeLogo} alt="" />
       </div>

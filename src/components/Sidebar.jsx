@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import context from "../contexts/createContexts"
 
-export default function Sidebar() {
+export default function Sidebar({ setCollapse }) {
   const navigate = useNavigate()
 
   const { user } = useContext(context)
@@ -30,7 +30,26 @@ export default function Sidebar() {
     `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`
 
   return (
-    <div className={styles.sidebar}>
+    <div
+      className={styles.sidebar}
+      style={{
+        position: window.innerWidth < 992 ? "absolute" : "sticky",
+        zIndex: window.innerWidth < 992 && 1,
+      }}
+      onMouseLeave={(e) => {
+        if (window.innerWidth < 992) {
+          e.target.ownerDocument.body.style.overflowY = "auto"
+          setTimeout(() => {
+            setCollapse(true)
+          }, 300)
+        }
+      }}
+      onMouseOver={(e) => {
+        if (window.innerWidth < 992) {
+          e.target.ownerDocument.body.style.overflowY = "hidden"
+        }
+      }}
+    >
       <div className={styles.headerArea}>
         <h2 className={styles.brandTitle}>Workasana</h2>
         <span className={styles.brandSubtitle}>Workspace Management</span>
