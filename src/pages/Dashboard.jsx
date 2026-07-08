@@ -44,8 +44,8 @@ export default function Dashboard() {
 
         if (user && Object.keys(user).length) {
           const taskEndpoint = currentStatusFilter
-            ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
-            : `http://localhost:3000/api/tasks?owner=${user.id}`
+            ? `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
+            : `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}`
 
           await fetchTasks({
             taskEndpoint,

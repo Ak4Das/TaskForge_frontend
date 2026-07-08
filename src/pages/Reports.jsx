@@ -86,7 +86,7 @@ export default function Reports() {
       const projectPendingEffort = await pendingTasksByOwner({ setIsError })
 
       const allTasks = await fetchTasks({
-        taskEndpoint: "http://localhost:3000/api/tasks",
+        taskEndpoint: "https://workasana-backend-zeta.vercel.app/api/tasks",
         setIsError,
       })
 
