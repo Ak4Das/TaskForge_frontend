@@ -11,11 +11,7 @@ import {
   HelpCircle,
 } from "lucide-react"
 import TaskModal from "../components/TaskModel"
-import {
-  fetchAllProjects,
-  fetchMe,
-  fetchTasks,
-} from "../../services/requestToServer.js"
+import { fetchAllProjects, fetchTasks } from "../../services/requestToServer.js"
 import ProjectModal from "../components/ProjectModel.jsx"
 import context from "../contexts/createContexts.js"
 
@@ -46,10 +42,10 @@ export default function Dashboard() {
           setIsError,
         })
 
-        if (Object.keys(user).length) {
+        if (user && Object.keys(user).length) {
           const taskEndpoint = currentStatusFilter
-            ? `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
-            : `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}`
+            ? `http://localhost:3000/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
+            : `http://localhost:3000/api/tasks?owner=${user.id}`
 
           await fetchTasks({
             taskEndpoint,

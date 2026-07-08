@@ -57,7 +57,7 @@ export default function TeamDetail() {
         }
 
         const globalTasks = await fetchTasks({
-          taskEndpoint: "https://workasana-backend-zeta.vercel.app/api/tasks",
+          taskEndpoint: "http://localhost:3000/api/tasks",
           setIsError,
         })
 

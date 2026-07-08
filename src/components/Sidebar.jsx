@@ -17,7 +17,8 @@ export default function Sidebar() {
 
   const { user } = useContext(context)
 
-  const userMetadata = Object.keys(user).length ? user : { name: "Team Member" }
+  const userMetadata =
+    user && Object.keys(user).length ? user : { name: "Team Member" }
 
   const executeLogoutSequence = () => {
     localStorage.removeItem("token")

@@ -26,7 +26,6 @@ import CompressSidebar from "./components/CompressSidebar"
 import { useContext, useEffect, useState } from "react"
 import ContextProvider from "./contexts/contextProvider"
 import context from "./contexts/createContexts"
-import { fetchMe } from "../services/requestToServer"
 
 const ProtectedLayout = ({ children }) => {
   const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
@@ -74,6 +73,39 @@ const ProtectedLayout = ({ children }) => {
   )
 }
 
+const NormalLayout = ({ children }) => {
+  const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 992) {
+        setCollapse(true)
+      } else {
+        setCollapse(false)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        backgroundColor: "#F3F4F6",
+      }}
+    >
+      {!isCollapse ? <Sidebar /> : <CompressSidebar />}
+      <main style={{ flex: 1, overflowY: "auto" }}>{children}</main>
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <Router>
@@ -84,9 +116,9 @@ export default function App() {
           <Route
             path="/"
             element={
-              <ProtectedLayout>
+              <NormalLayout>
                 <Dashboard />
-              </ProtectedLayout>
+              </NormalLayout>
             }
           />
           <Route
