@@ -8,11 +8,13 @@ import { useFormik } from "formik"
 import { userSchema } from "../schemas/User.schema"
 import { CheckCircle2 } from "lucide-react"
 import context from "../contexts/createContexts"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function Signup() {
   const [error, setIsError] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { user, setUser } = useContext(context)
 
@@ -127,16 +129,32 @@ export default function Signup() {
 
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Secure Passphrase</label>
-            <input
-              className={styles.formInput}
-              type="password"
-              required
-              value={values.password}
-              name="password"
-              placeholder="Min 6 characters"
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <input
+                className={styles.formInput}
+                type={showPassword ? "text" : "password"}
+                required
+                value={values.password}
+                name="password"
+                placeholder="Min 6 characters"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                style={{ paddingRight: "40px", width: "100%" }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className={`${styles.showHidePasswordBtn}`}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             {errors.password && touched.password ? (
               <p className={`text-danger my-0 ${styles.errorMessage}`}>
                 {errors.password}

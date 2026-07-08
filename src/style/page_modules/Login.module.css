@@ -145,3 +145,16 @@
 .signupLink:hover {
   text-decoration: underline;
 }
+
+.showHidePasswordBtn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #6b7280;
+}

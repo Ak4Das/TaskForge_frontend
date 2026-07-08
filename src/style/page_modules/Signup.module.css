@@ -1,4 +1,3 @@
-/* Centered Canvas Container Wrapper */
 .signupContainer {
   min-height: 100vh;
   display: flex;
@@ -10,7 +9,6 @@
   box-sizing: border-box;
 }
 
-/* Authentication Content Card */
 .signupCard {
   width: 100%;
   max-width: 400px;
@@ -25,7 +23,6 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
-/* Header Text Blocks */
 .cardHeader {
   text-align: center;
   margin-bottom: 28px;
@@ -44,7 +41,6 @@
   margin: 0;
 }
 
-/* Dynamic State Messages (Error / Success) */
 .errorAlertBanner {
   background-color: #fef2f2;
   border: 1px solid #fca5a5;
@@ -72,7 +68,6 @@
   flex-shrink: 0;
 }
 
-/* Layout and Groups Form Structure */
 .signupForm {
   display: flex;
   flex-direction: column;
@@ -93,7 +88,6 @@
   margin-bottom: 6px;
 }
 
-/* Interactive Fields styling */
 .formInput {
   width: 100%;
   box-sizing: border-box;
@@ -113,15 +107,13 @@
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-/* Formik Input validation message replacement */
 .errorMessage {
   font-size: 12px;
   line-height: 15px;
-  color: #dc3545; /* Clean fallback matching previous .text-danger structure */
+  color: #dc3545;
   margin: 5px 0 0 0;
 }
 
-/* Main Submission Button Configuration */
 .submitBtn {
   border: none;
   background-color: #4f46e5;
@@ -144,7 +136,6 @@
   cursor: not-allowed;
 }
 
-/* Footnote Block Redirection */
 .cardFooter {
   text-align: center;
   margin-top: 20px;
@@ -160,4 +151,17 @@
 
 .loginLink:hover {
   text-decoration: underline;
+}
+
+.showHidePasswordBtn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #6b7280;
 }
