@@ -754,6 +754,46 @@ export async function updateTask(obj) {
   }
 }
 
+export async function deleteTask(obj) {
+  const { taskId, setIsError } = obj
+
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  try {
+    const response = await axios.delete(
+      `http://localhost:3000/api/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal: controller.signal,
+      },
+    )
+
+    clearTimeout(timerId)
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    setIsError && setIsError(error.message)
+  }
+}
+
 export async function updateUserProfile(obj) {
   const { body, setFunction, setIsError } = obj
 

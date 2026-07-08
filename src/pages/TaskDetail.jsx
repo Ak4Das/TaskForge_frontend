@@ -15,8 +15,13 @@ import {
   CalendarDays,
   Clock3,
   SquarePen,
+  Trash2,
 } from "lucide-react"
-import { fetchTasksById, updateTask } from "../../services/requestToServer"
+import {
+  fetchTasksById,
+  updateTask,
+  deleteTask,
+} from "../../services/requestToServer"
 
 export default function TaskDetail() {
   const { taskId } = useParams()
@@ -25,6 +30,7 @@ export default function TaskDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
   const [updating, setUpdating] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (error === "Invalid Token.") {
@@ -74,6 +80,28 @@ export default function TaskDetail() {
       setIsError(error.message)
     } finally {
       setUpdating(false)
+    }
+  }
+
+  const handleDeleteTask = async () => {
+    // const confirmDelete = window.confirm(
+    //   `Are you sure you want to delete this task?`,
+    // )
+    // if (!confirmDelete) {
+    //   return
+    // }
+
+    try {
+      setDeleting(true)
+      await deleteTask({ taskId, setIsError })
+      navigate(`/projects/${task.project._id}`)
+    } catch (error) {
+      if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+        console.error(error)
+      }
+      setIsError(error.message)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -225,26 +253,41 @@ export default function TaskDetail() {
           </div>
         </div>
 
-        {task.status !== "Completed" && (
-          <div className={styles.cardFooter}>
-            <button
-              className={styles.submitBtn}
-              onClick={() => navigate(`/tasks/edit/${taskId}`)}
-              disabled={updating}
-            >
-              <SquarePen size={16} />
-              Edit Task
-            </button>
-            <button
-              className={styles.submitBtn}
-              onClick={handleMarkAsComplete}
-              disabled={updating}
-            >
-              <CheckCircle2 size={16} />
-              {updating ? "Updating state..." : "Mark as Complete"}
-            </button>
-          </div>
-        )}
+        <div className={styles.cardFooter}>
+          {task.status !== "Completed" && (
+            <>
+              <button
+                className={styles.submitBtn}
+                onClick={() => navigate(`/tasks/edit/${taskId}`)}
+                disabled={updating || deleting}
+              >
+                <SquarePen size={16} />
+                Edit Task
+              </button>
+              <button
+                className={styles.submitBtn}
+                onClick={handleMarkAsComplete}
+                disabled={updating || deleting}
+              >
+                <CheckCircle2 size={16} />
+                {updating ? "Updating state..." : "Mark as Complete"}
+              </button>
+
+              <button
+                onClick={() => handleDeleteTask(task._id, task.name)}
+                disabled={updating || deleting}
+                className={`${styles.deleteBtn}`}
+                style={{
+                  cursor: deleting || updating ? "not-allowed" : "pointer",
+                  opacity: deleting || updating ? 0.6 : 1,
+                }}
+              >
+                <Trash2 size={16} />
+                {deleting ? "Deleting..." : "Delete Task"}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

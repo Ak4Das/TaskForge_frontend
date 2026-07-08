@@ -51,7 +51,13 @@ export default function Sidebar({ setCollapse }) {
       }}
     >
       <div className={styles.headerArea}>
-        <h2 className={styles.brandTitle}>Workasana</h2>
+        <h2
+          className={styles.brandTitle}
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
+          Workasana
+        </h2>
         <span className={styles.brandSubtitle}>Workspace Management</span>
       </div>
 

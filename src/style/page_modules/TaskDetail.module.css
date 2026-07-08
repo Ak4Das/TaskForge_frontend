@@ -226,6 +226,27 @@
   cursor: not-allowed;
 }
 
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+@media (max-width: 680px) {
+  .cardFooter {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 640px) {
   .container {
     padding: 16px;
@@ -247,12 +268,6 @@
   .submitBtn {
     width: 100%;
     justify-content: center;
-  }
-}
-
-@media (max-width: 540px) {
-  .cardFooter {
-    flex-direction: column;
   }
 }
 
