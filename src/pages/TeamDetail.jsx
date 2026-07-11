@@ -19,6 +19,8 @@ import UserModel from "../components/UserModel"
 export default function TeamDetail() {
   const { teamId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+
   const [team, setTeam] = useState(null)
   const [membersData, setMembersData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -26,10 +28,8 @@ export default function TeamDetail() {
   const [searchName, setSearchName] = useState("")
   const [searchEmail, setSearchEmail] = useState("")
   const [filterRole, setFilterRole] = useState("All")
-
   const [sortColumn, setSortColumn] = useState("closedTasks")
   const [sortDirection, setSortDirection] = useState("desc")
-  const navigate = useNavigate()
 
   const isMemberModalOpen = searchParams.get("newMemberModal") === "true"
 
