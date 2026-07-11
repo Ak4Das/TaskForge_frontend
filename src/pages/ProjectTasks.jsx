@@ -1,7 +1,6 @@
 import styles from "../style/page_modules/ProjectTasks.module.css"
 import React, { useState, useEffect } from "react"
 import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom"
-import axios from "axios"
 import {
   ArrowLeft,
   CheckCircle2,
@@ -24,18 +23,19 @@ import TaskModal from "../components/TaskModel"
 
 export default function ProjectTasks() {
   const { projectId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+
   const [project, setProject] = useState(null)
   const [tasks, setTasks] = useState([])
   const [users, setUsers] = useState([])
   const [tags, setTags] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
-  const [searchParams, setSearchParams] = useSearchParams()
   const [owner, setOwner] = useState("")
   const [tag, setTag] = useState("")
   const [prioritySortOrder, setPrioritySortOrder] = useState("")
   const [dateSortOrder, setDateSortOrder] = useState("")
-  const navigate = useNavigate()
 
   const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
