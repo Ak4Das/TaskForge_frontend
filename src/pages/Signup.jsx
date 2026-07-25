@@ -73,7 +73,7 @@ export default function Signup() {
     <div className={styles.signupContainer}>
       <div className={styles.signupCard}>
         <div className={styles.cardHeader}>
-          <h2 className={styles.brandTitle}>Join Workasana</h2>
+          <h2 className={styles.brandTitle}>Join TaskForge</h2>
           <p className={styles.brandSubtitle}>
             Create your profile to start tracking metrics
           </p>
@@ -116,7 +116,7 @@ export default function Signup() {
               required
               value={values.email}
               name="email"
-              placeholder="alex.rivera@workasana.com"
+              placeholder="alexrivera@example.com"
               onChange={handleChange}
               onBlur={handleBlur}
             />

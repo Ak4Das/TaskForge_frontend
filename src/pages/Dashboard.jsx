@@ -131,7 +131,7 @@ export default function Dashboard() {
     <div className={`${styles.dashboard_container}`}>
       <div className={`${styles.dashboard_header}`}>
         <div className={`${styles.header_title_area}`}>
-          <h1>Workasana Dashboard</h1>
+          <h1>TaskForge Dashboard</h1>
           <p>Track projects, organize workloads, and keep your team aligned.</p>
         </div>
 

@@ -190,7 +190,7 @@ export default function Reports() {
     <div className={`${styles.reports_container}`}>
       <div className={`${styles.reports_header_bar}`}>
         <div className={`${styles.title_area}`}>
-          <h1 className={`${styles.reports_main_title}`}>Workasana Reports</h1>
+          <h1 className={`${styles.reports_main_title}`}>TaskForge Reports</h1>
           <p className={`${styles.reports_sub_title}`}>
             Monitor task completion matrices and pending workloads.
           </p>

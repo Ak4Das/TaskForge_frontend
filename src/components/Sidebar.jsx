@@ -56,7 +56,7 @@ export default function Sidebar({ setCollapse }) {
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/")}
         >
-          Workasana
+          TaskForge
         </h2>
         <span className={styles.brandSubtitle}>Workspace Management</span>
       </div>

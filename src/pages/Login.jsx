@@ -67,7 +67,7 @@ export default function Login() {
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>
         <div className={styles.cardHeader}>
-          <h2 className={styles.brandTitle}>Workasana</h2>
+          <h2 className={styles.brandTitle}>TaskForge</h2>
           <p className={styles.brandSubtitle}>
             Log in to your system profile workspace
           </p>
