@@ -14,7 +14,11 @@ import TagsModel from "./TagsModel"
 import { useFormik } from "formik"
 import { taskSchema } from "../schemas/EditTask.schema"
 
-export default function TaskModal({ setModalVisibilityState, fetchData }) {
+export default function TaskModal({
+  setModalVisibilityState,
+  fetchData,
+  setUpdated,
+}) {
   const [projects, setProjects] = useState([])
   const [teams, setTeams] = useState([])
   const [users, setUsers] = useState([])
@@ -49,6 +53,7 @@ export default function TaskModal({ setModalVisibilityState, fetchData }) {
 
         if (response) {
           setSuccess("Task Created Successfully")
+          setUpdated(true)
         }
 
         setTimeout(() => {

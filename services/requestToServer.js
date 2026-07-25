@@ -1,5 +1,12 @@
 import axios from "axios"
 
+let url = null
+if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+  url = "http://localhost:3000"
+} else {
+  url = "https://workasana-backend-zeta.vercel.app"
+}
+
 export async function fetchAllProjects(obj) {
   const controller = new AbortController()
 
@@ -10,12 +17,9 @@ export async function fetchAllProjects(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/projects",
-      {
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/projects`, {
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -91,13 +95,10 @@ export async function fetchTeams(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/teams",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/teams`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -134,13 +135,10 @@ export async function fetchUsers(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/users",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/users`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -177,13 +175,10 @@ export async function fetchTags(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/tags",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/tags`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -220,13 +215,10 @@ export async function fetchMe(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/auth/me",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -272,7 +264,7 @@ export async function fetchTasksById(obj) {
 
   try {
     const response = await axios.get(
-      `https://workasana-backend-zeta.vercel.app/api/tasks/${taskId}`,
+      `${url}/api/tasks/${taskId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -317,7 +309,7 @@ export async function fetchTeamsById(obj) {
 
   try {
     const response = await axios.get(
-      `https://workasana-backend-zeta.vercel.app/api/teams/${teamId}`,
+      `${url}/api/teams/${teamId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -362,7 +354,7 @@ export async function login(obj) {
 
   try {
     const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/auth/login",
+      `${url}/api/auth/login`,
       body,
       {
         signal: controller.signal,
@@ -400,7 +392,7 @@ export async function signUp(obj) {
 
   try {
     const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/auth/signup",
+      `${url}/api/auth/signup`,
       body,
       {
         signal: controller.signal,
@@ -442,14 +434,10 @@ export async function createTeam(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/teams",
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/teams`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -486,14 +474,10 @@ export async function createTask(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/tasks",
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/tasks`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -531,7 +515,7 @@ export async function createProject(obj) {
 
   try {
     const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/projects",
+      `${url}/api/projects`,
       body,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -574,14 +558,10 @@ export async function createTags(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      "https://workasana-backend-zeta.vercel.app/api/tags",
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/tags`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -619,7 +599,7 @@ export async function closedTasksByTeams(obj) {
 
   try {
     const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/report/closed-tasks-teams",
+      `${url}/api/report/closed-tasks-teams`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
@@ -662,7 +642,7 @@ export async function closedTasksByOwner(obj) {
 
   try {
     const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/report/closed-tasks-owners",
+      `${url}/api/report/closed-tasks-owners`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
@@ -705,7 +685,7 @@ export async function pendingTasksByOwner(obj) {
 
   try {
     const response = await axios.get(
-      "https://workasana-backend-zeta.vercel.app/api/report/pending",
+      `${url}/api/report/pending`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
@@ -748,7 +728,7 @@ export async function updateTask(obj) {
 
   try {
     const response = await axios.patch(
-      `https://workasana-backend-zeta.vercel.app/api/tasks/${taskId}`,
+      `${url}/api/tasks/${taskId}`,
       body,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -792,7 +772,7 @@ export async function deleteTask(obj) {
 
   try {
     const response = await axios.delete(
-      `https://workasana-backend-zeta.vercel.app/api/tasks/${taskId}`,
+      `${url}/api/tasks/${taskId}`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
@@ -832,7 +812,7 @@ export async function updateUserProfile(obj) {
 
   try {
     const response = await axios.patch(
-      `https://workasana-backend-zeta.vercel.app/api/users/profile`,
+      `${url}/api/users/profile`,
       body,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -876,7 +856,7 @@ export async function updateTeam(obj) {
 
   try {
     const response = await axios.patch(
-      `https://workasana-backend-zeta.vercel.app/api/teams/${teamId}`,
+      `${url}/api/teams/${teamId}`,
       body,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

@@ -6,7 +6,10 @@ import { createProject } from "../../services/requestToServer"
 import { useFormik } from "formik"
 import { projectSchema } from "../schemas/Project.schema"
 
-export default function ProjectModal({ setProjectModalVisibilityState }) {
+export default function ProjectModal({
+  setProjectModalVisibilityState,
+  setUpdated,
+}) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")
@@ -34,6 +37,7 @@ export default function ProjectModal({ setProjectModalVisibilityState }) {
         })
         if (response) {
           setSuccess("Project Initialized Successfully")
+          setUpdated(true)
         }
         setTimeout(() => {
           if (response && Object.keys(response).length) {

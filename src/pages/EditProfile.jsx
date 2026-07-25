@@ -40,8 +40,18 @@ export default function EditProfile() {
         setSubmitting(true)
         const body = {
           name: values.name,
-          currentPassword: values.currentPassword,
-          newPassword: values.newPassword,
+        }
+
+        if (values.currentPassword) {
+          body.currentPassword = values.currentPassword
+        }
+
+        if (values.newPassword) {
+          body.newPassword = values.newPassword
+        }
+
+        if (values.confirmPassword) {
+          body.confirmPassword = values.confirmPassword
         }
 
         const response = await updateUserProfile({ body, setIsError })

@@ -16,6 +16,13 @@ import {
 import { fetchTasks, fetchTeamsById } from "../../services/requestToServer"
 import UserModel from "../components/UserModel"
 
+let url = null
+if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+  url = "http://localhost:3000"
+} else {
+  url = "https://workasana-backend-zeta.vercel.app"
+}
+
 export default function TeamDetail() {
   const { teamId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -57,7 +64,7 @@ export default function TeamDetail() {
         }
 
         const globalTasks = await fetchTasks({
-          taskEndpoint: "https://workasana-backend-zeta.vercel.app/api/tasks",
+          taskEndpoint: `${url}/api/tasks`,
           setIsError,
         })
 

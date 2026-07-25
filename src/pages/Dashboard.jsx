@@ -15,6 +15,13 @@ import { fetchAllProjects, fetchTasks } from "../../services/requestToServer.js"
 import ProjectModal from "../components/ProjectModel.jsx"
 import context from "../contexts/createContexts.js"
 
+let url = null
+if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+  url = "http://localhost:3000"
+} else {
+  url = "https://workasana-backend-zeta.vercel.app"
+}
+
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tasks, setTasks] = useState([])
@@ -22,6 +29,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false)
   const [error, setIsError] = useState("")
   const [projectStatus, setProjectStatus] = useState("")
+  const [isUpdated, setUpdated] = useState(false)
 
   const { user } = useContext(context)
 
@@ -44,14 +52,18 @@ export default function Dashboard() {
 
         if (user && Object.keys(user).length) {
           const taskEndpoint = currentStatusFilter
-            ? `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
-            : `https://workasana-backend-zeta.vercel.app/api/tasks?owner=${user.id}`
+            ? `${url}/api/tasks?owner=${user.id}&status=${encodeURIComponent(currentStatusFilter)}`
+            : `${url}/api/tasks?owner=${user.id}`
 
           await fetchTasks({
             taskEndpoint,
             setFunction: setTasks,
             setIsError,
           })
+        }
+
+        if (isUpdated) {
+          setUpdated(false)
         }
       } catch (error) {
         if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -64,7 +76,7 @@ export default function Dashboard() {
     }
 
     fetchDashboardContent()
-  }, [user, currentStatusFilter])
+  }, [user, currentStatusFilter, isUpdated])
 
   // Update URL queries when a user selects a filter
   const handleQuickFilterToggle = (statusValue) => {
@@ -470,12 +482,16 @@ export default function Dashboard() {
       </section>
 
       {isTaskModalOpen && (
-        <TaskModal setModalVisibilityState={setModalVisibilityState} />
+        <TaskModal
+          setModalVisibilityState={setModalVisibilityState}
+          setUpdated={setUpdated}
+        />
       )}
 
       {isProjectModalOpen && (
         <ProjectModal
           setProjectModalVisibilityState={setProjectModalVisibilityState}
+          setUpdated={setUpdated}
         />
       )}
     </div>

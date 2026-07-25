@@ -31,6 +31,13 @@ ChartJS.register(
   Legend,
 )
 
+let url = null
+if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+  url = "http://localhost:3000"
+} else {
+  url = "https://workasana-backend-zeta.vercel.app"
+}
+
 export default function Reports() {
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
@@ -86,7 +93,7 @@ export default function Reports() {
       const projectPendingEffort = await pendingTasksByOwner({ setIsError })
 
       const allTasks = await fetchTasks({
-        taskEndpoint: "https://workasana-backend-zeta.vercel.app/api/tasks",
+        taskEndpoint: `${url}/api/tasks`,
         setIsError,
       })
 

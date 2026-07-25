@@ -21,6 +21,13 @@ import {
 } from "../../services/requestToServer"
 import TaskModal from "../components/TaskModel"
 
+let url = null
+if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+  url = "http://localhost:3000"
+} else {
+  url = "https://workasana-backend-zeta.vercel.app"
+}
+
 export default function ProjectTasks() {
   const { projectId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -62,33 +69,33 @@ export default function ProjectTasks() {
         ? owner
           ? tag
             ? prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}`
+              ? `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&tags=${tag}`
             : prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
+              ? `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&owner=${owner}`
           : tag
             ? prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}`
+              ? `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&tags=${tag}`
             : prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
+              ? `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&status=${encodeURIComponent(currentStatusFilter)}`
         : owner
           ? tag
             ? prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}`
+              ? `${url}/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&owner=${owner}&tags=${tag}`
             : prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&owner=${owner}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&owner=${owner}`
+              ? `${url}/api/tasks?project=${projectId}&owner=${owner}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&owner=${owner}`
           : tag
             ? prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&tags=${tag}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&tags=${tag}`
+              ? `${url}/api/tasks?project=${projectId}&tags=${tag}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}&tags=${tag}`
             : prioritySortOrder
-              ? `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
-              : `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}`
+              ? `${url}/api/tasks?project=${projectId}&priorityOrder=${prioritySortOrder}`
+              : `${url}/api/tasks?project=${projectId}`
 
       await fetchTasks({
         taskEndpoint,
@@ -297,7 +304,7 @@ export default function ProjectTasks() {
                 } else if (e.target.value === "lowToHigh") {
                   sortRemainingDaysByAscOrder()
                 } else {
-                  const taskEndpoint = `https://workasana-backend-zeta.vercel.app/api/tasks?project=${projectId}`
+                  const taskEndpoint = `${url}/api/tasks?project=${projectId}`
                   fetchTasks({
                     taskEndpoint,
                     setFunction: setTasks,
