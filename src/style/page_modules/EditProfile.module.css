@@ -2,8 +2,6 @@
   padding: 32px;
   max-width: 540px;
   margin: 0 auto;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .backButton {
@@ -160,7 +158,6 @@
   border: 1px solid #fde68a;
   border-radius: 8px;
   padding: 14px;
-  animation: fadeIn 0.2s;
 }
 
 .verificationLabel {
@@ -197,10 +194,6 @@
   transition: background-color 0.2s ease;
 }
 
-.submitButton:hover:not(:disabled) {
-  background-color: #4338ca;
-}
-
 .loadingState {
   padding: 40px;
   text-align: center;
@@ -208,8 +201,8 @@
   font-family: sans-serif;
 }
 
-@media (max-width:500px) {
-    .container {
-        padding: 15px;
-    }
+@media (max-width: 500px) {
+  .container {
+    padding: 15px;
+  }
 }

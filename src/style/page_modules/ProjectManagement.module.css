@@ -1,6 +1,5 @@
 .workspace_container {
   padding: 32px;
-  font-family: sans-serif;
   box-sizing: border-box;
 }
 
@@ -37,7 +36,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  white-space: nowrap;
 }
 
 .btn_add_project:hover {
@@ -194,7 +192,6 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  white-space: nowrap;
 }
 
 .badge_todo {
@@ -226,8 +223,6 @@
   color: #4b5563;
   line-height: 1.5;
   margin: 0 0 24px 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }

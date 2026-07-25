@@ -2,8 +2,6 @@
   padding: 32px;
   max-width: 600px;
   margin: 0 auto;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .backButton {
@@ -173,13 +171,11 @@
   font-size: 13px;
   color: #374151;
   cursor: pointer;
-  user-select: none;
 }
 
 .checkboxInput {
   width: 15px;
   height: 15px;
-  accent-color: #4f46e5;
   cursor: pointer;
 }
 

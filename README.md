@@ -1,16 +1,53 @@
-# React + Vite
+# PRD
+## Login page
+- User can login with registered email and password
+- Implement authentication to validate user
+- If email not registered then user will redirected to signin page
+- If login successful then user will redirected to Dashboard page automatically
+- Create new token valid for 24hrs and store inside localstorage
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## SignUp page
+- User can create account with name, email, password
+- Implement authentication to check email is already present or not and create unique token
+- password is converted into hashed with bcrypt before save to database
+- Create token valid for 24hrs store inside localstorage
 
-Currently, two official plugins are available:
+## Dashboard 
+- List of all ongoing projects with filter on status
+- Add new task and add new project btns present on the dashboard
+- All current task assign to user are listed in table format with filter functionality on status of tasks
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project Management
+- All projects are listed 
+- search and filter functionality implemented
+- Add new project btn to add a new project
 
-## React Compiler
+## Project Details page
+- displayed all project related data
+- project tasks are listed on a table you can implement various filters (status, owners, tags etc.) on the table of data and sorting functionality (priority, Due date) is also available
+- Edit task and add new task btn is available on this page
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Task Details page
+- All task related details are displayed on this page
+- Edit task and mark as completed btn is available on this page
 
-## Expanding the ESLint configuration
+## Team management page
+- All teams are listed in this page
+- Add new team form is available
+- Edit team btn is available on this page
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Team Details page
+- All data related to a particular team is listed here
+- All team members data are listed in  table format with searching and sorting functionality 
+- Edit team and add new member btn are available on this page
+
+## Reports page
+- Pending Work Across Projects data is shown using bar chart
+- Tasks Closed By Team data shown using pie chart
+- Tasks Closed By Owner data shown using doughnut chart
+
+## Settings page
+- User can change his name and password
+
+## sidebar
+- contain all main navigation pages links
