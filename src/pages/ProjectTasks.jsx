@@ -163,29 +163,19 @@ export default function ProjectTasks() {
   })
 
   function sortRemainingDaysByAscOrder() {
-    for (let i = 0; i < finalTasks.length; i++) {
-      for (let j = i + 1; j < finalTasks.length; j++) {
-        if (finalTasks[i].remainingDays > finalTasks[j].remainingDays) {
-          const hold = finalTasks[i]
-          finalTasks[i] = finalTasks[j]
-          finalTasks[j] = hold
-        }
-      }
-    }
-    setTasks(finalTasks)
+    const sortedTasks = finalTasks.sort(
+      (a, b) => a.remainingDays - b.remainingDays,
+    )
+
+    setTasks(sortedTasks)
   }
 
   function sortRemainingDaysByDescOrder() {
-    for (let i = 0; i < finalTasks.length; i++) {
-      for (let j = i + 1; j < finalTasks.length; j++) {
-        if (finalTasks[i].remainingDays < finalTasks[j].remainingDays) {
-          const hold = finalTasks[i]
-          finalTasks[i] = finalTasks[j]
-          finalTasks[j] = hold
-        }
-      }
-    }
-    setTasks(finalTasks)
+    const sortedTasks = finalTasks.sort(
+      (a, b) => b.remainingDays - a.remainingDays,
+    )
+
+    setTasks(sortedTasks)
   }
 
   const getStatusClassName = (status) => {
