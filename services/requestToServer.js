@@ -46,6 +46,46 @@ export async function fetchAllProjects(obj) {
   }
 }
 
+export async function fetchTheProject(obj) {
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  const { setFunction, setIsError, id } = obj
+
+  try {
+    const response = await axios.get(`${url}/api/projects/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
+
+    clearTimeout(timerId)
+
+    setFunction && setFunction(response.data.respondedData)
+    return response.data.respondedData
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    setIsError && setIsError(error.message)
+  }
+}
+
 export async function fetchTasks(obj) {
   const controller = new AbortController()
 
@@ -263,15 +303,12 @@ export async function fetchTasksById(obj) {
   const { taskId, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      `${url}/api/tasks/${taskId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        signal: controller.signal,
+    const response = await axios.get(`${url}/api/tasks/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    )
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -308,15 +345,12 @@ export async function fetchTeamsById(obj) {
   const { teamId, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      `${url}/api/teams/${teamId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        signal: controller.signal,
+    const response = await axios.get(`${url}/api/teams/${teamId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    )
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -353,13 +387,9 @@ export async function login(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      `${url}/api/auth/login`,
-      body,
-      {
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/auth/login`, body, {
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -391,13 +421,9 @@ export async function signUp(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      `${url}/api/auth/signup`,
-      body,
-      {
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/auth/signup`, body, {
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -514,14 +540,10 @@ export async function createProject(obj) {
   const { body, setFunction, setIsError } = obj
 
   try {
-    const response = await axios.post(
-      `${url}/api/projects`,
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.post(`${url}/api/projects`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -598,13 +620,10 @@ export async function closedTasksByTeams(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      `${url}/api/report/closed-tasks-teams`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/report/closed-tasks-teams`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -641,13 +660,10 @@ export async function closedTasksByOwner(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      `${url}/api/report/closed-tasks-owners`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/report/closed-tasks-owners`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -684,13 +700,10 @@ export async function pendingTasksByOwner(obj) {
   const { setFunction, setIsError } = obj
 
   try {
-    const response = await axios.get(
-      `${url}/api/report/pending`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.get(`${url}/api/report/pending`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -727,9 +740,49 @@ export async function updateTask(obj) {
   }, 10000)
 
   try {
+    const response = await axios.patch(`${url}/api/tasks/${taskId}`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
+
+    clearTimeout(timerId)
+
+    setFunction && setFunction(response.data.respondedData)
+    return response.data.respondedData
+  } catch (error) {
+    clearTimeout(timerId)
+
+    if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
+      console.dir(error)
+    }
+
+    if (error.response.data.message === "Access Denied: Invalid Token.") {
+      setIsError && setIsError("Invalid Token.")
+      return
+    }
+
+    if (error.name === "CanceledError") {
+      setIsError && setIsError("Request timeout")
+      return
+    }
+
+    setIsError && setIsError(error.message)
+  }
+}
+
+export async function updateProject(obj) {
+  const { projectId, payload, setFunction, setIsError } = obj
+
+  const controller = new AbortController()
+
+  const timerId = setTimeout(() => {
+    controller.abort()
+  }, 10000)
+
+  try {
     const response = await axios.patch(
-      `${url}/api/tasks/${taskId}`,
-      body,
+      `${url}/api/projects/${projectId}`,
+      payload,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal: controller.signal,
@@ -771,13 +824,10 @@ export async function deleteTask(obj) {
   }, 10000)
 
   try {
-    const response = await axios.delete(
-      `${url}/api/tasks/${taskId}`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.delete(`${url}/api/tasks/${taskId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
   } catch (error) {
@@ -811,14 +861,10 @@ export async function updateUserProfile(obj) {
   }, 10000)
 
   try {
-    const response = await axios.patch(
-      `${url}/api/users/profile`,
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.patch(`${url}/api/users/profile`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 
@@ -855,14 +901,10 @@ export async function updateTeam(obj) {
   }, 10000)
 
   try {
-    const response = await axios.patch(
-      `${url}/api/teams/${teamId}`,
-      body,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal: controller.signal,
-      },
-    )
+    const response = await axios.patch(`${url}/api/teams/${teamId}`, body, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      signal: controller.signal,
+    })
 
     clearTimeout(timerId)
 

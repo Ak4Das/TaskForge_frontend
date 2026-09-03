@@ -22,6 +22,7 @@ import TeamDetail from "./pages/TeamDetail"
 import EditTask from "./pages/EditTaskModel"
 import EditProfile from "./pages/EditProfile"
 import EditTeam from "./pages/EditTeam"
+import EditProject from "./pages/EditProject"
 import CompressSidebar from "./components/CompressSidebar"
 import { useContext, useEffect, useState } from "react"
 import ContextProvider from "./contexts/contextProvider"
@@ -142,6 +143,14 @@ export default function App() {
             element={
               <ProtectedLayout>
                 <ProjectTasks />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/editProject/:projectId"
+            element={
+              <ProtectedLayout>
+                <EditProject />
               </ProtectedLayout>
             }
           />

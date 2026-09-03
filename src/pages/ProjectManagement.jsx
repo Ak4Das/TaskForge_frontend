@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Clock,
   Plus,
+  SquarePen,
 } from "lucide-react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { fetchAllProjects } from "../../services/requestToServer"
@@ -203,6 +204,12 @@ export default function ProjectManagement() {
               </div>
 
               <div className={`${styles.card_footer}`}>
+                <Link
+                  to={`/editProject/${project._id}`}
+                  className="btn btn-primary btn-sm d-flex align-items-center gap-1"
+                >
+                  <SquarePen size={18} /> Edit Project
+                </Link>
                 <Link
                   className={`${styles.view_tasks_link}`}
                   to={`/projects/${project._id}`}
