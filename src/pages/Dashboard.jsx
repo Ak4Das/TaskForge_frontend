@@ -14,6 +14,7 @@ import TaskModal from "../components/TaskModel"
 import { fetchAllProjects, fetchTasks } from "../../services/requestToServer.js"
 import ProjectModal from "../components/ProjectModel.jsx"
 import context from "../contexts/createContexts.js"
+import { toast } from "react-toastify"
 
 let url = null
 if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
@@ -23,12 +24,17 @@ if (import.meta.env.VITE_MODE === "DEVELOPMENT") {
 }
 
 export default function Dashboard() {
+  // To set or remove queries from url
   const [searchParams, setSearchParams] = useSearchParams()
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
+  // While we fetch dashboard contents loading will appear
   const [loading, setLoading] = useState(false)
+  // If There is any error during fetch dashboard contents
   const [error, setIsError] = useState("")
+  // selected project status to filter project according to selected status
   const [projectStatus, setProjectStatus] = useState("")
+  // When you create new task or new project then its need to update dashboard content
   const [isUpdated, setUpdated] = useState(false)
 
   const { user } = useContext(context)
@@ -37,10 +43,12 @@ export default function Dashboard() {
     ? projects.filter((project) => project.status === projectStatus)
     : projects
 
+  // if user filter tasks by status then currentStatusFilter hold the selected status
   const currentStatusFilter = searchParams.get("status") || ""
   const isTaskModalOpen = searchParams.get("newTaskModal") === "true"
   const isProjectModalOpen = searchParams.get("newProjectModal") === "true"
 
+  // This useEffect fetch all the required dashboard contents (projects and tasks)
   useEffect(() => {
     const fetchDashboardContent = async () => {
       try {
@@ -78,9 +86,16 @@ export default function Dashboard() {
     fetchDashboardContent()
   }, [user, currentStatusFilter, isUpdated])
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+      setIsError("")
+    }
+  }, [error])
+
   // Update URL queries when a user selects a filter
   const handleQuickFilterToggle = (statusValue) => {
-    // Create copy of existing searchParams
+    // Create copy of existing searchParams because we should not mutating the object returned by useSearchParams
     const updatedParams = new URLSearchParams(searchParams)
     if (currentStatusFilter === statusValue) {
       updatedParams.delete("status")

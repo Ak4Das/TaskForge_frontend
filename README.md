@@ -51,3 +51,11 @@
 
 ## sidebar
 - contain all main navigation pages links
+
+
+# CHECKLIST
+1. ContextProvider ✓
+2. Login ✓
+3. Signup ✓
+4. NormalLayout ✓
+5. Dashboard ✓

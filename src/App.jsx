@@ -79,6 +79,7 @@ const ProtectedLayout = ({ children }) => {
 }
 
 const NormalLayout = ({ children }) => {
+  // Controls toggle btw sidebar and compressSidebar
   const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
 
   useEffect(() => {
