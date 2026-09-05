@@ -10,6 +10,7 @@ export default function ProjectModal({
   setProjectModalVisibilityState,
   setUpdated,
 }) {
+  // To disable the submit button
   const [submitting, setSubmitting] = useState(false)
   const [error, setIsError] = useState("")
   const [success, setSuccess] = useState("")

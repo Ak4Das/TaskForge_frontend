@@ -19,9 +19,11 @@ import ProjectModal from "../components/ProjectModel.jsx"
 
 export default function ProjectManagement() {
   const [projects, setProjects] = useState([])
+  // Search projects by name
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setIsError] = useState("")
+  // Choose project status from dropdown
   const [projectStatus, setProjectStatus] = useState("")
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()

@@ -59,3 +59,7 @@
 3. Signup ✓
 4. NormalLayout ✓
 5. Dashboard ✓
+6. ProtectedLayout ✓
+7. ProjectManagement ✓
+8. TaskModel ✓
+9. ProjectModel ✓

@@ -29,6 +29,7 @@ import ContextProvider from "./contexts/contextProvider"
 import context from "./contexts/createContexts"
 
 const ProtectedLayout = ({ children }) => {
+  // Controls toggle btw sidebar and compressSidebar
   const [isCollapse, setCollapse] = useState(window.innerWidth < 992)
   const navigate = useNavigate()
 

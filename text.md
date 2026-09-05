@@ -31,3 +31,7 @@
 - list all the tasks assign to login user and filter by status implemented via url query method
 - add new task form, open or close form via url query method
 - add new project form, open or close form via url query method
+
+## ProtectedLayout
+- Only difference btw NormalLayout and ProtectedLayout is inside protected layout i check user to be null or not if null then navigate to login page
+- When user login successfully then user will fetched and update user state inside ContextProvider
